@@ -5,16 +5,16 @@ import os
 from . import versions
 
 
-def pack(*paths):
+def build(*paths):
     """Return the path to the main pack directory ('build')."""
     return os.path.join('build', *paths)
 
 def df(*paths):
     """Return the path to the DF directory in the built pack."""
-    return pack(versions.df(dirname=True), *paths)
+    return build(versions.df(dirname=True), *paths)
 
 def lnp(*paths):
-    return pack('LNP', *paths)
+    return build('LNP', *paths)
 
 def utilities(*paths):
     return lnp('Utilities', *paths)
@@ -32,3 +32,8 @@ def zipped():
 def component(*paths):
     """Return the path where downloaded components are stored."""
     return os.path.join('components', *paths)
+
+
+def base(*paths):
+    """Return the path to the main pack directory ('build')."""
+    return os.path.join('base', *paths)

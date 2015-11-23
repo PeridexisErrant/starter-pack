@@ -6,15 +6,29 @@ and other special categories, and individual logic for other files.
 Many functions are VERY tightly coupled to the contents of config.yml
 """
 
+import glob
+import json
 import os
 import shutil
 import zipfile
 
 from . import component
 from . import paths
+from . import versions
 
 
-def unzip_to(filename, target_dir, *, makedirs=False):
+def overwrite_dir(src, dest):
+    """Copies a tree from src to dest, adding files."""
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        for f in os.listdir(src):
+            overwrite_dir(os.path.join(src, f), os.path.join(dest, f))
+    else:
+        shutil.copy(src, os.path.dirname(dest))
+
+
+def unzip_to(filename, target_dir, *, makedirs=True):
     """Extract the contents of the given archive to the target directory.
 
     - If the filename is not a zip file, copy '.exe's to target_dir.
@@ -27,8 +41,6 @@ def unzip_to(filename, target_dir, *, makedirs=False):
             os.makedirs(target_dir)
         except FileExistsError:
             pass
-    if not os.path.isdir(target_dir):
-        raise FileNotFoundError('Cannot extract to missing dir: ' + target_dir)
     if not filename.endswith('.zip'):
         if filename.endswith('.exe'):
             # Rare utilities, basically just Dorven Realms
@@ -61,4 +73,28 @@ def create_utilities():
             continue
         comp = component.Component('utilities', util)
         print('{:20}  ->  {}'.format(comp.filename[:20], target))
-        unzip_to(comp.path, target, makedirs=True)
+        unzip_to(comp.path, target)
+    # TODO: generate utilities.txt
+
+
+def create_df_dir():
+    """Create the Dwarf Fortress directory, with DFHack and other content."""
+    items = ['Dwarf Fortress', 'DFHack', 'Stocksettings']
+    destinations = [paths.df(), paths.df(), paths.df('stocksettings')]
+    for item, path in zip(items, destinations):
+        comp = component.Component('files', item)
+        unzip_to(comp.path, path)
+    os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
+    for fname in glob.glob(paths.base('*.init')):
+        shutil.copy(fname, paths.df())
+
+
+def pylnp_config():
+    """Create LNP/PyLNP.json with correct pack version string."""
+    with open(paths.base('PyLNP.json')) as f:
+        pylnp_conf = json.load(f)
+    pylnp_conf['updates']['packVersion'] = versions.starter_pack()
+    with open(paths.lnp('PyLNP.json'), 'w') as f:
+        json.dump(pylnp_conf, f, indent=2)
+
+

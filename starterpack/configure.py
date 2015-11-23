@@ -26,8 +26,8 @@ def clear_temp_and_log_files():
     files = ['PyLNP.user', 'stderr.txt', 'stdout.txt',
              r'LNP\Utilities\autorun.txt']
     for k in files:
-        if os.path.isfile(paths.pack(k)):
-            os.remove(paths.pack(k))
+        if os.path.isfile(paths.build(k)):
+            os.remove(paths.build(k))
     shutil.rmtree(paths.lnp('Baselines', 'temp'), ignore_errors=True)
     with open(paths.df('gamelog.txt'), 'w') as f:
         f.write('')
@@ -50,21 +50,6 @@ def check_extras():
         result('Extras files', 'need installation')
 
 
-def check_dfhack_init():
-    """Checks and writes dfhack.init including call to extra script"""
-    dfhack_init = paths.df('dfhack.init')
-    if not os.path.isfile(dfhack_init):
-        if os.path.isfile(dfhack_init + '-example'):
-            with open(dfhack_init + '-example') as f:
-                text = f.read()
-            os.remove(dfhack_init + '-example')
-            with open(dfhack_init, 'w') as f:
-                f.write(text)
-            result('dfhack.init', 'was fixed')
-        result('dfhack.init', 'not found')
-    result('dfhack.init', 'is OK')
-
-
 def keybinds():
     """Check that keybindings haven't changed between versions"""
     installed = paths.df('data', 'init', 'interface.txt')
@@ -74,26 +59,6 @@ def keybinds():
             if not f1.read() == f2.read():
                 result('Keybinds status', 'needs updating')
     result('Keybinds status', 'is OK')
-
-
-def pylnp_json():
-    """Check and update version string in PyLNP.json"""
-    pylnpjson = paths.lnp('PyLNP.json')
-    if os.path.isfile(pylnpjson):
-        with open(pylnpjson) as f:
-            config = f.readlines()
-            orig = config[:]
-        for n, _ in enumerate(config):
-            config[n] = config[n].replace('\t', '    ')
-            if '"packVersion": "' in config[n]:
-                config[n] = '    "packVersion": "{}",\n'.format(
-                    versions.starter_pack())
-        if not config == orig:
-            with open(pylnpjson, 'w') as f:
-                f.writelines(config)
-            result('PyLNP.json version string', 'was fixed')
-        result('PyLNP.json version string', 'is OK')
-    result('PyLNP.json version string', 'file not found')
 
 
 def embark_profiles():
@@ -203,13 +168,11 @@ def twbtify_graphics_init(pack):
 def configure_all():
     print('Checking built pack is configured...')
     keybinds()
-    pylnp_json()
     embark_profiles()
     soundsense_xml()
     graphics_installed_and_all_simplified()
     clear_temp_and_log_files()
     check_installed_settings()
     check_extras()
-    check_dfhack_init()
     dwarf_therapist()
     twbt_config_and_files()

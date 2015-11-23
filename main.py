@@ -24,13 +24,16 @@ Notes:
 import hashlib
 import json
 import os
+import shutil
 import zipfile
 
-from starterpack import component
-from starterpack.configure import configure_all
-from starterpack import download
-from starterpack import paths
-from starterpack import unpack
+from starterpack import (
+    build,
+    component,
+    configure,
+    download,
+    paths,
+    )
 
 # TODO:  implement the actual logic for this module
 
@@ -52,10 +55,22 @@ def download_files():
             print('Downloaded  {:25}{:30}'.format(c.name, c.filename[:25]))
 
 
+def build_pack():
+    """Copy everything to the 'build' directory, ready to go."""
+    shutil.rmtree('build')
+    build.create_df_dir()
+    build.create_utilities()
+    for d in os.listdir(paths.base()):
+        if os.path.isdir(paths.base(d)):
+            build.overwrite_dir(paths.base(d), paths.lnp(d))
+    build.overwrite_dir(paths.lnp('Graphics', 'Phoebus'), paths.df())
+    build.pylnp_config()
+    configure.configure_all()
+
+
 cache_metadata()
 download_files()
-unpack.create_utilities()
-configure_all()
+build_pack()
 
 
 def zip_pack():
