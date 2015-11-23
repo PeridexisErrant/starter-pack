@@ -28,6 +28,10 @@ files:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
+    Doren Phoebus TwbT:
+        bay12: 152698
+        host: dffd
+        ident: 11069
     PerfectWorld XML:
         bay12: 57428
         host: dffd
@@ -35,6 +39,10 @@ files:
     Quickfort Blueprints:
         host: dffd
         ident: 8185
+    Stocksettings:
+        bay12: 146213
+        host: dffd
+        ident: 10170
     TwbT:
         bay12: 138754
         host: github

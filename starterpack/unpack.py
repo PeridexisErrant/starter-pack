@@ -55,12 +55,10 @@ def unzip_to(filename, target_dir, *, makedirs=False):
 
 def create_utilities():
     """Extract all utilities to the build/LNP/Utilities dir."""
-    for d in os.listdir(paths.utilities()):
-        if os.path.isdir(paths.utilities(d)):
-            print('deleting', d)
-            shutil.rmtree(paths.utilities(d))
     for util in (u for c, u in component.ITEMS if c == 'utilities'):
         target = paths.utilities(util)
+        if os.path.isdir(target):
+            continue
         comp = component.Component('utilities', util)
         print('{:20}  ->  {}'.format(comp.filename[:20], target))
         unzip_to(comp.path, target, makedirs=True)

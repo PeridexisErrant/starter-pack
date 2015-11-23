@@ -201,7 +201,7 @@ def twbtify_graphics_init(pack):
 
 
 def configure_all():
-    print('\nChecking built pack is configured...')
+    print('Checking built pack is configured...')
     keybinds()
     pylnp_json()
     embark_profiles()
@@ -213,4 +213,3 @@ def configure_all():
     check_dfhack_init()
     dwarf_therapist()
     twbt_config_and_files()
-    print()

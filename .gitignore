@@ -2,6 +2,9 @@
 # It's useful to hide files and folders sometimes
 _*
 
+# This dir holds everything that's not done automatically yet.
+base/
+
 # All the downloaded utilities etc go here
 components/
 

@@ -40,7 +40,7 @@ def cache_metadata():
     for cat, item in component.ITEMS:
         c = component.Component(cat, item)
         print('{:25}{:15}{}'.format(c.name, c.version, c.filename[:30]))
-    with open('_cache.json', 'w') as f:
+    with open('_cached.json', 'w') as f:
         json.dump(download.JSON_CACHE, f)
 
 
@@ -48,8 +48,8 @@ def download_files():
     """Download files which are in config.yml, but not saved in components."""
     for cat, item in component.ITEMS:
         c = component.Component(cat, item)
-        print('{:25}{:30}downloaded='.format(c.name, c.filename[:25]), end='')
-        print(c.download())
+        if c.download():
+            print('Downloaded  {:25}{:30}'.format(c.name, c.filename[:25]))
 
 
 cache_metadata()
