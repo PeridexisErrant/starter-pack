@@ -1,0 +1,96 @@
+version: r18
+comment: |
+    A reasonably simple config file. The "version" key simply holds
+    the version string of the pack.
+
+    Other categories hold config for a downloadable component. Each component:
+
+        SHOULD have a "bay12" key set to the forum thread number
+        MUST have "host" set to one of "dffd", "github", or "manual"
+        MUST have "version" and "dl_link" if host is manual
+        MUST have "ident" set otherwise
+        SHOULD NOT set keys not specified here
+
+    All components can be downloaded to the ./components directory, and
+    if "host" is not "manual" can be automatically checked for updates.
+
+    The top-level categories are slightly different in, essentially in
+    how they try to install things and where the descriptions are saved.
+        - files:  custom handling for each
+        - utilities: unpacked to ./build/LNP/Utilities
+    Other categories to come later.
+files:
+    Dwarf Fortress:
+        host: manual
+        dl_link: http://bay12games.com/dwarves/df_40_24_win.zip
+        version: 0.40.24
+    DFHack:
+        bay12: 139553
+        host: github
+        ident: DFHack/dfhack
+    PerfectWorld XML:
+        bay12: 57428
+        host: dffd
+        ident: 9672
+    Quickfort Blueprints:
+        host: dffd
+        ident: 8185
+    TwbT:
+        bay12: 138754
+        host: github
+        ident: mifki/df-twbt
+utilities:
+    Announcement Window:
+        bay12: 153777
+        host: github
+        ident: NuAoA/AnnouncementWindow
+    Armok Vision:
+        bay12: 146473
+        host: github
+        ident: JapaMala/armok-vision
+    DF Story Maker:
+        bay12: 128570
+        host: dffd
+        ident: 7832
+    Dorven Realms:
+        bay12: 138366
+        host: dffd
+        ident: 8553
+    Dwarf Mockup:
+        bay12: 143546
+        host: dffd
+        ident: 9654
+    Dwarf Therapist:
+        bay12: 122968
+        host: dffd
+        ident: 9040
+    Isoworld:
+        bay12: 70700
+        host: dffd
+        ident: 3418
+    Legends Viewer:
+        bay12: 72702
+        host: dffd
+        ident: 3556
+    PerfectWorld:
+        bay12: 57428
+        host: dffd
+        ident: 2354
+    Picturefort:
+        bay12: 138590
+        host: dffd
+        ident: 8564
+    Quickfort:
+        bay12: 35931
+        host: manual
+        dl_link: https://github.com/downloads/joelpt/quickfort/Quickfort_2.04.zip
+        version: "2.04"
+    Soundsense:
+        bay12: 60287
+        host: manual
+        dl_link: http://df.zweistein.cz/soundsense/soundSense_2015-1_194.zip
+        version: "2015-1"
+    World Viewer:
+        bay12: 128932
+        host: dffd
+        ident: 7851
