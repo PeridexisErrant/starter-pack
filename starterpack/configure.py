@@ -21,18 +21,6 @@ def result(part, status, last=['']):
         last[0] = part
 
 
-def clear_temp_and_log_files():
-    """Remove stuff that we should avoid distributing"""
-    files = ['PyLNP.user', 'stderr.txt', 'stdout.txt',
-             r'LNP\Utilities\autorun.txt']
-    for k in files:
-        if os.path.isfile(paths.build(k)):
-            os.remove(paths.build(k))
-    shutil.rmtree(paths.lnp('Baselines', 'temp'), ignore_errors=True)
-    with open(paths.df('gamelog.txt'), 'w') as f:
-        f.write('')
-
-
 def check_installed_settings():
     """Checks that default settings are installed"""
     with open(paths.df('data', 'init', 'd_init.txt')) as f:
@@ -171,7 +159,6 @@ def configure_all():
     embark_profiles()
     soundsense_xml()
     graphics_installed_and_all_simplified()
-    clear_temp_and_log_files()
     check_installed_settings()
     check_extras()
     dwarf_therapist()

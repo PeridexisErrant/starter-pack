@@ -28,6 +28,9 @@ class ManualMetadata(download.AbstractMetadata):
     def dl_link(self, identifier):
         return self.json(identifier)['dl_link']
 
+    def filename(self, identifier):
+        return os.path.basename(self.dl_link(identifier))
+
 
 class Component(object):
     """Represent a downloadable component, with metadata."""

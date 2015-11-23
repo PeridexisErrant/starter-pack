@@ -35,7 +35,7 @@ class AbstractMetadata(object):
         return self.json(identifier)[self.version_key]
 
     def filename(self, identifier):
-        return os.path.basename(self.dl_link(identifier))
+        raise NotImplementedError()
 
     def dl_link(self, identifier):
         raise NotImplementedError()
@@ -63,12 +63,18 @@ class GitHubMetadata(AbstractMetadata):
         """A release on Github can have several files associated with it."""
         if repo not in self.stored:
             assets = self.json(repo)['assets']
-            if not assets:
-                raise ValueError('No release files for ' + repo)
-            assets.sort(key=lambda a: len(a['name']))
-            win = [a for a in assets if 'win' in a['name'].lower()]
-            win64 = [a for a in win if '64' in a['name']]
-            # Prefer Win64, then Win, then any. Filename length is tiebreaker.
-            lst = win64 if win64 else (win if win else assets)
-            self.stored[repo] = lst[0]['browser_download_url']
+            if assets:
+                assets.sort(key=lambda a: len(a['name']))
+                win = [a for a in assets if 'win' in a['name'].lower()]
+                win64 = [a for a in win if '64' in a['name']]
+                lst = win64 if win64 else (win if win else assets)
+                self.stored[repo] = lst[0]['browser_download_url']
+            else:
+                self.stored[repo] = self.json(repo)['zipball_url']
         return self.stored[repo]
+
+    def filename(self, repo):
+        fname = os.path.basename(self.dl_link(repo))
+        if '/zipball/' in self.dl_link(repo):
+            return '{}_{}_{}.zip'.format(repo.replace('/', '_'), fname)
+        return fname
