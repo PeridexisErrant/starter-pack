@@ -102,3 +102,35 @@ utilities:
         bay12: 128932
         host: dffd
         ident: 7851
+graphics:
+    ASCII:
+        host: github
+        ident: fricy/ASCII-Default
+    CLA:
+        bay12: 105376
+        host: github
+        ident: fricy/CLA
+    Gemset:
+        bay12: 150753
+        host: dffd
+        ident: 10857
+    Ironhand:
+        bay12: 53180
+        host: github
+        ident: fricy/Ironhand
+    Mayday:
+        bay12: 137370
+        host: github
+        ident: fricy/Mayday
+    Obsidian:
+        bay12: 126934
+        host: github
+        ident: fricy/Obsidian
+    Phoebus:
+        bay12: 137096
+        host: github
+        ident: fricy/Phoebus
+    Spacefox:
+        bay12: 129219
+        host: github
+        ident: fricy/Spacefox

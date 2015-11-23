@@ -65,16 +65,29 @@ def unzip_to(filename, target_dir, *, makedirs=True):
                 shutil.copyfileobj(zf.open(obj), out)
 
 
-def create_utilities():
-    """Extract all utilities to the build/LNP/Utilities dir."""
-    for util in (u for c, u in component.ITEMS if c == 'utilities'):
-        target = paths.utilities(util)
+def _create_lnp_subdir(kind):
+    """Extract all of somethine to the build/LNP/something dir."""
+    for thing in (u for c, u in component.ITEMS if c == kind):
+        target = paths.lnp(kind, thing)
         if os.path.isdir(target):
             continue
-        comp = component.Component('utilities', util)
+        comp = component.Component(kind, thing)
         print('{:20}  ->  {}'.format(comp.filename[:20], target))
         unzip_to(comp.path, target)
+
+
+def create_utilities():
+    """Extract all utilities to the build/LNP/Utilities dir."""
+    _create_lnp_subdir('utilities')
     # TODO: generate utilities.txt
+
+
+def create_graphics():
+    """Extract all graphics packs to the build/LNP/Graphics dir."""
+    _create_lnp_subdir('graphics')
+    # TODO: create ASCII graphics from DF release, instead of downloading?
+    # TODO: simplify graphics packs?
+    # TODO: fix Gemset (one version on each side of a fork)
 
 
 def create_df_dir():

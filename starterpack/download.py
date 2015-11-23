@@ -23,28 +23,20 @@ def download(url):
 
 class AbstractMetadata(object):
     """Base class for site-specific downloaders."""
-    #pylint:disable=no-member
-
-    def json(self, identifier):
-        url = self.json_template.format(identifier)
-        if url not in JSON_CACHE:
-            JSON_CACHE[url] = requests.get(url).json()
-        return JSON_CACHE[url]
-
+    def json(self, identifier): raise NotImplementedError()
+    def filename(self, identifier): raise NotImplementedError()
+    def dl_link(self, identifier): raise NotImplementedError()
     def version(self, identifier):
-        return self.json(identifier)[self.version_key]
-
-    def filename(self, identifier):
-        raise NotImplementedError()
-
-    def dl_link(self, identifier):
-        raise NotImplementedError()
+        return self.json(identifier)['version']
 
 
 class DFFDMetadata(AbstractMetadata):
-    def __init__(self):
-        self.json_template = 'http://dffd.bay12games.com/file_data/{}.json'
-        self.version_key = 'version'
+    
+    def json(self, ID):
+        url = 'http://dffd.bay12games.com/file_data/{}.json'.format(ID)
+        if url not in JSON_CACHE:
+            JSON_CACHE[url] = requests.get(url).json()
+        return JSON_CACHE[url]
 
     def filename(self, ID):
         return self.json(ID)['filename']
@@ -54,27 +46,34 @@ class DFFDMetadata(AbstractMetadata):
 
 
 class GitHubMetadata(AbstractMetadata):
-    def __init__(self):
-        self.json_template = 'https://api.github.com/repos/{}/releases/latest'
-        self.version_key = 'name'
-        self.stored = {}
+
+    def json(self, repo):
+        url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
+        tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
+        if repo not in JSON_CACHE:
+            tags = requests.get(tags_url).json()
+            data = {} if not tags else tags[0]
+            data.update(requests.get(url).json())
+            JSON_CACHE[repo] = data
+        return JSON_CACHE[repo]
+
+    def version(self, identifier):
+        return self.json(identifier)['name']
 
     def dl_link(self, repo):
-        """A release on Github can have several files associated with it."""
-        if repo not in self.stored:
-            assets = self.json(repo)['assets']
-            if assets:
-                assets.sort(key=lambda a: len(a['name']))
-                win = [a for a in assets if 'win' in a['name'].lower()]
-                win64 = [a for a in win if '64' in a['name']]
-                lst = win64 if win64 else (win if win else assets)
-                self.stored[repo] = lst[0]['browser_download_url']
-            else:
-                self.stored[repo] = self.json(repo)['zipball_url']
-        return self.stored[repo]
+        """A release on Github can have several files associated with it.
+        If there's no release, get the zipball at the latest tag."""
+        assets = self.json(repo).get('assets')
+        if assets:
+            assets.sort(key=lambda a: len(a['name']))
+            win = [a for a in assets if 'win' in a['name'].lower()]
+            win64 = [a for a in win if '64' in a['name']]
+            lst = win64 if win64 else (win if win else assets)
+            return lst[0]['browser_download_url']
+        return self.json(repo)['zipball_url']
 
     def filename(self, repo):
         fname = os.path.basename(self.dl_link(repo))
         if '/zipball/' in self.dl_link(repo):
-            return '{}_{}_{}.zip'.format(repo.replace('/', '_'), fname)
+            return '{}_{}.zip'.format(repo.replace('/', '_'), fname)
         return fname

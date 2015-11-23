@@ -60,6 +60,7 @@ def build_pack():
     shutil.rmtree('build')
     build.create_df_dir()
     build.create_utilities()
+    build.create_graphics()
     for d in os.listdir(paths.base()):
         if os.path.isdir(paths.base(d)):
             build.overwrite_dir(paths.base(d), paths.lnp(d))

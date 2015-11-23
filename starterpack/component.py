@@ -17,8 +17,6 @@ ITEMS = tuple((cat, item) for cat, vals in YML.items() for item in vals
 
 
 class ManualMetadata(download.AbstractMetadata):
-    def __init__(self):
-        self.version_key = 'version'
 
     def json(self, identifier):
         for category in YML.values():
@@ -56,6 +54,7 @@ class Component(object):
         """Ensure that the given file is downloaded to the components dir."""
         if os.path.isfile(self.path):
             return False
+        print('downloading {}...'.format(self.name))
         with open(self.path, 'wb') as f:
             f.write(download.download(self.dl_link))
         return True

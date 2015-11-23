@@ -28,16 +28,6 @@ def check_installed_settings():
             result('Default settings', 'need installation')
 
 
-def check_extras():
-    """Check that extras are installed"""
-    # only checks top-level files and folders
-    extras = paths.lnp('extras', '*')
-    files = [os.path.relpath(f, os.path.dirname(extras))
-             for f in glob.glob(extras)]
-    if not all([os.path.exists(paths.df(f)) for f in files]):
-        result('Extras files', 'need installation')
-
-
 def keybinds():
     """Check that keybindings haven't changed between versions"""
     installed = paths.df('data', 'init', 'interface.txt')
@@ -84,13 +74,7 @@ def soundsense_xml():
 
 def graphics_installed_and_all_simplified():
     """Check that I haven't forgotten to simplify or installa graphics pack."""
-    # later, can I pull from Fricy's repo to fix this?
-    packs = ['ASCII Default', 'CLA', 'Ironhand', 'Mayday',
-             'Obsidian', 'Phoebus', 'Spacefox']
-    available = os.listdir(paths.lnp('graphics'))
-    if not all([(p in available) for p in packs]):
-        result('graphics packs set', 'not correct')
-    for p in packs:
+    for p in os.listdir(paths.lnp('graphics')):
         if os.path.isfile(paths.lnp('graphics', p, 'Dwarf Fortress.exe')):
             result(p + ' graphics pack', 'not simplified')
     if os.path.isfile(paths.df('data', 'art', 'Phoebus_16x16.png')):
@@ -160,6 +144,5 @@ def configure_all():
     soundsense_xml()
     graphics_installed_and_all_simplified()
     check_installed_settings()
-    check_extras()
     dwarf_therapist()
     twbt_config_and_files()
