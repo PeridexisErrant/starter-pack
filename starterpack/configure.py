@@ -11,6 +11,7 @@ import shutil
 import requests
 
 from . import paths
+from . import versions
 
 
 def result(part, status, last=['']):

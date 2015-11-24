@@ -92,22 +92,67 @@ def create_graphics():
 
 def create_df_dir():
     """Create the Dwarf Fortress directory, with DFHack and other content."""
+    # Extract the items below
     items = ['Dwarf Fortress', 'DFHack', 'Stocksettings']
     destinations = [paths.df(), paths.df(), paths.df('stocksettings')]
     for item, path in zip(items, destinations):
         comp = component.Component('files', item)
         unzip_to(comp.path, path)
+    # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
+    # TODO: use LNP/Extras for this stuff...
     for fname in glob.glob(paths.base('*.init')):
         shutil.copy(fname, paths.df())
+    # install TwbT
+    plugins = ['{}/{}.plug.dll'.format(component.ALL['DFHack'].version, plug)
+               for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
+    with zipfile.ZipFile(component.ALL['TwbT'].path) as zf:
+        for obj, name in zip(zf.infolist(), zf.namelist()):
+            if name in plugins:
+                outpath = paths.df('hack', 'plugins', os.path.basename(name))
+                with open(outpath, 'wb') as out:
+                    shutil.copyfileobj(zf.open(obj), out)
 
 
-def pylnp_config():
-    """Create LNP/PyLNP.json with correct pack version string."""
+def setup_pylnp():
+    """Extract PyLNP and copy PyLNP.json from ./base"""
+    unzip_to(component.ALL['PyLNP'].path, paths.build())
+    os.rename(paths.build('PyLNP.exe'),
+              paths.build('Starter Pack Launcher (PyLNP).exe'))
+    os.remove(paths.build('PyLNP.json'))
     with open(paths.base('PyLNP.json')) as f:
         pylnp_conf = json.load(f)
     pylnp_conf['updates']['packVersion'] = versions.starter_pack()
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
+    # TODO: create baselines for graphics install (in a different function)
 
 
+def install_misc_files():
+    """Install the various files that need to be added after the fact."""
+    # XML file for PerfectWorld
+    unzip_to(component.ALL['PerfectWorld XML'].path,
+             paths.utilities('PerfectWorld'))
+    # Quickfort blueprints
+    unzip_to(component.ALL['Quickfort Blueprints'].path,
+             paths.utilities('Quickfort', 'blueprints'))
+    # Doren's upgrade for Phoebus
+    # TODO: handle this - or ask Fricy to incorporate it...
+
+
+# This block just checks that each 'file' is handled by some function.
+# It does not execute them; just register that they exist.
+funcs = {
+    'Dwarf Fortress': create_df_dir,
+    'DFHack': create_df_dir,
+    'Doren Phoebus TwbT': install_misc_files,
+    'PerfectWorld XML': install_misc_files,
+    'PyLNP': setup_pylnp,
+    'Quickfort Blueprints': install_misc_files,
+    'Stocksettings': create_df_dir,
+    'TwbT': create_df_dir,
+    }
+
+for comp in component.FILES:
+    if comp.name not in funcs:
+        print('WARNING: {} does not have a registered installer.')

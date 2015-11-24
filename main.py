@@ -51,7 +51,8 @@ def build_pack():
         if os.path.isdir(paths.base(d)):
             build.overwrite_dir(paths.base(d), paths.lnp(d))
     build.overwrite_dir(paths.lnp('Graphics', 'Phoebus'), paths.df())
-    build.pylnp_config()
+    build.setup_pylnp()
+    build.install_misc_files()
     configure.configure_all()
     # TODO:  write, call remaining functionality
 
