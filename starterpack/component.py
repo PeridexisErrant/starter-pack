@@ -54,14 +54,17 @@ class Component(object):
         if os.path.isfile(self.path):
             return False
         print('downloading {}...'.format(self.name))
+        buf = download.download(self.dl_link)
         with open(self.path, 'wb') as f:
-            f.write(download.download(self.dl_link))
+            f.write(buf)
         return True
 
 
 COMPONENTS = tuple(Component(k, i) for k, i in
     ((cat, item) for cat, vals in YML.items() for item in vals
     if cat not in {'comment', 'version'}))
+
+ALL = {c.name: c for c in COMPONENTS}
 
 UTILITIES = tuple(c for c in COMPONENTS if c.category == 'utilities')
 GRAPHICS = tuple(c for c in COMPONENTS if c.category == 'graphics')

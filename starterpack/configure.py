@@ -11,7 +11,6 @@ import shutil
 import requests
 
 from . import paths
-from . import versions
 
 
 def result(part, status, last=['']):
@@ -53,26 +52,23 @@ def embark_profiles():
 
 def soundsense_xml():
     """Check and update version strings in xml path config"""
-    xmlfile = paths.utilities('soundsense', 'configuration.xml')
+    xmlfile = paths.utilities('Soundsense', 'configuration.xml')
+    relpath = os.path.relpath(paths.df(), paths.utilities('Soundsense'))
     with open(xmlfile) as f:
         config = f.readlines()
-        orig = config[:]
-    for n, _ in enumerate(config):
-        if r'\gamelog.txt"/>' in config[n]:
-            config[n] = ('\t<gamelog encoding="Cp850" path="..\\..\\..\\' +
-                         versions.df(dirname=True) + '\\gamelog.txt"/>\n')
-        if r'\ss_fix.log"/>' in config[n]:
-            config[n] = ('\t\t<item path="..\\..\\..\\' +
-                         versions.df(dirname=True) +
-                         '\\ss_fix.log"/>\n')
-    if not config == orig:
-        with open(xmlfile, 'w') as f:
-            f.writelines(config)
-        result('Soundsense configuration', 'was fixed')
-    result('Soundsense configuration', 'is OK')
+    for n, line in enumerate(config):
+        if 'gamelog.txt' in line:
+            config[n] = '\t<gamelog encoding="Cp850" path="{}"/>\n'.format(
+                os.path.join(relpath, 'gamelog.txt'))
+        elif 'ss_fix.log' in line:
+            config[n] = '\t\t<item path="{}"/>\n'.format(
+                os.path.join(relpath, 'ss_fix.log'))
+    with open(xmlfile, 'w') as f:
+        f.writelines(config)
+    result('Soundsense configuration', 'was fixed')
 
 
-def graphics_installed_and_all_simplified():
+def graphics_simplified():
     """Check that graphics packs are all configured correctly."""
     for p in os.listdir(paths.lnp('graphics')):
         files = os.listdir(paths.lnp('graphics', p))
@@ -86,28 +82,25 @@ def graphics_installed_and_all_simplified():
 def dwarf_therapist():
     """Check that DT memory layout for the current version is present."""
     fname = 'v{}_graphics.ini'.format(versions.df())
-    for folder in glob.glob(paths.utilities('Dwarf*Therapist*')):
-        memfile = os.path.join(folder, 'share', 'memory_layouts', 'windows',
-                               fname)
-        break
+    memfile = paths.utilities(
+        'Dwarf Therapist', 'share', 'memory_layouts', 'windows', fname)
     if os.path.isfile(memfile):
-        result('Therapist memory layout', 'is OK')
-    else:
+        return
+    if not os.path.isfile(paths.component(fname)):
+        # TODO:  update this URL scheme for next DF version
         url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
                '/DF2014/share/memory_layouts/windows/' + fname)
-        try:
-            with open(memfile, 'w') as f:
-                f.write(requests.get(url).text)
-            result('Therapist memory layout', 'was downloaded')
-        except Exception:
-            result('Therapist memory layout', 'not available')
+        text = requests.get(url).text
+        with open(memfile, 'w') as f:
+            f.write(text)
+        result('Therapist memory layout', 'was downloaded')
+    shutil.copy(paths.component(fname), memfile)
 
 
 def twbt_config_and_files():
     """Check if TwbT is installed."""
     if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
         result('TwbT plugin', 'not installed')
-        return
     g = [p for p in os.listdir(paths.lnp('graphics'))
          if os.path.isdir(paths.lnp('graphics', p)) and not 'ascii' in p.lower()]
     for pack in g:
@@ -143,7 +136,7 @@ def configure_all():
     keybinds()
     embark_profiles()
     soundsense_xml()
-    graphics_installed_and_all_simplified()
+    graphics_simplified()
     check_installed_settings()
     dwarf_therapist()
     twbt_config_and_files()

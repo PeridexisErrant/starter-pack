@@ -36,6 +36,11 @@ files:
         bay12: 57428
         host: dffd
         ident: 9672
+    PyLNP:
+        bay12: 140808
+        host: manual
+        dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10b-win32.zip
+        version: 0.10b
     Quickfort Blueprints:
         host: dffd
         ident: 8185
