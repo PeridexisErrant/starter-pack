@@ -22,7 +22,6 @@ Notes:
 """
 
 import hashlib
-import json
 import os
 import shutil
 import zipfile
@@ -31,26 +30,13 @@ from starterpack import (
     build,
     component,
     configure,
-    download,
     paths,
     )
-
-# TODO:  implement the actual logic for this module
-
-
-def cache_metadata():
-    """Prints the name and version of each utility, caching the response."""
-    for cat, item in component.ITEMS:
-        c = component.Component(cat, item)
-        print('{:25}{:15}{}'.format(c.name, c.version, c.filename[:30]))
-    with open('_cached.json', 'w') as f:
-        json.dump(download.JSON_CACHE, f)
 
 
 def download_files():
     """Download files which are in config.yml, but not saved in components."""
-    for cat, item in component.ITEMS:
-        c = component.Component(cat, item)
+    for c in component.COMPONENTS:
         if c.download():
             print('Downloaded  {:25}{:30}'.format(c.name, c.filename[:25]))
 
@@ -67,21 +53,28 @@ def build_pack():
     build.overwrite_dir(paths.lnp('Graphics', 'Phoebus'), paths.df())
     build.pylnp_config()
     configure.configure_all()
+    # TODO:  write, call remaining functionality
 
 
-cache_metadata()
-download_files()
-build_pack()
-
-
-def zip_pack():
+def zip_pack(*, overwrite=False):
     """Zip the pack and return the sha256 of the resulting file."""
-    if os.path.isfile(paths.dist()):
-        raise ValueError('A zipped version of this pack already exists!')
-    with zipfile.ZipFile(paths.dist(), 'w', zipfile.ZIP_DEFLATED) as zf:
-        for dirname, _, files in os.walk(paths.pack()):
-            zf.write(dirname)
+    if not os.path.isdir(paths.dist()):
+        os.makedirs(paths.dist())
+    elif not overwrite and os.path.isfile(paths.zipped()):
+        print('A zipped version of this pack already exists!  Aborting...')
+        return
+    with zipfile.ZipFile(paths.zipped(), 'w', zipfile.ZIP_DEFLATED) as zf:
+        for dirname, _, files in os.walk(paths.build()):
+            zf.write(dirname, os.path.relpath(dirname, paths.build()))
             for filename in files:
-                zf.write(os.path.join(dirname, filename))
-    with open(paths.dist(), 'rb') as f:
+                fname = os.path.join(dirname, filename)
+                zf.write(fname, os.path.relpath(fname, paths.build()))
+    with open(paths.zipped(), 'rb') as f:
         return hashlib.sha256(f.read()).hexdigest()
+
+
+if __name__ == '__main__':
+    download_files()
+    build_pack()
+    zip_pack(overwrite=True)
+    print('Pack zipped in ./dist/ and ready to inspect.')

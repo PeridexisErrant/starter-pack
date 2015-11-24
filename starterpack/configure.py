@@ -73,13 +73,14 @@ def soundsense_xml():
 
 
 def graphics_installed_and_all_simplified():
-    """Check that I haven't forgotten to simplify or installa graphics pack."""
+    """Check that graphics packs are all configured correctly."""
     for p in os.listdir(paths.lnp('graphics')):
-        if os.path.isfile(paths.lnp('graphics', p, 'Dwarf Fortress.exe')):
+        files = os.listdir(paths.lnp('graphics', p))
+        if not ('data' in files and 'raw' in files):
+            result(p + ' graphics pack', 'malformed')
+        elif len(files) > 3:
+            # data, raw, manifest.json
             result(p + ' graphics pack', 'not simplified')
-    if os.path.isfile(paths.df('data', 'art', 'Phoebus_16x16.png')):
-        result('Phoebus graphics install', 'is OK')
-    result('Phoebus graphics install', 'not installed')
 
 
 def dwarf_therapist():

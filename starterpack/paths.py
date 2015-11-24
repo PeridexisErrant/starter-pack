@@ -26,7 +26,7 @@ def dist(*paths):
 
 def zipped():
     """Return the path to the zipped pack to upload."""
-    return dist(versions.starter_pack(dirname=True))
+    return dist(versions.starter_pack(dirname=True) + '.zip')
 
 
 def component(*paths):
