@@ -36,6 +36,7 @@ def unzip_to(filename, target_dir, *, makedirs=True):
     - If the zip is all in a single compressed folder, traverse it.
         We want the target_dir to hold files, not a single subdir.
     """
+    print('{:20}  ->  {}'.format(filename[:20], target_dir))
     if makedirs:
         try:
             os.makedirs(target_dir)
@@ -72,7 +73,6 @@ def _create_lnp_subdir(kind):
         if os.path.isdir(target):
             print(target, 'already exists! skipping...')
             continue
-        print('{:20}  ->  {}'.format(comp.filename[:20], target))
         unzip_to(comp.path, target)
 
 
@@ -153,6 +153,6 @@ funcs = {
     'TwbT': create_df_dir,
     }
 
-for comp in component.FILES:
-    if comp.name not in funcs:
+for compon in component.FILES:
+    if compon.name not in funcs:
         print('WARNING: {} does not have a registered installer.')

@@ -1,4 +1,5 @@
 """Utility methods to get various paths.  Acts as a single source of truth."""
+#pylint:disable=missing-docstring
 
 import os
 
@@ -18,6 +19,9 @@ def lnp(*paths):
 
 def utilities(*paths):
     return lnp('Utilities', *paths)
+
+def graphics(*paths):
+    return lnp('Graphics', *paths)
 
 
 def dist(*paths):

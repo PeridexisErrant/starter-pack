@@ -11,12 +11,12 @@ from . import download
 from . import paths
 
 
-with open('config.yml') as f:
-    YML = yaml.safe_load(f)
+with open('config.yml') as ymlfile:
+    YML = yaml.safe_load(ymlfile)
 
 
 class ManualMetadata(download.AbstractMetadata):
-
+    """Mock metadata API for locally configured components."""
     def json(self, identifier):
         for category in YML.values():
             if identifier in category:
@@ -31,14 +31,15 @@ class ManualMetadata(download.AbstractMetadata):
 
 class Component(object):
     """Represent a downloadable component, with metadata."""
+    #pylint:disable=too-many-instance-attributes,too-few-public-methods
 
     def __init__(self, category, item):
         self.config = YML[category][item]
         self.category = category
         self.name = item
-        self.bay12 = self.config.get('bay12', 126076)
-        self.thread = 'http://www.bay12forums.com/smf/index.php?topic='.format(
-            self.bay12)
+        self.bay12 = str(self.config.get('bay12', 126076))
+        self.thread = ('http://www.bay12forums.com/smf/index.php?topic=' +
+                       self.bay12)
         self.ident = (self.name if self.config['host'] == 'manual'
                       else self.config['ident'])
         metadata = {'dffd': download.DFFDMetadata,
@@ -60,9 +61,10 @@ class Component(object):
         return True
 
 
-COMPONENTS = tuple(Component(k, i) for k, i in
-    ((cat, item) for cat, vals in YML.items() for item in vals
-    if cat not in {'comment', 'version'}))
+__items = [(cat, item) for cat, vals in YML.items() for item in vals
+           if cat not in {'comment', 'version'}]
+
+COMPONENTS = tuple(Component(k, i) for k, i in __items)
 
 ALL = {c.name: c for c in COMPONENTS}
 
@@ -73,5 +75,5 @@ FILES = tuple(c for c in COMPONENTS if c.category == 'files')
 for comp in COMPONENTS:
     print('{:25}{:15}{}'.format(comp.name, comp.version, comp.filename[:30]))
 
-with open('_cached.json', 'w') as f:
-    json.dump(download.JSON_CACHE, f, indent=4)
+with open('_cached.json', 'w') as cachefile:
+    json.dump(download.JSON_CACHE, cachefile, indent=4)

@@ -5,7 +5,6 @@ Currently unfinished and unusable.
 Needs reworking to be useful.
 """
 
-from .configure import result
 from . import paths
 from . import versions
 
@@ -42,8 +41,6 @@ def update_documentation():
     if not lines == orig:
         with open(doc_file, 'w') as f:
             f.writelines(lines)
-        result('Pack documentation', 'was fixed')
-    result('Pack documentation', 'is OK')
 
 
 def check_documentation():
@@ -88,7 +85,7 @@ def release_documentation(SHA256):
     with open(doc_file, 'w') as f:
         f.write(text)
     # Main post for Bay12 forums is pre-written and just updated
-    with open(path.dist('contents_and_changelog.txt'), 'w') as f:
+    with open(paths.dist('contents_and_changelog.txt'), 'w') as f:
         f.write(text)
     # Get changelog - everything but first line
     changelog = []

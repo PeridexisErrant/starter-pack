@@ -23,15 +23,18 @@ def download(url):
 
 class AbstractMetadata(object):
     """Base class for site-specific downloaders."""
-    def json(self, identifier): raise NotImplementedError()
-    def filename(self, identifier): raise NotImplementedError()
-    def dl_link(self, identifier): raise NotImplementedError()
+    def json(self, identifier):
+        raise NotImplementedError()
+    def filename(self, identifier):
+        raise NotImplementedError()
+    def dl_link(self, identifier):
+        raise NotImplementedError()
     def version(self, identifier):
         return self.json(identifier)['version']
 
 
 class DFFDMetadata(AbstractMetadata):
-    
+
     def json(self, ID):
         url = 'http://dffd.bay12games.com/file_data/{}.json'.format(ID)
         if url not in JSON_CACHE:

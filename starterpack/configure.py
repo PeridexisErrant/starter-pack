@@ -4,7 +4,6 @@ Logic in this module is subject to change without notice based on
 upstream changes or to alter the default configuration of the pack.
 """
 
-import glob
 import os
 import shutil
 
@@ -16,9 +15,29 @@ from . import versions
 
 def result(part, status, last=['']):
     """Shortcut to print values and remember overall status"""
+    #pylint:disable=dangerous-default-value
     if part != last[0]:
         print('{:30}{}'.format(part, status))
         last[0] = part
+
+
+def make_baselines():
+    """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
+    # TODO: implement this function
+    raise NotImplementedError
+
+
+def make_defaults():
+    """Create and install LNP/Defaults files from the vanilla files."""
+    # TODO: implement this function
+    raise NotImplementedError
+
+
+def make_keybindings():
+    """Create and install LNP/keybindings files from the vanilla files."""
+    # TODO: implement this function
+    # One is copied; the other two have some fairly predictable edits
+    raise NotImplementedError
 
 
 def check_installed_settings():
@@ -44,11 +63,8 @@ def embark_profiles():
     defaults folder."""
     default = paths.lnp('defaults', 'embark_profiles.txt')
     installed = paths.df('data', 'init', 'embark_profiles.txt')
-    if os.path.isfile(installed):
-        result('Embark profile install', 'is OK')
-    else:
-        shutil.copyfile(default, installed)
-        result('Embark profile install', 'was fixed')
+    shutil.copyfile(default, installed)
+    result('Embark profiles', 'were installed')
 
 
 def soundsense_xml():
@@ -71,8 +87,8 @@ def soundsense_xml():
 
 def graphics_simplified():
     """Check that graphics packs are all configured correctly."""
-    for p in os.listdir(paths.lnp('graphics')):
-        files = os.listdir(paths.lnp('graphics', p))
+    for p in os.listdir(paths.graphics()):
+        files = os.listdir(paths.graphics(p))
         if not ('data' in files and 'raw' in files):
             result(p + ' graphics pack', 'malformed')
         elif len(files) > 3:
@@ -102,10 +118,10 @@ def twbt_config_and_files():
     """Check if TwbT is installed."""
     if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
         result('TwbT plugin', 'not installed')
-    g = [p for p in os.listdir(paths.lnp('graphics'))
-         if os.path.isdir(paths.lnp('graphics', p)) and not 'ascii' in p.lower()]
+    g = [p for p in os.listdir(paths.graphics())
+         if os.path.isdir(paths.graphics(p)) and not 'ascii' in p.lower()]
     for pack in g:
-        ors = paths.lnp('graphics', pack, 'data', 'init', 'overrides.txt')
+        ors = paths.graphics(pack, 'data', 'init', 'overrides.txt')
         if not os.path.isfile(ors):
             result(pack + ' TwbT graphics', 'needs overrides')
         twbtify_graphics_init(pack)
@@ -115,7 +131,7 @@ def twbtify_graphics_init(pack):
     """Get TwbT init settings working for a graphics pack"""
     if 'gemset' in pack.lower():
         return #designed for TwbT, do not retrofit
-    init_file = paths.lnp('graphics', pack, 'data', 'init', 'init.txt')
+    init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
     with open(init_file) as f:
         init = f.readlines()
         orig = init[:]
@@ -133,6 +149,7 @@ def twbtify_graphics_init(pack):
 
 
 def configure_all():
+    """Call all the check functions above."""
     print('Checking built pack is configured...')
     keybinds()
     embark_profiles()
