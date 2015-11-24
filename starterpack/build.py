@@ -67,11 +67,11 @@ def unzip_to(filename, target_dir, *, makedirs=True):
 
 def _create_lnp_subdir(kind):
     """Extract all of somethine to the build/LNP/something dir."""
-    for thing in (u for c, u in component.ITEMS if c == kind):
-        target = paths.lnp(kind, thing)
+    for comp in (c for c in component.COMPONENTS if c.category == kind):
+        target = paths.lnp(kind, comp.name)
         if os.path.isdir(target):
+            print(target, 'already exists! skipping...')
             continue
-        comp = component.Component(kind, thing)
         print('{:20}  ->  {}'.format(comp.filename[:20], target))
         unzip_to(comp.path, target)
 

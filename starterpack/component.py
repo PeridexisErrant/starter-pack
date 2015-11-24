@@ -3,6 +3,7 @@
 Offers a set of shared commands backed by minimal manual config.
 """
 
+import json
 import os
 import yaml
 
@@ -12,8 +13,6 @@ from . import paths
 
 with open('config.yml') as f:
     YML = yaml.safe_load(f)
-ITEMS = tuple((cat, item) for cat, vals in YML.items() for item in vals
-              if cat not in {'comment', 'version'})
 
 
 class ManualMetadata(download.AbstractMetadata):
@@ -58,3 +57,18 @@ class Component(object):
         with open(self.path, 'wb') as f:
             f.write(download.download(self.dl_link))
         return True
+
+
+COMPONENTS = tuple(Component(k, i) for k, i in
+    ((cat, item) for cat, vals in YML.items() for item in vals
+    if cat not in {'comment', 'version'}))
+
+UTILITIES = tuple(c for c in COMPONENTS if c.category == 'utilities')
+GRAPHICS = tuple(c for c in COMPONENTS if c.category == 'graphics')
+FILES = tuple(c for c in COMPONENTS if c.category == 'files')
+
+for comp in COMPONENTS:
+    print('{:25}{:15}{}'.format(comp.name, comp.version, comp.filename[:30]))
+
+with open('_cached.json', 'w') as f:
+    json.dump(download.JSON_CACHE, f, indent=4)
