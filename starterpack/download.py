@@ -51,9 +51,15 @@ class GitHubMetadata(AbstractMetadata):
         url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
         tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
         if repo not in JSON_CACHE:
+            # Get data
             tags = requests.get(tags_url).json()
             data = {} if not tags else tags[0]
             data.update(requests.get(url).json())
+            # discard large-but-unused parts, to make the cache human-readable
+            data['author'] = ''  # details of the user
+            data['body'] = ''  # release notes
+            for a in data.get('assets', []):
+                a['uploader'] = ''
             JSON_CACHE[repo] = data
         return JSON_CACHE[repo]
 
