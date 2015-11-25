@@ -9,68 +9,54 @@ import shutil
 
 import requests
 
+from . import build
 from . import paths
 from . import versions
 
 
-def result(part, status, last=['']):
-    """Shortcut to print values and remember overall status"""
-    #pylint:disable=dangerous-default-value
-    if part != last[0]:
-        print('{:30}{}'.format(part, status))
-        last[0] = part
-
-
 def install_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
-    for d in ('Colours', 'Embarks', 'Tilesets'):
+    for d in ('Colours', 'Embarks', 'Extras', 'Tilesets'):
         shutil.copytree(paths.base(d), paths.lnp(d))
+    build.overwrite_dir(paths.lnp('Extras'), paths.df())
+    build.overwrite_dir(paths.lnp('Tilesets'), paths.df('data', 'art'))
 
 
 def make_baselines():
     """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
-    # TODO: implement this function
-    raise NotImplementedError
+    df_zip = paths.component_by_name('Dwarf Fortress')
+    base_dir = df_zip.replace('_win', '').replace('.zip', '')
+    build.unzip_to(df_zip, paths.lnp('Baselines', base_dir))
+    # TODO: remove other files
 
 
 def make_defaults():
     """Create and install LNP/Defaults files from the vanilla files."""
-    # TODO: implement this function
+    default_dir = paths.lnp('Defaults')
+    shutil.copy(paths.lnp('Embarks', 'default_profiles.txt'), default_dir)
+    # TODO: also create and edit init.txt, d_init.txt
     raise NotImplementedError
+    build.overwrite_dir(default_dir, paths.df('data', 'init'))
 
 
 def make_keybindings():
     """Create and install LNP/keybindings files from the vanilla files."""
+    os.makedirs(paths.lnp('Keybindings'))
+    # Read/write vanilla keybindings
+    with open(paths.df('data', 'init', 'interface.txt'),
+              encoding='cp437') as f:
+        dflines = f.readlines()
+    with open(paths.lnp('Keybindings', 'Vanilla DF.txt'), 'w') as f:
+        f.write(dflines)
+    # Then write modified versions for 'Laptop' and 'Laptop with mouse' keys
     # TODO: implement this function
-    # One is copied; the other two have some fairly predictable edits
-    raise NotImplementedError
 
 
 def check_installed_settings():
     """Checks that default settings are installed"""
     with open(paths.df('data', 'init', 'd_init.txt')) as f:
         if not '[ENGRAVINGS_START_OBSCURED:YES]' in f.read():
-            result('Default settings', 'need installation')
-
-
-def keybinds():
-    """Check that keybindings haven't changed between versions"""
-    installed = paths.df('data', 'init', 'interface.txt')
-    stored = paths.lnp('keybinds', 'Vanilla DF.txt')
-    with open(stored, encoding='cp437') as f1:
-        with open(installed, encoding='cp437') as f2:
-            if not f1.read() == f2.read():
-                result('Keybinds status', 'needs updating')
-    result('Keybinds status', 'is OK')
-
-
-def embark_profiles():
-    """Check if embark profiles are installed, and if not copy them from
-    defaults folder."""
-    default = paths.lnp('defaults', 'embark_profiles.txt')
-    installed = paths.df('data', 'init', 'embark_profiles.txt')
-    shutil.copyfile(default, installed)
-    result('Embark profiles', 'were installed')
+            print('{:30}{}'.format('Default settings', 'need installation'))
 
 
 def soundsense_xml():
@@ -95,10 +81,10 @@ def graphics_simplified():
     for p in os.listdir(paths.graphics()):
         files = os.listdir(paths.graphics(p))
         if not ('data' in files and 'raw' in files):
-            result(p + ' graphics pack', 'malformed')
+            print('{:30}{}'.format(p + ' graphics pack', 'malformed'))
         elif len(files) > 3:
             # data, raw, manifest.json
-            result(p + ' graphics pack', 'not simplified')
+            print('{:30}{}'.format(p + ' graphics pack', 'not simplified'))
 
 
 def dwarf_therapist():
@@ -115,7 +101,7 @@ def dwarf_therapist():
         text = requests.get(url).text
         with open(memfile, 'w') as f:
             f.write(text)
-        result('Therapist memory layout', 'was downloaded')
+        print('{:30}{}'.format('Therapist memory layout', 'was downloaded'))
     shutil.copy(paths.component(fname), memfile)
 
 
@@ -130,7 +116,7 @@ def twbt_config_and_files():
                  if p not in {'ASCII', 'Gemset'}]:
         ors = paths.graphics(pack, 'data', 'init', 'overrides.txt')
         if not os.path.isfile(ors) and pack != 'CLA':
-            result(pack + ' TwbT graphics', 'needs overrides')
+            print('{:30}{}'.format(pack + ' TwbT graphics', 'needs overrides'))
         init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
         with open(init_file) as f:
             init = f.readlines()
@@ -148,10 +134,11 @@ def twbt_config_and_files():
 
 
 def configure_all():
-    """Call all the check functions above."""
-    print('Checking built pack is configured...')
-    keybinds()
-    embark_profiles()
+    """Call all the configuration functions above."""
+    install_lnp_dirs()
+    make_baselines()
+    make_defaults()
+    make_keybindings()
     soundsense_xml()
     graphics_simplified()
     check_installed_settings()
