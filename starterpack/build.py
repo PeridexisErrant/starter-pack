@@ -14,7 +14,6 @@ import zipfile
 
 from . import component
 from . import paths
-from . import versions
 
 
 def overwrite_dir(src, dest):
@@ -122,7 +121,7 @@ def setup_pylnp():
     os.remove(paths.build('PyLNP.json'))
     with open(paths.base('PyLNP.json')) as f:
         pylnp_conf = json.load(f)
-    pylnp_conf['updates']['packVersion'] = versions.starter_pack()
+    pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
     # TODO: create baselines for graphics install (in a different function)

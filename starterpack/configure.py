@@ -11,7 +11,6 @@ import requests
 
 from . import build
 from . import paths
-from . import versions
 
 
 def install_lnp_dirs():
@@ -89,7 +88,7 @@ def graphics_simplified():
 
 def dwarf_therapist():
     """Check that DT memory layout for the current version is present."""
-    fname = 'v{}_graphics.ini'.format(versions.df())
+    fname = 'v{}_graphics.ini'.format(paths.DF_VERSION)
     memfile = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', 'windows', fname)
     if os.path.isfile(memfile):

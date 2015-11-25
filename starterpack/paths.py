@@ -2,8 +2,15 @@
 #pylint:disable=missing-docstring
 
 import os
+import yaml
 
-from . import versions
+from .component import ALL
+
+
+with open('config.yml') as f:
+    __YML = yaml.safe_load(f)
+    DF_VERSION = __YML['files']['Dwarf Fortress']['version']
+    PACK_VERSION = DF_VERSION + '-' + __YML['version']
 
 
 def build(*paths):
@@ -12,7 +19,7 @@ def build(*paths):
 
 def df(*paths):
     """Return the path to the DF directory in the built pack."""
-    return build(versions.df(dirname=True), *paths)
+    return build('Dwarf Fortress ' + DF_VERSION, *paths)
 
 def lnp(*paths):
     return build('LNP', *paths)
@@ -30,12 +37,16 @@ def dist(*paths):
 
 def zipped():
     """Return the path to the zipped pack to upload."""
-    return dist(versions.starter_pack(dirname=True) + '.zip')
+    return dist("PeridexisErrant's Starter Pack {}.zip".format(PACK_VERSION))
 
 
 def component(*paths):
     """Return the path where downloaded components are stored."""
     return os.path.join('components', *paths)
+
+def component_by_name(name):
+    """Return the path to a downloaded component, by configured name."""
+    return ALL[name].path
 
 
 def base(*paths):

@@ -6,7 +6,6 @@ Needs reworking to be useful.
 """
 
 from . import paths
-from . import versions
 
 # TODO: modularise this, break down into chunks, automate more stuff
 
@@ -21,22 +20,22 @@ def update_documentation():
     for n, _ in enumerate(lines):
         if lines[n].startswith('[tr][td]'):
             table_r += 1
-            if versions.starter_pack() in lines[n]:
+            if paths.PACK_VERSION in lines[n]:
                 if table_r == 2:
                     lines[n] = '[tr][td]{}[/td][td]unavailable[/td][/tr]\n'\
-                               .format(versions.starter_pack())
+                               .format(paths.PACK_VERSION)
                     continue
                 else:
                     lines[n] = ''
             if table_r == 2:
                 lines[n] = '[tr][td]{}[/td][td]unavailable[/td][/tr]\n{}'\
-                           .format(versions.starter_pack(), lines[n])
+                           .format(paths.PACK_VERSION, lines[n])
         if in_cl:
             if lines[n] == '\n':
                 in_cl = False
             if lines[n] == ' - \n':
                 lines[n] = ''
-        if lines[n].startswith(versions.starter_pack()):
+        if lines[n].startswith(paths.PACK_VERSION):
             in_cl = True
     if not lines == orig:
         with open(doc_file, 'w') as f:
@@ -53,22 +52,22 @@ def check_documentation():
     for n, _ in enumerate(lines):
         if lines[n].startswith('[tr][td]'):
             table_r += 1
-            if versions.starter_pack() in lines[n]:
+            if paths.PACK_VERSION in lines[n]:
                 if table_r == 2:
                     lines[n] = '[tr][td]{}[/td][td]unavailable[/td][/tr]\n'\
-                               .format(versions.starter_pack())
+                               .format(paths.PACK_VERSION)
                     continue
                 else:
                     lines[n] = ''
             if table_r == 2:
                 lines[n] = '[tr][td]{}[/td][td]unavailable[/td][/tr]\n{}'\
-                           .format(versions.starter_pack(), lines[n])
+                           .format(paths.PACK_VERSION, lines[n])
         if in_cl:
             if lines[n] == '\n':
                 in_cl = False
             if lines[n] == ' - \n':
                 lines[n] = ''
-        if lines[n].startswith(versions.starter_pack()):
+        if lines[n].startswith(paths.PACK_VERSION):
             in_cl = True
     if not lines == orig:
         with open(doc_file, 'w') as f:
@@ -91,7 +90,7 @@ def release_documentation(SHA256):
     changelog = []
     with open('contents_and_changelog.txt') as f:
         for k in f.readlines():
-            if k.strip() == versions.starter_pack(dirname=True):
+            if k.strip() == paths.PACK_VERSION:
                 changelog.append('Changelog:\n')
                 continue
             if changelog:
@@ -102,12 +101,12 @@ def release_documentation(SHA256):
     # Write summaries
     dffd_url = 'http://dffd.bay12games.com/file.php?id=7622'
     with open('forum_post.txt', 'w') as f:
-        f.write('The Starter Pack has updated to ' + versions.starter_pack() +
+        f.write('The Starter Pack has updated to ' + paths.PACK_VERSION +
                 '!  As usual, [url=' + dffd_url + ']'
                 'you can get it here.[/url]\n\n')
         f.writelines(changelog)
     with open('reddit_post.txt', 'w') as f:
-        f.write('The Starter Pack has updated to ' + versions.starter_pack() +
+        f.write('The Starter Pack has updated to ' + paths.PACK_VERSION +
                 '!  As usual, [you can get it here.]'
                 '(' + dffd_url + ')\n\n')
         f.writelines(['    ' + k for k in changelog])

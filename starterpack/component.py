@@ -8,7 +8,6 @@ import os
 import yaml
 
 from . import download
-from . import paths
 
 
 with open('config.yml') as ymlfile:
@@ -48,7 +47,7 @@ class Component(object):
         self.dl_link = metadata.dl_link(self.ident)
         self.filename = metadata.filename(self.ident)
         self.version = metadata.version(self.ident)
-        self.path = paths.component(self.filename)
+        self.path = os.path.join('components', self.filename)
 
     def download(self):
         """Ensure that the given file is downloaded to the components dir."""
