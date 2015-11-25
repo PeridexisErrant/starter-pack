@@ -1,4 +1,4 @@
-version: r18
+version: r19
 comment: |
     A reasonably simple config file. The "version" key simply holds
     the version string of the pack.

@@ -4,6 +4,7 @@ Logic in this module is subject to change without notice based on
 upstream changes or to alter the default configuration of the pack.
 """
 
+import collections
 import os
 import shutil
 
@@ -22,26 +23,52 @@ def install_lnp_dirs():
 
 
 def make_defaults():
-    """Create and install LNP/Defaults files from the vanilla files."""
+    """Create and install LNP/Defaults - embark profiles, Phoebus settings."""
     default_dir = paths.lnp('Defaults')
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
-    # TODO: also create and edit init.txt, d_init.txt
+    for f in {'init.txt', 'd_init.txt'}:
+        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
     build.overwrite_dir(default_dir, paths.df('data', 'init'))
+
+
+def _parse_keybinds_file(lines):
+    """Parse a keybinding file; returning an OrderedDict of bind:list(keys).
+    All dict keys and items in the values lists are strings - a line from
+    the file, without leading or trailing whitespace.  Empty lines dropped."""
+    od, lastkey = collections.OrderedDict(), None
+    for line in (l.strip() for l in lines):
+        if not line:
+            continue
+        if line.startswith('[BIND:'):
+            od[line] = []
+            lastkey = line
+        else:
+            if lastkey is not None:
+                od[lastkey].append(line)
+    return od
 
 
 def make_keybindings():
     """Create and install LNP/keybindings files from the vanilla files."""
     os.makedirs(paths.lnp('keybindings'))
     # Read/write vanilla keybindings
-    with open(paths.df('data', 'init', 'interface.txt'),
-              encoding='cp437') as f:
-        dflines = f.readlines()
-    with open(paths.lnp('keybindings', 'Vanilla DF.txt'),
-              'w', encoding='cp437') as f:
-        f.writelines(dflines)
-    # Then write modified versions for 'Laptop' and 'Laptop with mouse' keys
-    # TODO: implement keybindings generation
-
+    van_file = paths.df('data', 'init', 'interface.txt')
+    shutil.copy(van_file, paths.lnp('keybindings', 'Vanilla DF.txt'))
+    with open(van_file, encoding='cp437') as f:
+        vanbinds = _parse_keybinds_file(f.readlines())
+    for fname in os.listdir(paths.base('keybindings')):
+        with open(paths.base('keybindings', fname)) as f:
+            cfg = _parse_keybinds_file(f.readlines())
+        lines = []
+        for bind, vals in vanbinds.items():
+            lines.append(bind)
+            if bind in cfg:
+                lines.extend(cfg[bind])
+            else:
+                lines.extend(vals)
+        with open(paths.lnp('keybindings', fname),
+                  'w', encoding='cp437') as f:
+            f.write('\n' + '\n'.join(lines))
 
 def soundsense_xml():
     """Check and update version strings in xml path config"""
@@ -79,7 +106,6 @@ def dwarf_therapist():
     if os.path.isfile(memfile):
         return
     if not os.path.isfile(paths.component(fname)):
-        # TODO: update Therapist memory layout URL for next DF version
         url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
                '/DF2014/share/memory_layouts/windows/' + fname)
         text = requests.get(url).text
