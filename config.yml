@@ -1,24 +1,9 @@
+# Each component, under files/utilities/graphics:
+#     SHOULD have a "bay12" key set to the forum thread number
+#     MUST have "host" set to one of "dffd", "github", or "manual"
+#     MUST have "version" and "dl_link" if host is "manual" or "ident" set otherwise
+# The pack version is appended to the DF version, eg "0.40.24-r18"
 version: r19
-comment: |
-    A reasonably simple config file. The "version" key simply holds
-    the version string of the pack.
-
-    Other categories hold config for a downloadable component. Each component:
-
-        SHOULD have a "bay12" key set to the forum thread number
-        MUST have "host" set to one of "dffd", "github", or "manual"
-        MUST have "version" and "dl_link" if host is manual
-        MUST have "ident" set otherwise
-        SHOULD NOT set keys not specified here
-
-    All components can be downloaded to the ./components directory, and
-    if "host" is not "manual" can be automatically checked for updates.
-
-    The top-level categories are slightly different in, essentially in
-    how they try to install things and where the descriptions are saved.
-        - files:  custom handling for each
-        - utilities: unpacked to ./build/LNP/Utilities
-    Other categories to come later.
 files:
     Dwarf Fortress:
         host: manual

@@ -19,6 +19,10 @@ def install_lnp_dirs():
     for d in ('colors', 'embarks', 'extras', 'tilesets'):
         shutil.copytree(paths.base(d), paths.lnp(d))
     build.overwrite_dir(paths.lnp('extras'), paths.df())
+    for img in {'curses_640x300', 'curses_800x600',
+                'curses_square_16x16', 'mouse'}:
+        shutil.copy(paths.curr_baseline('data', 'art', img + '.png'),
+                    paths.lnp('tilesets'))
     build.overwrite_dir(paths.lnp('tilesets'), paths.df('data', 'art'))
 
 

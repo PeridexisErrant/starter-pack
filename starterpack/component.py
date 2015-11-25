@@ -60,8 +60,7 @@ class Component(object):
         return True
 
 
-__items = [(cat, item) for cat, vals in YML.items() for item in vals
-           if cat not in {'comment', 'version'}]
+__items = [(c, i) for c, vals in YML.items() for i in vals if c != 'version']
 
 COMPONENTS = tuple(Component(k, i) for k, i in __items)
 

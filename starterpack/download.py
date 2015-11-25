@@ -12,8 +12,10 @@ import requests
 try:
     with open('_cached.json') as f:
         JSON_CACHE = json.load(f)
+    print('Loaded metadata from local "_cache.json"; delete to refresh.')
 except IOError:
     JSON_CACHE = {}
+    print('Could not load metadata from cache; downloading from APIs...')
 
 
 def download(url):

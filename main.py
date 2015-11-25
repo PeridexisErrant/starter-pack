@@ -47,7 +47,6 @@ def build_pack():
         shutil.rmtree('build')
     build.build_all()
     configure.configure_all()
-    # TODO:  write, call remaining functionality
 
 
 def zip_pack(*, overwrite=False):
@@ -69,6 +68,8 @@ def zip_pack(*, overwrite=False):
 
 if __name__ == '__main__':
     download_files()
+    print('\nBuilding pack...')
     build_pack()
+    print('\nCompressing pack...')
     zip_pack(overwrite=True)
     print('Pack zipped in ./dist/ and ready to inspect.')

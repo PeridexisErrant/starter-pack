@@ -30,6 +30,10 @@ def utilities(*paths):
 def graphics(*paths):
     return lnp('Graphics', *paths)
 
+def curr_baseline(*paths):
+    dname = 'df_{0[1]}_{0[2]}'.format(DF_VERSION.split('.'))
+    return lnp('baselines', dname, *paths)
+
 
 def dist(*paths):
     """Return the path to the distribution dir."""

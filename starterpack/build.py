@@ -10,6 +10,7 @@ import glob
 import json
 import os
 import shutil
+import yaml
 import zipfile
 
 from . import component
@@ -89,7 +90,8 @@ def _create_lnp_subdir(kind):
 def create_utilities():
     """Extract all utilities to the build/LNP/Utilities dir."""
     _create_lnp_subdir('utilities')
-    # TODO: generate utilities.txt
+    # TODO: generate utilities.txt instead of copying a static version
+    shutil.copy(paths.base('utilities.txt'), paths.utilities())
 
 
 def create_graphics():
@@ -103,8 +105,7 @@ def create_graphics():
     shutil.rmtree(paths.graphics('Gemset'))
     shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
     # Reduce filesize of graphics packs
-    packs = os.listdir(paths.graphics())
-    for pack in packs:
+    for pack in os.listdir(paths.graphics()):
         rough_simplify(paths.graphics(pack))
 
 
@@ -131,10 +132,8 @@ def create_df_dir():
 
 def create_baselines():
     """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
-    base_dir = 'df_{0[1]}_{0[2]}'.format(paths.DF_VERSION.split('.'))
-    unzip_to(paths.component_by_name('Dwarf Fortress'),
-             paths.lnp('baselines', base_dir))
-    rough_simplify(paths.lnp('baselines', base_dir))
+    unzip_to(paths.component_by_name('Dwarf Fortress'), paths.curr_baseline())
+    rough_simplify(paths.curr_baseline())
 
 
 def setup_pylnp():
@@ -143,19 +142,19 @@ def setup_pylnp():
     os.rename(paths.build('PyLNP.exe'),
               paths.build('Starter Pack Launcher (PyLNP).exe'))
     os.remove(paths.build('PyLNP.json'))
-    with open(paths.base('PyLNP.json')) as f:
-        pylnp_conf = json.load(f)
+    with open(paths.base('PyLNP-json.yml')) as f:
+        pylnp_conf = yaml.load(f)
     pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
+    with open(paths.df('PyLNP_dfhack_onLoad.init'), 'w') as f:
+        f.write('# Placeholder file.\n')
 
 
 def install_misc_files():
     """Install the various files that need to be added after the fact."""
-    # XML file for PerfectWorld
     unzip_to(component.ALL['PerfectWorld XML'].path,
              paths.utilities('PerfectWorld'))
-    # Quickfort blueprints
     unzip_to(component.ALL['Quickfort Blueprints'].path,
              paths.utilities('Quickfort', 'blueprints'))
 
@@ -168,20 +167,3 @@ def build_all():
     create_baselines()
     setup_pylnp()
     install_misc_files()
-
-
-# This block just checks that each 'file' is handled by some function.
-# It does not execute them; just register that they exist.
-funcs = {
-    'Dwarf Fortress': create_df_dir,
-    'DFHack': create_df_dir,
-    'PerfectWorld XML': install_misc_files,
-    'PyLNP': setup_pylnp,
-    'Quickfort Blueprints': install_misc_files,
-    'Stocksettings': create_df_dir,
-    'TwbT': create_df_dir,
-    }
-
-for compon in component.FILES:
-    if compon.name not in funcs:
-        print('WARNING: {} does not have a registered installer.')
