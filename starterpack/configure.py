@@ -21,6 +21,12 @@ def result(part, status, last=['']):
         last[0] = part
 
 
+def install_lnp_dirs():
+    """Install the LNP subdirs that I can't create automatically."""
+    for d in ('Colours', 'Embarks', 'Tilesets'):
+        shutil.copytree(paths.base(d), paths.lnp(d))
+
+
 def make_baselines():
     """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
     # TODO: implement this function
@@ -82,7 +88,6 @@ def soundsense_xml():
                 os.path.join(relpath, 'ss_fix.log'))
     with open(xmlfile, 'w') as f:
         f.writelines(config)
-    result('Soundsense configuration', 'was fixed')
 
 
 def graphics_simplified():
@@ -115,37 +120,31 @@ def dwarf_therapist():
 
 
 def twbt_config_and_files():
-    """Check if TwbT is installed."""
-    if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
-        result('TwbT plugin', 'not installed')
-    g = [p for p in os.listdir(paths.graphics())
-         if os.path.isdir(paths.graphics(p)) and not 'ascii' in p.lower()]
-    for pack in g:
+    """Check and update init files for TwbT settings."""
+    # ASCII doesn't use TwbT - it's the vanilla interface
+    # Gemset is built for TwbT and doesn't need configuring
+    # CLA uses multilevel, but no overrides.
+    # Other packs need printmode and FONT changed
+    # TODO: check whether this is required after Fricy updates...
+    for pack in [p for p in os.listdir(paths.graphics())
+                 if p not in {'ASCII', 'Gemset'}]:
         ors = paths.graphics(pack, 'data', 'init', 'overrides.txt')
-        if not os.path.isfile(ors):
+        if not os.path.isfile(ors) and pack != 'CLA':
             result(pack + ' TwbT graphics', 'needs overrides')
-        twbtify_graphics_init(pack)
-
-
-def twbtify_graphics_init(pack):
-    """Get TwbT init settings working for a graphics pack"""
-    if 'gemset' in pack.lower():
-        return #designed for TwbT, do not retrofit
-    init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
-    with open(init_file) as f:
-        init = f.readlines()
-        orig = init[:]
-    for n, _ in enumerate(init):
-        if init[n].startswith('[FONT:'):
-            init[n] = '[FONT:curses_640x300.png]\n'
-        elif init[n].startswith('[FULLFONT:'):
-            init[n] = '[FULLFONT:curses_640x300.png]\n'
-        elif init[n].startswith('[PRINT_MODE:'):
-            init[n] = '[PRINT_MODE:TWBT]\n'
-    if init != orig:
-        with open(init_file, 'w') as f:
-            f.writelines(init)
-        result(pack + ' TwbT graphics', 'was fixed')
+        init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
+        with open(init_file) as f:
+            init = f.readlines()
+            orig = init[:]
+        for n, _ in enumerate(init):
+            if init[n].startswith('[FONT:') and pack != 'CLA':
+                init[n] = '[FONT:curses_640x300.png]\n'
+            elif init[n].startswith('[FULLFONT:') and pack != 'CLA':
+                init[n] = '[FULLFONT:curses_640x300.png]\n'
+            elif init[n].startswith('[PRINT_MODE:'):
+                init[n] = '[PRINT_MODE:TWBT]\n'
+        if init != orig:
+            with open(init_file, 'w') as f:
+                f.writelines(init)
 
 
 def configure_all():

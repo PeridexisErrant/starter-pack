@@ -44,15 +44,7 @@ def download_files():
 def build_pack():
     """Copy everything to the 'build' directory, ready to go."""
     shutil.rmtree('build')
-    build.create_df_dir()
-    build.create_utilities()
-    build.create_graphics()
-    for d in os.listdir(paths.base()):
-        if os.path.isdir(paths.base(d)):
-            build.overwrite_dir(paths.base(d), paths.lnp(d))
-    build.overwrite_dir(paths.lnp('Graphics', 'Phoebus'), paths.df())
-    build.setup_pylnp()
-    build.install_misc_files()
+    build.build_all()
     configure.configure_all()
     # TODO:  write, call remaining functionality
 

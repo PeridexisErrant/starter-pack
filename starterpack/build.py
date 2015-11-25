@@ -140,6 +140,16 @@ def install_misc_files():
     # TODO: handle this - or ask Fricy to incorporate it...
 
 
+def build_all():
+    """Build all components, in the required order."""
+    create_df_dir()
+    create_utilities()
+    create_graphics()
+    overwrite_dir(paths.graphics('Phoebus'), paths.df())
+    setup_pylnp()
+    install_misc_files()
+
+
 # This block just checks that each 'file' is handled by some function.
 # It does not execute them; just register that they exist.
 funcs = {
