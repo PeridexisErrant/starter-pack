@@ -28,10 +28,6 @@ files:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
-    Doren Phoebus TwbT:
-        bay12: 152698
-        host: dffd
-        ident: 11069
     PerfectWorld XML:
         bay12: 57428
         host: dffd
@@ -108,9 +104,6 @@ utilities:
         host: dffd
         ident: 7851
 graphics:
-    ASCII:
-        host: github
-        ident: fricy/ASCII-Default
     CLA:
         bay12: 105376
         host: github
@@ -132,9 +125,9 @@ graphics:
         host: github
         ident: fricy/Obsidian
     Phoebus:
-        bay12: 137096
-        host: github
-        ident: fricy/Phoebus
+        bay12: 152698
+        host: dffd
+        ident: 11069
     Spacefox:
         bay12: 129219
         host: github

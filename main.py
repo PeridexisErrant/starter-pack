@@ -43,7 +43,8 @@ def download_files():
 
 def build_pack():
     """Copy everything to the 'build' directory, ready to go."""
-    shutil.rmtree('build')
+    if os.path.isdir('build'):
+        shutil.rmtree('build')
     build.build_all()
     configure.configure_all()
     # TODO:  write, call remaining functionality

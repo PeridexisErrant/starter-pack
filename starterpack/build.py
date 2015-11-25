@@ -65,6 +65,17 @@ def unzip_to(filename, target_dir, *, makedirs=True):
                 shutil.copyfileobj(zf.open(obj), out)
 
 
+def rough_simplify(df_dir):
+    """Remove all files except data, raw, and manifests.json"""
+    for fname in os.listdir(df_dir):
+        path = os.path.join(df_dir, fname)
+        if os.path.isfile(path):
+            if fname != 'manifest.json':
+                os.remove(path)
+        elif fname not in {'data', 'raw'}:
+            shutil.rmtree(path)
+
+
 def _create_lnp_subdir(kind):
     """Extract all of somethine to the build/LNP/something dir."""
     for comp in (c for c in component.COMPONENTS if c.category == kind):
@@ -84,9 +95,17 @@ def create_utilities():
 def create_graphics():
     """Extract all graphics packs to the build/LNP/Graphics dir."""
     _create_lnp_subdir('graphics')
-    # TODO: create ASCII graphics from DF release, instead of downloading?
-    # TODO: simplify graphics packs?
-    # TODO: fix Gemset (one version on each side of a fork)
+    unzip_to(paths.component_by_name('Dwarf Fortress'),
+             paths.graphics('ASCII'))
+    # Only keep the 24px edition of Gemset
+    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
+    shutil.move(gemset, paths.graphics('_temp'))
+    shutil.rmtree(paths.graphics('Gemset'))
+    shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
+    # Reduce filesize of graphics packs
+    packs = os.listdir(paths.graphics())
+    for pack in packs:
+        rough_simplify(paths.graphics(pack))
 
 
 def create_df_dir():
@@ -99,9 +118,6 @@ def create_df_dir():
         unzip_to(comp.path, path)
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
-    # TODO: use LNP/Extras for this stuff...
-    for fname in glob.glob(paths.base('*.init')):
-        shutil.copy(fname, paths.df())
     # install TwbT
     plugins = ['{}/{}.plug.dll'.format(component.ALL['DFHack'].version, plug)
                for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
@@ -111,6 +127,14 @@ def create_df_dir():
                 outpath = paths.df('hack', 'plugins', os.path.basename(name))
                 with open(outpath, 'wb') as out:
                     shutil.copyfileobj(zf.open(obj), out)
+
+
+def create_baselines():
+    """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
+    base_dir = 'df_{0[1]}_{0[2]}'.format(paths.DF_VERSION.split('.'))
+    unzip_to(paths.component_by_name('Dwarf Fortress'),
+             paths.lnp('baselines', base_dir))
+    rough_simplify(paths.lnp('baselines', base_dir))
 
 
 def setup_pylnp():
@@ -124,7 +148,6 @@ def setup_pylnp():
     pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
-    # TODO: create baselines for graphics install (in a different function)
 
 
 def install_misc_files():
@@ -135,8 +158,6 @@ def install_misc_files():
     # Quickfort blueprints
     unzip_to(component.ALL['Quickfort Blueprints'].path,
              paths.utilities('Quickfort', 'blueprints'))
-    # Doren's upgrade for Phoebus
-    # TODO: handle this - or ask Fricy to incorporate it...
 
 
 def build_all():
@@ -144,7 +165,7 @@ def build_all():
     create_df_dir()
     create_utilities()
     create_graphics()
-    overwrite_dir(paths.graphics('Phoebus'), paths.df())
+    create_baselines()
     setup_pylnp()
     install_misc_files()
 
@@ -154,7 +175,6 @@ def build_all():
 funcs = {
     'Dwarf Fortress': create_df_dir,
     'DFHack': create_df_dir,
-    'Doren Phoebus TwbT': install_misc_files,
     'PerfectWorld XML': install_misc_files,
     'PyLNP': setup_pylnp,
     'Quickfort Blueprints': install_misc_files,

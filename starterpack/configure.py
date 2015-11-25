@@ -15,47 +15,32 @@ from . import paths
 
 def install_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
-    for d in ('Colours', 'Embarks', 'Extras', 'Tilesets'):
+    for d in ('colors', 'embarks', 'extras', 'tilesets'):
         shutil.copytree(paths.base(d), paths.lnp(d))
-    build.overwrite_dir(paths.lnp('Extras'), paths.df())
-    build.overwrite_dir(paths.lnp('Tilesets'), paths.df('data', 'art'))
-
-
-def make_baselines():
-    """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
-    df_zip = paths.component_by_name('Dwarf Fortress')
-    base_dir = df_zip.replace('_win', '').replace('.zip', '')
-    build.unzip_to(df_zip, paths.lnp('Baselines', base_dir))
-    # TODO: remove other files
+    build.overwrite_dir(paths.lnp('extras'), paths.df())
+    build.overwrite_dir(paths.lnp('tilesets'), paths.df('data', 'art'))
 
 
 def make_defaults():
     """Create and install LNP/Defaults files from the vanilla files."""
     default_dir = paths.lnp('Defaults')
-    shutil.copy(paths.lnp('Embarks', 'default_profiles.txt'), default_dir)
+    shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
     # TODO: also create and edit init.txt, d_init.txt
-    raise NotImplementedError
     build.overwrite_dir(default_dir, paths.df('data', 'init'))
 
 
 def make_keybindings():
     """Create and install LNP/keybindings files from the vanilla files."""
-    os.makedirs(paths.lnp('Keybindings'))
+    os.makedirs(paths.lnp('keybindings'))
     # Read/write vanilla keybindings
     with open(paths.df('data', 'init', 'interface.txt'),
               encoding='cp437') as f:
         dflines = f.readlines()
-    with open(paths.lnp('Keybindings', 'Vanilla DF.txt'), 'w') as f:
-        f.write(dflines)
+    with open(paths.lnp('keybindings', 'Vanilla DF.txt'),
+              'w', encoding='cp437') as f:
+        f.writelines(dflines)
     # Then write modified versions for 'Laptop' and 'Laptop with mouse' keys
-    # TODO: implement this function
-
-
-def check_installed_settings():
-    """Checks that default settings are installed"""
-    with open(paths.df('data', 'init', 'd_init.txt')) as f:
-        if not '[ENGRAVINGS_START_OBSCURED:YES]' in f.read():
-            print('{:30}{}'.format('Default settings', 'need installation'))
+    # TODO: implement keybindings generation
 
 
 def soundsense_xml():
@@ -94,7 +79,7 @@ def dwarf_therapist():
     if os.path.isfile(memfile):
         return
     if not os.path.isfile(paths.component(fname)):
-        # TODO:  update this URL scheme for next DF version
+        # TODO: update Therapist memory layout URL for next DF version
         url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
                '/DF2014/share/memory_layouts/windows/' + fname)
         text = requests.get(url).text
@@ -105,12 +90,11 @@ def dwarf_therapist():
 
 
 def twbt_config_and_files():
-    """Check and update init files for TwbT settings."""
-    # ASCII doesn't use TwbT - it's the vanilla interface
-    # Gemset is built for TwbT and doesn't need configuring
-    # CLA uses multilevel, but no overrides.
-    # Other packs need printmode and FONT changed
-    # TODO: check whether this is required after Fricy updates...
+    """Check and update init files for TwbT settings.
+
+    ASCII doesn't use TwbT.  CLA uses multilevel, but no overrides.
+    Gemset is built for TwbT.  Other packs need printmode and FONT changed.
+    """
     for pack in [p for p in os.listdir(paths.graphics())
                  if p not in {'ASCII', 'Gemset'}]:
         ors = paths.graphics(pack, 'data', 'init', 'overrides.txt')
@@ -135,11 +119,10 @@ def twbt_config_and_files():
 def configure_all():
     """Call all the configuration functions above."""
     install_lnp_dirs()
-    make_baselines()
     make_defaults()
     make_keybindings()
     soundsense_xml()
     graphics_simplified()
-    check_installed_settings()
     dwarf_therapist()
     twbt_config_and_files()
+    build.overwrite_dir(paths.graphics('Phoebus'), paths.df())
