@@ -3,7 +3,7 @@
 _*
 
 # This dir holds everything that's not done automatically yet.
-base/
+base/*/
 
 # All the downloaded utilities etc go here
 components/

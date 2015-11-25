@@ -1,0 +1,71 @@
+hideUtilityExt: false
+hideUtilityPath: true
+updates:
+    updateMethod: dffd
+    dffdID: 7622
+dfhack:
+    Workflow - production targets:
+        command: enable workflow
+        enabled: false
+        tooltip: >
+            The 'workflow' plugin disables cancelling repeat jobs.
+            Use 'alt-W' to set targets (eg 'if less than 100 drinks, unsuspend drink production until 200 drinks').
+            Great for automating complicated industries.
+    Other Automation plugins:
+        command: multicmd autonestbox start; repeat -time 7 -timeUnits days -command [ burial ] -name burial
+        enabled: false
+        tooltip: more automation plugins - autonestbox, burial
+    Stonesense Isometric view:
+        command: ssense
+        enabled: false
+        tooltip: >
+            Opens an isometric visualiser in a separate window.
+            Run in-game with 'ssense overlay', but ONLY in PRINT_MODE:2D (crashes otherwise)
+    Mouse Controls:
+        command: mousequery edge enable
+        enabled: false
+        tooltip: allows scrolling by hovering near edge of map - pair with 'laptop with mouse' keybindings
+    Performance Tweaks:
+        command: multicmd tweak fast-heat 100; repeat -time 1 -timeUnits months -command [ multicmd cleanowned X ; clean all ]
+        enabled: false
+        tooltip: >
+            DFHack fixes to run regularly, changes the game a little but helps a lot on old or slow hardware.
+            (fast-heat, dump worn items, remove all contaminants)
+    Automatic Job Assignments:
+        command: enable autolabor
+        enabled: false
+        tooltip: The autolabor plugin automates job assignments, replacing tools such as Dwarf Therapist
+folders:
+    - [Main folder, ""]
+    - [Dwarf Fortress folder, <df>]
+    - [LNP folder, LNP]
+    - ["-", "-"]
+    - [Savegame folder, <df>/data/save]
+    - [Utilities folder, LNP/Utilities]
+    - [Graphics folder, LNP/Graphics]
+    - [Init folder, <df>/data/init]
+links:
+    - [DF Homepage, "http://www.bay12games.com/dwarves"]
+    - [This Pack's homepage, "http://www.bay12forums.com/smf/index.php?topic=126076"]
+    - [Support this pack!, "https://www.patreon.com/PeridexisErrant"]
+    - ["-", "-"]
+    - [DF Forums, "http://www.bay12forums.com/smf/"]
+    - [DF Wiki, "http://dwarffortresswiki.org/Quickstart_guide"]
+    - [DF on Reddit, "https://www.reddit.com/r/dwarffortress"]
+    - [DF Map Archive, "http://mkv25.net/dfma"]
+    - [DFHack readme, "https://dfhack.readthedocs.org"]
+    - [DF on TvTropes, "http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DwarfFortress"]
+    - ["-", "-"]
+    - [PeridexisErrant's DF Tutorials, "https://df-walkthrough.readthedocs.org"]
+    - [CptnDuck's Tutorial vids, "https://www.youtube.com/playlist?list=PL0sBhCMFBvPlF7wG7OH-NFQKMeCQiS8aM"]
+    - [Das24680's Tutorial vids, "https://www.youtube.com/playlist?list=PLGB6RkFB7ZmNbSUujzXbgNjJi_-WHTTTD"]
+    - [Getting Started (book), "http://shop.oreilly.com/product/0636920022565.do"]
+    - ["-", "-"]
+    - [DF Stories (1), "http://dfstories.com/all-stories"]
+    - [DF Stories (2), "http://dfst.org"]
+    - [Hall of Legends, "http://www.bay12forums.com/smf/index.php?topic=89305"]
+    - ["-", "-"]
+    - [More graphics packs, "https://github.com/Lazy-Newb-Pack/DFgraphics/releases"]
+    - [Even more graphics, "http://www.bay12forums.com/smf/index.php?board=28"]
+    - [Look for mods, "http://www.bay12forums.com/smf/index.php?board=27"]
+    - [Get more utilities, "http://www.bay12forums.com/smf/index.php?board=29"]
