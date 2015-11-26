@@ -4,30 +4,65 @@
  - Download any missing files
  - Provide a common 'Component' object with various config methods
 
+Any modules that use this data should just access the dict ALL (bottom).
+
 This should be the only module that touches the network or which components
 are described in config.yml
 """
 #pylint:disable=missing-docstring
 
-import json
+import collections
+import datetime
 import os
-import time
 import yaml
 
 import requests
 
-# TODO:  use caching decorator, general cleanup and refactoring
 
-with open('config.yml') as ymlfile:
-    YML = yaml.safe_load(ymlfile)
+def cache(method, *, saved={}, dump=False):
+    """A local cache is faster, and avoids GitHub API ratelimit."""
+    if not saved:
+        try:
+            with open('_cached.yml') as f:
+                saved.update(yaml.load(f))
+            print('Loaded metadata cache; delete "_cached.yml" to refresh.\n')
+        except IOError:
+            saved['notified'] = True
+            print('No metadata cache; will download from APIs.\n')
+    if saved and dump and not os.path.isfile('_cached.yml'):
+        with open('_cached.yml', 'w') as f:
+            yaml.dump(saved, f, indent=4)
 
-try:
-    with open('_cached.json') as f:
-        JSON_CACHE = json.load(f)
-    print('Loaded metadata from local "_cache.json"; delete to refresh.\n')
-except IOError:
-    JSON_CACHE = {}
-    print('Could not load metadata from cache; will download from APIs...\n')
+    def wrapper(self, ident):
+        if ident not in saved:
+            saved[ident] = method(self, ident)
+        return saved[ident]
+    return wrapper
+
+
+def report(comps=None):
+    if comps is None:
+        comps = ALL.values()
+    print('Component:            Age:   Version:       Filename:')
+    for comp in sorted(comps, key=lambda c: c.days_since_update):
+        print(' {:22}{:4}   {:15}{:30}'.format(
+            comp.name[:19], comp.days_since_update,
+            comp.version, comp.filename[:30]))
+    cache(lambda s, x: None, dump=True)
+
+
+def download_files(comps=None):
+    """Download files which are in config.yml, but not saved in components."""
+    if comps is None:
+        comps = ALL.values()
+    for c in comps:
+        if os.path.isfile(c.path):
+            continue
+        print('downloading {}...'.format(c.name))
+        buf = b''.join(requests.get(c.dl_link).iter_content(1024))
+        with open(c.path, 'wb') as f:
+            f.write(buf)
+        print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
 
 
 class AbstractMetadata(object):
@@ -45,26 +80,22 @@ class AbstractMetadata(object):
 
 
 class DFFDMetadata(AbstractMetadata):
-
+    @cache
     def json(self, ID):
-        url = 'http://dffd.bay12games.com/file_data/{}.json'.format(ID)
-        if url not in JSON_CACHE:
-            JSON_CACHE[url] = requests.get(url).json()
-        return JSON_CACHE[url]
+        return requests.get(
+            'http://dffd.bay12games.com/file_data/{}.json'.format(ID)).json()
 
     def dl_link(self, ID):
         return 'http://dffd.bay12games.com/download.php?id={}&f=b'.format(ID)
 
     def days_since_update(self, ID):
-        secs = time.time() - int(self.json(ID)['updated_timestamp'])
-        return int(secs / (60 * 60 * 24))
+        return (datetime.date.today() - datetime.date.fromtimestamp(
+            float(self.json(ID)['updated_timestamp']))).days
 
 
 class GitHubMetadata(AbstractMetadata):
-
+    @cache
     def json(self, repo):
-        if repo in JSON_CACHE:
-            return JSON_CACHE[repo]
         # Abstract the release/tag differences here if possible
         url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
         release = requests.get(url).json()
@@ -77,95 +108,90 @@ class GitHubMetadata(AbstractMetadata):
             release['filename'] = os.path.basename(release['dl_link'])
             for key in ['author', 'body', 'assets']:
                 release.pop(key)
-            data = release
-        else:
-            tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
-            tag = requests.get(tags_url).json()[0]
-            tag['dl_link'] = tag['zipball_url']
-            tag['filename'] = '{}_{}.zip'.format(
-                repo.replace('/', '_'), os.path.basename(tag['dl_link']))
-            tag['published_at'] = requests.get(
-                tag['commit']['url']).json()['commit']['author']['date']
-            data = tag
-        data['version'] = data['name']
-        JSON_CACHE[repo] = data
-        return JSON_CACHE[repo]
+            release['version'] = release['name']
+            return release
+        tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
+        tags = requests.get(tags_url).json()
+        if 'message' in tags:
+            print(tags['message'])  # Probably hit API rate limit; wait 5
+        tag = tags[0]
+        tag['dl_link'] = tag['zipball_url']
+        tag['filename'] = '{}_{}.zip'.format(
+            repo.replace('/', '_'), os.path.basename(tag['dl_link']))
+        tag['published_at'] = requests.get(
+            tag['commit']['url']).json()['commit']['author']['date']
+        tag['version'] = tag['name']
+        return tag
 
-    def days_since_update(self, ID): # "2015-11-23T09:52:07Z"
-        update_epoch = time.mktime(time.strptime(
-            self.json(ID)['published_at'], '%Y-%m-%dT%H:%M:%SZ'))
-        return int((time.time() - update_epoch) / (60 * 60 * 24))
+    def days_since_update(self, ID):
+        return (datetime.datetime.today() - datetime.datetime.strptime(
+            self.json(ID)['published_at'], '%Y-%m-%dT%H:%M:%SZ')).days
 
 
 class ManualMetadata(AbstractMetadata):
-    """Mock metadata API for locally configured components."""
     def json(self, identifier):
-        for category in YML.values():
-            if identifier in category:
-                return category[identifier]
-
-    def dl_link(self, identifier):
-        return self.json(identifier)['dl_link']
+        with open('config.yml') as f:
+            for category in yaml.safe_load(f).values():
+                if identifier in category:
+                    return category[identifier]
 
     def filename(self, identifier):
         return os.path.basename(self.dl_link(identifier))
 
     def days_since_update(self, ID):
-        return -1
+        return (datetime.date.today() -
+                self.json(ID).get('updated', datetime.date(2005, 1, 1))).days
 
 
-class Component(object):
-    """Represent a downloadable component, with metadata."""
-    #pylint:disable=too-many-instance-attributes,too-few-public-methods
-
-    def __init__(self, category, item):
-        self.config = YML[category][item]
-        self.category = category
-        self.name = item
-        self.bay12 = str(self.config.get('bay12', 126076))
-        self.thread = ('http://www.bay12forums.com/smf/index.php?topic=' +
-                       self.bay12)
-        self.ident = (self.name if self.config['host'] == 'manual'
-                      else self.config['ident'])
-        metadata = {'dffd': DFFDMetadata,
-                    'github': GitHubMetadata,
-                    'manual': ManualMetadata}[self.config['host']]()
-        self.dl_link = metadata.dl_link(self.ident)
-        self.filename = metadata.filename(self.ident)
-        self.version = metadata.version(self.ident)
-        self.days_since_update = metadata.days_since_update(self.ident)
-        self.path = os.path.join('components', self.filename)
-        if item == 'Dwarf Fortress':
-            # TODO: check version and release date via the rss feed
-            # http://bay12games.com/dwarves/dev_release.rss
-            pass
-
-    def download(self):
-        """Ensure that the given file is downloaded to the components dir."""
-        if os.path.isfile(self.path):
-            return False
-        print('downloading {}...'.format(self.name))
-        buf = b''.join(requests.get(self.dl_link).iter_content(1024))
-        with open(self.path, 'wb') as f:
-            f.write(buf)
-        return True
+_template = collections.namedtuple('Component', [
+    'category', 'name', 'path',
+    'filename', 'dl_link', 'version',
+    'days_since_update', 'thread'])
 
 
-__items = [(c, i) for c, vals in YML.items() for i in vals if c != 'version']
+def __component(category, item):
+    """Lighter weight than a class, but still easy to access."""
+    with open('config.yml') as f:
+        config = yaml.safe_load(f)[category][item]
+    ident = item if config['host'] == 'manual' else config['ident']
+    meta = {'dffd': DFFDMetadata, 'github': GitHubMetadata,
+            'manual': ManualMetadata}[config['host']]()
+    return _template(
+        category, item, os.path.join('components', meta.filename(ident)),
+        meta.filename(ident), meta.dl_link(ident), meta.version(ident),
+        meta.days_since_update(ident),
+        'http://www.bay12forums.com/smf/index.php?topic={}'.format(
+            config.get('bay12', 126076)))
 
-COMPONENTS = tuple(Component(k, i) for k, i in __items)
 
-ALL = {c.name: c for c in COMPONENTS}
+@cache
+def df_metadata(null, ident):
+    """Fetch metadata about DF."""
+    #pylint:disable=unused-argument
+    for line in requests.get(
+            'http://bay12games.com/dwarves/dev_release.rss').text.split('\n'):
+        if line.startswith('      <title>'):
+            for s in ['      <title>', ' Released</title>']:
+                line = line.replace(s, '')
+            day, df_version = (s.strip() for s in line.split(': DF'))
+    return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
 
-UTILITIES = tuple(c for c in COMPONENTS if c.category == 'utilities')
-GRAPHICS = tuple(c for c in COMPONENTS if c.category == 'graphics')
-FILES = tuple(c for c in COMPONENTS if c.category == 'files')
 
-print('Component:           Age:   Version:       Filename:')
-for comp in sorted(COMPONENTS, key=lambda c: c.days_since_update):
-    print(' {:22}{:3}   {:15}{:30}'.format(
-        comp.name[:19], comp.days_since_update,
-        comp.version, comp.filename[:30]))
+def __component_DF():
+    """DF is the sole, hard-coded special case to avoid manual management."""
+    link = 'http://bay12games.com/dwarves/'
+    df_version, updated = df_metadata('', 'Dwarf Fortress')
+    filename = 'df_{0[1]}_{0[2]}_win.zip'.format(df_version.split('.'))
+    return _template(
+        'files', 'Dwarf Fortress', os.path.join('components', filename),
+        filename, link + filename, df_version,
+        (datetime.datetime.today() - updated).days,
+        link)
 
-with open('_cached.json', 'w') as cachefile:
-    json.dump(JSON_CACHE, cachefile, indent=4)
+
+if __name__ != '__main__':
+    with open('config.yml') as ymlfile:
+        __items = ((c, i) for c, vals in yaml.safe_load(ymlfile).items()
+                   for i in vals if c != 'version')
+        ALL = {i: __component(c, i) for c, i in __items}
+    ALL['Dwarf Fortress'] = __component_DF()

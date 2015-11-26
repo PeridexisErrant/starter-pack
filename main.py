@@ -34,21 +34,6 @@ from starterpack import (
     )
 
 
-def download_files():
-    """Download files which are in config.yml, but not saved in components."""
-    for c in component.COMPONENTS:
-        if c.download():
-            print('Downloaded  {:25}{:30}'.format(c.name, c.filename[:25]))
-
-
-def build_pack():
-    """Copy everything to the 'build' directory, ready to go."""
-    if os.path.isdir('build'):
-        shutil.rmtree('build')
-    build.build_all()
-    configure.configure_all()
-
-
 def zip_pack(*, overwrite=False):
     """Zip the pack and return the sha256 of the resulting file."""
     if not os.path.isdir(paths.dist()):
@@ -67,9 +52,13 @@ def zip_pack(*, overwrite=False):
 
 
 if __name__ == '__main__':
-    download_files()
+    component.report()
+    component.download_files()
     print('\nBuilding pack...')
-    build_pack()
+    if os.path.isdir('build'):
+        shutil.rmtree('build')
+    build.build_all()
+    configure.configure_all()
     print('\nCompressing pack...')
     zip_pack(overwrite=True)
     print('Pack zipped in ./dist/ and ready to inspect.')

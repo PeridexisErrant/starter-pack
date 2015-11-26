@@ -36,7 +36,7 @@ def unzip_to(filename, target_dir, *, makedirs=True):
     - If the zip is all in a single compressed folder, traverse it.
         We want the target_dir to hold files, not a single subdir.
     """
-    print('{:20}  ->  {}'.format(filename[:20], target_dir))
+    print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], target_dir))
     if makedirs:
         try:
             os.makedirs(target_dir)
@@ -79,7 +79,7 @@ def rough_simplify(df_dir):
 
 def _create_lnp_subdir(kind):
     """Extract all of somethine to the build/LNP/something dir."""
-    for comp in (c for c in component.COMPONENTS if c.category == kind):
+    for comp in (c for c in component.ALL.values() if c.category == kind):
         target = paths.lnp(kind, comp.name)
         if os.path.isdir(target):
             print(target, 'already exists! skipping...')
@@ -97,7 +97,7 @@ def create_utilities():
 def create_graphics():
     """Extract all graphics packs to the build/LNP/Graphics dir."""
     _create_lnp_subdir('graphics')
-    unzip_to(paths.component_by_name('Dwarf Fortress'),
+    unzip_to(component.ALL['Dwarf Fortress'].path,
              paths.graphics('ASCII'))
     # Only keep the 24px edition of Gemset
     gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
@@ -115,7 +115,7 @@ def create_df_dir():
     items = ['Dwarf Fortress', 'DFHack', 'Stocksettings']
     destinations = [paths.df(), paths.df(), paths.df('stocksettings')]
     for item, path in zip(items, destinations):
-        comp = component.Component('files', item)
+        comp = component.ALL[item]
         unzip_to(comp.path, path)
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
@@ -132,7 +132,7 @@ def create_df_dir():
 
 def create_baselines():
     """Extract the data and raw dirs of vanilla DF to LNP/Baselines."""
-    unzip_to(paths.component_by_name('Dwarf Fortress'), paths.curr_baseline())
+    unzip_to(component.ALL['Dwarf Fortress'].path, paths.curr_baseline())
     rough_simplify(paths.curr_baseline())
 
 

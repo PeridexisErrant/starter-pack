@@ -1,14 +1,10 @@
 # Each component, under files/utilities/graphics:
 #     SHOULD have a "bay12" key set to the forum thread number
 #     MUST have "host" set to one of "dffd", "github", or "manual"
-#     MUST have "version" and "dl_link" if host is "manual" or "ident" set otherwise
+#     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 # The pack version is appended to the DF version, eg "0.40.24-r18"
 version: r19
 files:
-    Dwarf Fortress:
-        host: manual
-        dl_link: http://bay12games.com/dwarves/df_40_24_win.zip
-        version: 0.40.24
     DFHack:
         bay12: 139553
         host: github
@@ -22,6 +18,7 @@ files:
         host: manual
         dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10b-win32.zip
         version: 0.10b
+        updated: 2015-05-19
     Quickfort Blueprints:
         host: dffd
         ident: 8185
@@ -79,11 +76,13 @@ utilities:
         host: manual
         dl_link: https://github.com/downloads/joelpt/quickfort/Quickfort_2.04.zip
         version: "2.04"
+        updated: 2012-05-30
     Soundsense:
         bay12: 60287
         host: manual
         dl_link: http://df.zweistein.cz/soundsense/soundSense_2015-1_194.zip
         version: "2015-1"
+        updated: 2015-02-07
     World Viewer:
         bay12: 128932
         host: dffd

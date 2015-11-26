@@ -42,6 +42,7 @@ def make_keybindings():
     shutil.copy(van_file, paths.lnp('keybindings', 'Vanilla DF.txt'))
 
     def keybinds_serialiser(lines):
+        """Turn lines into an ordered dict, to preserve structure of file."""
         od, lastkey = collections.OrderedDict(), None
         for line in (l.strip() for l in lines):
             if line and line.startswith('[BIND:'):
@@ -102,14 +103,14 @@ def dwarf_therapist():
         'Dwarf Therapist', 'share', 'memory_layouts', 'windows', fname)
     if os.path.isfile(memfile):
         return
-    if not os.path.isfile(paths.component(fname)):
+    if not os.path.isfile(os.path.join('component', fname)):
         url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
                '/DF2014/share/memory_layouts/windows/' + fname)
         text = requests.get(url).text
         with open(memfile, 'w') as f:
             f.write(text)
         print('{:30}{}'.format('Therapist memory layout', 'was downloaded'))
-    shutil.copy(paths.component(fname), memfile)
+    shutil.copy(os.path.join('component', fname), memfile)
 
 
 def twbt_config_and_files():
