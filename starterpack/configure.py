@@ -35,34 +35,27 @@ def make_defaults():
     build.overwrite_dir(default_dir, paths.df('data', 'init'))
 
 
-def _parse_keybinds_file(lines):
-    """Parse a keybinding file; returning an OrderedDict of bind:list(keys).
-    All dict keys and items in the values lists are strings - a line from
-    the file, without leading or trailing whitespace.  Empty lines dropped."""
-    od, lastkey = collections.OrderedDict(), None
-    for line in (l.strip() for l in lines):
-        if not line:
-            continue
-        if line.startswith('[BIND:'):
-            od[line] = []
-            lastkey = line
-        else:
-            if lastkey is not None:
-                od[lastkey].append(line)
-    return od
-
-
 def make_keybindings():
     """Create and install LNP/keybindings files from the vanilla files."""
     os.makedirs(paths.lnp('keybindings'))
-    # Read/write vanilla keybindings
     van_file = paths.df('data', 'init', 'interface.txt')
     shutil.copy(van_file, paths.lnp('keybindings', 'Vanilla DF.txt'))
+
+    def keybinds_serialiser(lines):
+        od, lastkey = collections.OrderedDict(), None
+        for line in (l.strip() for l in lines):
+            if line and line.startswith('[BIND:'):
+                od[line], lastkey = [], line
+            elif line:
+                if lastkey is not None:
+                    od[lastkey].append(line)
+        return od
+
     with open(van_file, encoding='cp437') as f:
-        vanbinds = _parse_keybinds_file(f.readlines())
+        vanbinds = keybinds_serialiser(f.readlines())
     for fname in os.listdir(paths.base('keybindings')):
         with open(paths.base('keybindings', fname)) as f:
-            cfg = _parse_keybinds_file(f.readlines())
+            cfg = keybinds_serialiser(f.readlines())
         lines = []
         for bind, vals in vanbinds.items():
             lines.append(bind)
@@ -70,9 +63,9 @@ def make_keybindings():
                 lines.extend(cfg[bind])
             else:
                 lines.extend(vals)
-        with open(paths.lnp('keybindings', fname),
-                  'w', encoding='cp437') as f:
+        with open(paths.lnp('keybindings', fname), 'w', encoding='cp437') as f:
             f.write('\n' + '\n'.join(lines))
+
 
 def soundsense_xml():
     """Check and update version strings in xml path config"""

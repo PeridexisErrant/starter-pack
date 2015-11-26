@@ -2,7 +2,7 @@
 Prepare a release of PeridexisErrant's Starter Pack for Dwarf Fortress.
 
 Downloads and checks versions, assembles components, checks configuration,
-and perpares everything for upload.
+and prepares everything for upload.
 
 This code is highly specific to my pack - it's released under the GPL3,
 but don't expect it to be production-quality or particularly reusable.
