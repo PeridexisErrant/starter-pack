@@ -1,0 +1,17 @@
+# Each line is executed as a DFHack command when a map is loaded
+
+# Before running the commands in the launcher's DFHack tab,
+# disable persistent plugins.  That way state will match the tab.
+disable autolabor workflow
+autonestbox stop
+
+# should-be-standard bugfixes
+fix/blood-del enable
+repeat -time 1 -timeUnits months -command [ fix/stuckdoors ]
+
+# there's some bugs in the "confirm" plugin for DFHack 40.24-r4
+confirm disable haul-delete
+confirm disable squad-disband
+
+# Run the commands written by the dfhack tab (and maybe re-enable some plugins)
+script PyLNP_dfhack_onLoad.init

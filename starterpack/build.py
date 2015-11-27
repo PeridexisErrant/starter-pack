@@ -107,6 +107,10 @@ def create_graphics():
     # Reduce filesize of graphics packs
     for pack in os.listdir(paths.graphics()):
         rough_simplify(paths.graphics(pack))
+        tilesets = os.listdir(paths.lnp('tilesets'))
+        for file in os.listdir(paths.graphics(pack, 'data', 'art')):
+            if file in tilesets or file.endswith('.bmp'):
+                os.remove(paths.graphics(pack, 'data', 'art', file))
 
 
 def create_df_dir():
