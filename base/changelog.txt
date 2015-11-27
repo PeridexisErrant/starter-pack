@@ -1,0 +1,939 @@
+40_24 r19
+ - disabled buggy confirmation dialogues; squad-disband and haul-delete
+ - changed extra init file; now triggers on map load instead of world load
+ - removed skill rust announcements from soundsense script
+
+40_24 r18
+ - updated Announcement Window to v1.2; mostly bugfixes
+ - updated DFHack to 40.24-r4; see that changelog elsewhere
+ - removed menu-mouse plugin; incompatible with new DFhack and no updates
+ - several backported scripts were replaced by other tools in the new DFHack
+ - removed autoresetgrid.lua
+ - updated custom init files; see LNP/Extras folder
+ - updated TwbT to v5.48
+ - fixed some DFHack config; reduced errors or unwanted output
+ - removed Blocky Map App; zoom all the way out in Armok Vision instead
+ - updated Armok Vision to v0.7.2, and dropped 32bit support
+ - updated Obsidian graphics; Fricy fixes some grass issues
+
+40_24 r17
+ - updated Gemset to v1.4
+ - added Doren's TwbT overrides for Phoebus
+ - removed Announcement Filter
+ - added Announcement Window v1.1; like the above but better!
+ - updated PyLNP to 0.10b-2; same code but compiled with newer Python
+ - updated TwbT to v5.47
+
+40_24 r16
+ - added Armok Vision 0.6a; includes automatic 32/64 bit handling
+ - updated remotefortressreader for latest Armok Vision
+ - updated open-legends.lua; help key works now
+
+40_24 r15
+ - changed "Pure bugfixes" config; now always on via extra_dfhack_init.init
+ - autoresetgrid is optional again due to flickering
+ - removed fix/feeding-timers; DF fixed this in 40.09 apparently?
+ - cleaned out some obsolete files
+ - added gui/extended-status; adds bedrooms tab to stocks screen
+ - added Lethosor's open-legends.lua; open legends mode from adventure or fort mode
+ - added "dwarves" and "points" scripts (determine number of each at embark)
+
+40_24 r14
+ - updated autoresetgrid; now automatically runs as appropriate
+ - updated Gemset to v1.32
+ - added Fricy's extra Gemset overrides config (eg built beds)
+ - updated fix-ster.lua; bugfix
+ - updated remotefortressreader for Armok Vision 0.5 (client not included)
+ - updated Spacefox graphics with domestic animals
+
+40_24 r13
+ - updated PyLNP to v0.10b; fixes mod install and moves PyLNP settings
+ - updated menu-mouse to v0.14
+ - updated view-item-info; now fixed, always-on, and more descriptions
+ - added Gemset graphics v1.3; high-res, TwbT intensive, and gorgeous
+
+40_24 r12
+ - updated menu-mouse to v0.13
+ - menu-mouse disabled by default; now part of "mouse control" hacks in launcher
+ - hid TwbT overrides in tilesets list
+ - updated PyLNP to v0.10a; hide TwbT override tilesets
+
+40_24 r11
+ - updated TwbT to 5.45; improved Adventure Mode support
+ - added DwarfMockup 1.0.3; DF-like quickfort blueprint creation interface
+ - added menu-mouse v0.12; makes embark menus click-able
+ - added Blocky Map App 1.0; true 3D renderer for legends mode maps
+ - updated PyLNP to v0.10; mostly UI upgrades
+ - added tooltips to all graphics packs via (new) manifests
+ - fixed missing GRAZE_COEFFICIENT in d_init.txt
+
+40_24 r10
+ - fixed flickering display
+ - moved autoresetgrid to it's own option
+
+40_24 r9
+ - updated PyLNP to 0.9.6; fixes graphics bug and misc improvements including mods logic
+ - added fixster.lua; script to alter animal fertility
+ - added autoresetgrid.lua; fixes Truetype issue through DFHack (in bugfixes setting)
+ - removed df_text_fixer utility (due to the above)
+ - updated view-item-info.lua
+ - removed nb_item_info.lua (obsolete due to the above)
+ - switched to using SHA256 checksums; following DFFD's implementation
+
+40_24 r8
+ - updated PyLNP launcher to 0.9.5a
+ - added DF Text Fixer 0.1; constantly refreshes DF to patch missing truetype text
+ - updated DFHack to 40.24 r3
+ - updated TwbT to v5.44
+ - updated Lethosor's scripts
+ - added raw-lint.lua; DFHack script to check your raws are good
+ - added view-item-info.lua; DFHack script that adds item info and descriptions
+
+40_24 r7
+ - fixed Announcement Filter configuration
+ - updated PyLNP launcher to 0.9.5; misc improvements and:
+ - PyLNP:  fixed rare graphics update bugs
+ - PyLNP:  made merging and installing mods much safer
+ - PyLNP:  updating graphics on saves is way faster
+ - updated donation links; I now have a Patreon for ongoing support!
+
+40_24 r6
+ - updated PyLNP to 0.9.3; misc upgrades including better legends processor
+ - improved handling of mods, especially with graphics or dfhack scripts
+ - fixed graphics switching on modded saves unsing PyLNP
+ - fixed bits of outdated documentation
+ - reduced disk/download size by moving redundant images to LNP/Tilesets
+ - updated exportlegends script; as merged for next DFHack
+
+40_24 r5
+ - fixed soundsense configuration
+ - removed duplicate keybindings
+ - fixed laptop listscroll binds
+ - removed some duplicate files
+
+40_24 r4
+ - updated documentation; mostly presentation and some new info
+ - renamed keybindings files for clarity
+ - updated Soundsense to 2015-1; fixes pack download function
+ - updated launcher to PyLNP 0.9.2a; improves handling of mods, graphics, upgrades, list display
+ - reduced raw format halves graphics pack size; even better for mods
+ - removed Legends Exports processor; replaced by new button in PyLNP advanced tab
+ - updated World Viewer to 2.0.2; now handles new DFHack exports
+ - upgraded exportlegends (via WV), exports custom legends_plus xml
+
+40_24 r3
+ - fixed dfhack syntax errors in option for automation plugins
+ - updated Dwarf Therapist to 31.0; labors for 40.24 and bugfixes
+ - updated DFHack to 40.24-r2
+ - updated TwbT to 5.43
+ - updated nb_item_info to 5.1
+ - removed (buggy) ascii art for the above
+ - documented inclusion of World Viewer 2.0.1
+ - added legends_plus xml export to exportlegends.lua instead of including exportlegendsWV.lua
+ - added stonesense option in dfhack tab; but not overlay (too buggy)
+ - enabled pure bugfixes option by default
+ - fixed PyLNP.json-breaking bug in my upload script
+
+40_24 r2
+ - updated DFHack to 40.24-r1; complete release fixes plugin issues
+ - added CptnDuck's 2015 embark profile to default set
+ - minor fix to hfs-pit.lua
+ - updated TwbT to v5.42
+ - fixed PyLNP.json; had broken dfhack tab, folders & links lists
+ - added script/mod to improve item viewscreens; much more info
+
+40_24 r1
+ - updated links for DFFD hostname migration
+ - QF tooltip warns of alt-key interception
+ - disabled seedwatch again; this time for good
+ - updated DF to v40.24; many bugfixes and probably the last before 40.01
+ - updated DFHack to 40.24-r0; some globals missing and reliant plugins will unload
+ - added new DT memory layout
+ - removed all mods due to raw changes and forthcoming merge logic upgrade
+ - updated TwbT to v5.41
+ - fixed Dorven Realms install; .dll files were missing
+ - updated graphics packs for 40.24
+
+40_23 r2
+ - reinstall Phoebus graphics (launcher didn't copy tileset)
+ - update TwbT to v5.40; updates plugins and fixes crash
+ - updated PyLNP to v0.9; new mods tab!
+ - added a beginning selection of mods; please post suggestions
+ - now using reduced raws format
+
+40_23 r1
+ - updated Legends Viewer to v1.13.24; fixes rare crash
+ - added World Viewer 2.01; finally up-to-date for DF40.xx
+ - added soundsense script for more announcements
+ - improved bugfixes and performance tweaks config in dfhack tab
+ - updated position.lua; better location reporting
+ - updated keybindings for DF 40.22 (no changes for .23)
+ - updated Dwarf Fortress to v0.40.23; with job prioritisations, better digging, and bugfixes!
+ - updated graphics packs (DF fixed typos in raws)
+ - improved my prep script to avoid leaving some graphics out (again)
+ - added Nate-Enator's dining room blueprint
+ - added 24x24 ASCII default tileset
+ - updated Therapist memory layouts through to 40.23
+ - updated DFHack to 40.23-r1; lots and lots of improvements
+ - updated TwbT to v5.38; recent changes to mousequery not included
+
+40_19 r3
+ - updated Dwarf Therapist to v30.1.0; adds gelding etc
+ - fixed exportlegends bug; did not export detailed map
+ - old changelogs are now in ./LNP/About/history.txt instead of this file/post
+ - added DFHack script "burial", GUI option; auto-allow built coffins for burial
+ - fixed ASCII graphics
+ - added DejaVu-Mono font option
+ - added empty gamelog; some utilities freak out otherwise
+ - added DFHack script "position"; reports time in great detail
+
+40_19 r2
+ - re-added Mayday graphics (oops)
+ - reset default settings; engravings start obscured
+
+40_19 r1
+ - updated DF to v0.40.19
+ - updated DFHack to 40.19-r1; includes Stonesense
+ - updated graphics for changed raws
+ - updated all keybindings files
+ - updated TwbT to v5.36
+ - added stockpile settings plugin; load and save across games
+ - added settings pack per Mechanixm's stockpiles guide
+ - disabled seedwatch due to egregious output
+
+40_16 r3
+ - updated TwbT to v5.33; fixes crash bug
+ - updated Legends Viewer to v1.13.23; fixes two crash bugs
+ - updated Dwarf Therapist to v30; many features now up-to-date
+ - updated Lethosor's scripts
+
+40_16 r2
+ - updated TwbT to v5.34; fix crash on max zoom out
+ - patched dfkack/symbols.xml; fixes crash in 'k' menu
+
+40_16 r1
+ - updated Quickfort Community plans set to v2.2
+ - updated PerfectWorld to v1.9
+ - updated Dwarf Fortress to 0.40.16
+ - updated PyLNP to v0.8a
+ - updated utilities config; finally add descriptive tooltips!
+ - removed some old content from defaults and extras
+ - added tileset options for TwbT; use the graphics/customisation tab to set FONT
+ - added Dwarf Therapist memory layout for 40.16
+ - updated default embark profiles
+ - updated DFHack to 40.16-r1
+ - updated TwbT to v5.33
+ - added Putnam's script "remove-stress"; removes stress of selected unit or "remove-stress all" to affect all units.
+
+40_15 r2
+ - fixed dfhack configuration
+ - refreshed color schemes; wider selection now includes colorblind support
+ - updated TwbT to v5.32; fixes crash bug
+
+40_15 r1
+ - updated Dwarf Fortress to version 40.15
+ - no changes needed to graphics packs
+ - updated DFHack to 40.15-r1
+ - updated exportlegends script again
+ - updated TwbT to v5.31
+ - updated default settings
+
+40_14 r2
+ - updated TwbT to v5.30; fixes mousequery issues
+ - updated graphics correctly; adds stepladders to newly generated worlds
+ - added upgraded exportlegends script
+
+40_14 r1
+ - updated Dwarf Fortress to version 40.14
+ - updated PyLNP to v0.7.1
+ - removed old windows-only launcher
+ - updated Dwarf Therapist to v28.0.0
+ - updated all keybindings for 40.14
+ - updated DFHack to 40.14-r1
+ - updated TwbT to v5.29
+ - fixed misc. configuration issues
+
+40_13 r5
+ - updated PyLNP to v0.6
+ - updated Legends Viewer to v1.13.21; misc bugfixes
+ - updated TwbT to v5.24; misc bugfixes
+ - removed TwbT zoom keybindings, as normal zoom now works (zoom text at main menu)
+ - updated all graphics to fix Grazer issue (large animals starving)
+
+40_13 r4
+ - updated Starter Pack Launcher to v19.2; displays installed graphics correctly
+ - updated TwbT to v5.17; several bugfixes and new features:
+   - normal zoom now affects the map instead of text
+   - special zoom now uses Ctrl-G / Ctrl-H to avoid conflicting commands
+
+40_13 r3
+ - updated all keybindings for 40.13
+ - updated Dwarf Therapist to v27.0
+ - [url=https://github.com/DFHack/dfhack/issues/338#issuecomment-56739172]patched DFHack box select issue[/url]
+ - updated exportlegends script, handles all site maps too
+ - updated TwbT to v5.12; which includes a number of changes:
+    - fixes occasional crash and issues with acting above a z-level
+    - text now uses 8x12 ASCII, with 16x16 graphical map tiles
+    - print_mode must be set to "TWBT"; only an issue if you change it
+    - standard zoom controls now only resize text (ie not map tiles)
+    - added map-zoom controls ctrl-P, ctrl-O
+
+40_13 r2
+ - fixed TwbT overrides when installing with PyLNP
+ - updated PyLNP to v0.5.2; fixes entombing pets option
+ - completely reworked dfhack tabs
+   - multilevel view now always-on through dfhack.init
+   - options now invoked via 'onLoadWorld.init' rather than
+     script in dfhack.init; fixes overlap and overwriting
+   - new automation options, non-persistent (ie unchecking box will disable)
+   NB: if an option is enabled in *either tab*, it will be active now
+ - enabled UI prompts for autochop and stocks plugins
+ - updated soundSense to version 2014-1
+ - bugfixes run ingame-monthly instead of only on startup
+
+40_13 r1
+ - fixed PyLNP dfhack tab config
+     NB:  activation of a dfhack option in PyLNP overrides non-activation in LNP.
+          PyLNP thus defaults all dfhack options to deactivated.
+ - updated DF to v0.40.13
+ - no graphics updates required immediately
+ - updated Dwarf Therapist to 26.0
+ - updated DFHack to 40.13-r1
+ - updated PyLNP to v0.5; fixes the issues raised since last pack
+ - fixed CLA_text.png some more
+ - updated Isoworld to v2.1; handles new export names
+ - updated TwbT to v3.43 (prerelease but stable)
+
+40_12 r1
+ - edited CLA tileset for punctuation with TwbT
+ - updated default settings
+ - updated Dwarf Fortress to 40_12
+ - all graphics are compatible this time; no need for an update
+ - updated PerfectWorld to 1.8; supports current DF version and temperature maps
+ - added the PyLNP launcher v0.4; will eventually replace the current launcher - provided for testing, feedback, and configuration.
+ - updated DFHack to 40.12-r1
+ - updated TwbT to v3.41; next-gen coming soon
+ - updated script manager-quantity
+
+40_11 r3
+ - fixed conflict with embark-tools in PeridexisErrant keybindings
+ - fixed ASCII graphics
+ - updated Phoebus, CLA, and Ironhand graphics to official versions for 40_11
+ - added TwbT v3.38
+ - patched TwbT support into all packs except ASCII
+
+40_11 r2
+ - added DFHack 40.11-r1
+ - enabled LNP DFHack tab
+ - added vjeck's scripts; rejuvenate, armoks_blessing, brainwash, elevate_mental, elevate_physical, make_legendary, pref_adjust
+ - added Putnams scripts; gaydar, badThoughtCheck
+ - added Lethosor's scripts and keybindings; adv-max-skills, load-screen, manager-quantity, settings-manager, title-version
+ - added many keybindings and enablers to start of dfhack.init
+
+40_11 r1
+ - updated Dwarf Fortress to 40_11
+ - added memory layout to Dwarf Therapist
+ - updated all graphics packs
+ - removed Isoworld; incompatible with new naming pattern for exports
+
+40_10 r4
+ - downgraded TwbT to v3.37 and restored associated plugins
+ - fixed item overrides in installed Phoebus graphics
+ - reduced multilevel view to five levels; should reduce performance hit
+
+40_10 r3
+ - commands run through dfhack tab run once on load, instead of repeating (until I can fix the errors)
+ - removed autorun of fix/population-cap; since it seems fixed independently
+ - added Text will be Text v4.48; enables nice graphics
+    - using TwbT "resume" and "mousequery" plugins (for compatibility)
+    - activated TwbT for all but ASCII graphics; including item sprites and 10-Z multilevel view
+    - added custom text tilesets for CLA, Phoebus, Spacefox.  Added ShizzleClean for Ironhand, Mayday.  
+    - Added item sprites to graphics packs.  Added overrides.txt to init folder.
+    - using printmode:standard; activates TwbT and deactivates truetype
+ - replaced default embark profiles with improved versions
+
+40_10 r2
+ - fixed 'Extras' installation; no effect but cleaner
+ - added DFHack 40_10-r1
+ - enabled Falconne's UI plugins
+ - re-add DFHack tab in the launcher
+
+40_10 r1
+ - Minor updates to Ironhand and Phoebus graphics
+ - LNP subfolder names capitalised for consistency with OSX / Linux
+ - re-added Legends Exports Processor v4.1; supports DF 40_09+, bugfixes
+ - updated DF to 40_10
+ - all graphics are still compatible, no no changes there
+ - updated Dwarf Therapist to v25.0
+
+40_09 r1
+ - updated DF to 0.40.09
+ - removed [url=https://github.com/PeridexisErrant/LegendsExportsProcessor/releases]Legends Exports Processor[/url] pending update to handle new legends export filenames
+ - removed [url=http://www.bay12forums.com/smf/index.php?topic=128932]World Viewer[/url], for the same reason
+ - updated all graphics from Fricy's repository
+ - added Jolly Bastion graphics
+ - updated configuration files for soundsense and Announcement filter
+ - removed dfhack; it'll be back when it updates for 40_09
+ - disabled dfhack tab of the launcher until it stops throwing errors
+ - updated Dwarf Therapist to 24.0; for DF 40_09
+
+40_08 r3
+ - updated DFHack to 0.40.08-r2, fixes some crash bugs and several other problems
+ - updated World Viewer to v2.0; includes new features based on dfhack-assisted data export
+
+40_08 r2
+ - added DFHack 0.40.08-r1; first release for DF 2014
+ - re-enabled dfhack tab of the launcher
+
+40_08 r1
+ - updated Dwarf Fortress to 40_07
+ - updated Phoebus graphics
+ - updated Ironhand graphics
+ - pulled Fricy's CLA update (https://github.com/fricy/DFgraphics)
+ - pulled Fricy's Mayday update
+ - pulled Fricy's Spacefox update
+ - updated default settings
+ - updated Dwarf Fortress to 40_08; fixes two common crash bugs
+ - updated Dwarf Therapist to v23.6; for 40_08
+
+40_06 r2
+ - updated Dwarf Therapist to 23.4
+ - fixed / updated soundsense config
+ - updated CaptainDuck's embark profile (in tutorials set)
+ - re-added Mayday graphics; thanks to /u/lesighfortress for the updated files
+ - added /u/MorbidPenguin's edits to the Quickfort blueprints; circles start in the center.
+ - re-added PerfectWorld; thanks to jwhite.df for the tip
+
+40_06 r1
+ - fixed Spacefox graphics (new raw/objects/*)
+ - changed to have Vanilla keybindings by default
+ - updated Legends Viewer; minor bugfix
+ - changed keybindings to match 40_05 vanilla; tracking @514 k->K, log @1307 e->g
+ - updated Dwarf Fortress to 40_06
+ - updated ASCII default graphics to 40_06
+ - updated Phoebus graphics to 40_06v01
+ - updated Ironhand (unofficial) graphics to 40_06
+ - removed CLA, Mayday graphics to avoid save incompatibility (40_06 has more raw chnages)
+ - updated default inits, reinstalled embark profiles, bumped version numbers, repointed soundsense config, etc
+ - updated Spacefox graphics to 40_06 v1
+ - added Dwarf Therapist memory layout for 40_06
+
+40_05 r2
+ - modified copy script; only draws from 40_05 saves (03+ is technically compatible, but graphics will break them; use manually at own risk)
+ - updated ASCII default graphics, deleted ascii square; only difference was a single init option (use CLA for square ASCII)
+ - updated Phoebus to 40_05v02
+ - updated Mayday to 40_05
+ - updated CLA to 40_05 (v17)
+ - removed obsolete embark profiles, updated those with a clear successor for 40.xx
+ - added CaptainDuck's beta embark profile (in tutorials set)
+ - updated Spacefox, using Mayday's raw/objects update
+ - patched d_init for Spacefox and Mayday; without setting [STRICT_POPULATION_CAP:x] you never get migrants
+
+40_05 r1
+ - updated DF2014 embark profiles (default set)
+ - updated Dwarf Therapist to 23.2
+ - updated Legends Viewer to 1.13.18; some version number catch-up is involved
+ - added Legends Exports Processor 4.0; a script to compress (by 95%+) legends exports and move them to the UGC folder
+ - updated the launcher; it now won't launch DF again if it's already running
+ - updated Dwarf Fortress to 40_05; biggest bugfixing update ever!
+ - re-installed keybindings, phoebus graphics, embark profiles
+ - updated Ironhand graphics for 40_05
+ - updated Phoebus graphics for 40_05
+ - updated Dwarf Therapist to 23.3 for 40_05
+
+40_04 r2
+ - updated launcher to v19.1; it can now notify you when an updated pack is available (you can of course disable this the first time it does so, or set a reminder)
+ - removed symlinks script; it seems to be responsible for some problems and isn't that important
+ - removed user blueprints folder; use the UGC folder or your own system
+ - modified embark profiles:  now split into four thematic files in "/LNP/useful/Embark Profiles/"
+ - new "default_profiles" set for DF2014 installed by default, others can be manually added
+ - fixed soundsense config for 40_04
+ - updated Dwarf Therapist to v23.1; misc fixes and tweaks
+ - updated Mayday graphics for 40_04
+ - completed and added data-copying script; it can pull from any starter pack or vanilla DF since 40_03
+
+40_04 r1
+ - fixed keybinding bug (mousewheel z-up also zoomed out)
+ - small bugfix update for Legends Viewer
+ - Updated Dwarf Fortress to 40_04 (saves should be compatible this time)
+ - updated Phoebus graphics to 40_04v00
+ - updated Ironhand graphics to 40_04
+ - added Dwarf Therapist v23 memory layout for 40_04
+ - removed old Dwarf Therapist
+
+40_03 r4
+ - updated World Viewer; shows much more info per screen, takes zipped files
+ - added Legends Viewer 1.13.11; now updated for DF 40.xx
+ - removed last section of folders menu in launcher (causing errors)
+ - removed duplicate soundsense from menu
+ - added Splinterz' Dwarf Therapist for 40_03; so you now have the new one too (old is still in until stability can be confirmed)
+ - removed legends export processor until I get it working again
+
+40_03 r3
+ - fixed broken soundSense; soundSense.jar had been deleted (oops)
+ - made keybinding options for 40.xx; both classic LNP and PeridexisErrant are available.
+ - made symlinks relative (good for USB or cloud storage installs)
+
+40_03 r2
+ - updated Ironhand graphics for 40_03; fixes miners displaying as children and misc tweaks
+ - updated Mayday graphics for 40_03
+ - used batch file to give World Viewer a single utilities list entry - it'll choose the 32/64 bit version for you
+ - added Dwarf Therapist for 40_03
+ - added more embark profiles
+
+40_03 r1
+ - updated World Viewer for 40_02 (v1.5)
+ - updated Ironhand graphics for 40_02
+ - updated to DF v40_03 (breaks saves again, sorry)
+ - updated Phoebus graphics for 40_03
+ - fixed soundsense configuration to find gamelog
+ - updated Mayday graphics for 40_02
+ - updated ASCII options from 40_03
+ - removed Legends Viewer until it updates to handle 40.x
+ - fixed 'restore defaults' option, at least for this version
+ - added embark profiles from 34.11; I'm told they work but haven't done much testing
+
+40_02 r1
+ - Added CLA graphics
+ - Added Mayday graphics
+ - Added Phoebus graphics
+ - Added Ironhand graphics (unofficial)
+ - Added Spacefox graphics (unofficial)
+ - Added World Viewer for 40.01
+ - UPDATED DWARF FORTRESS to 40_02
+
+40_01 r1
+ - Added Dwarf Fortress v40.01
+ - 12x8 or 16x16 ASCII graphics options in the launcher
+ - changed settings to starter pack defaults, good for new players
+ - Quick fixes to legends exports processor to update version references (might be broken, but speed is more important than perfection!)
+ - Added symlinks batch script
+ - no keybindings, a quick compare shows huge changes so I'll have to do more detailed analysis and updating later
+
+40_01 r0 (template release, no DF)
+ - kept all utilities that work off external or exported files which are not expected to change too much:
+    Legends Viewer, Quickfort, Soundsense, Isoworld, DF Announcement Filter, DF Story Maker, Picturefort, Dorven Realms, Legends Export Processor
+ - kept some extras:  Color schemes, cheatsheets, Quickfort plans
+
+34_11 r67
+ - updated Dwarf Therapist to v22.0; improved roles and optimiser, many other tweaks
+ - using custom stonesense version that is compatible with TwbT
+ - changed all graphics settings for TwbT compatibility (except ASCII default)
+ - activated Text will be Text for all graphics packs (except ASCII default)
+ - updated TwbT to v3.31
+
+34_11 r66
+ - changed line endings in hack/ruby/ruby-autogen to windows style, apparently Fricy's package was OSX-endings and causing some issues
+ - fixed growthbug syntax from dfhack tab
+ - updated TwbT to v3.28
+ - fixed TwbT item overrides
+ - with crashes resolved, added TwbT "multilevel 10" to dfhack.init and installed TwbT graphics by default
+
+34_11 r65
+ - updated Text will be Text to version 3.19; adds multilevel rendering (updated plugin and added shadows.png to the TwbT graphics packs)
+ - new and improved symlink batch scripts thanks to Kevin Cathcart
+ - deleted "fix/growthbug.lua" - it was interfereing with the .rb version, which we wanted
+ - changes to the data copying script again... hopefully it's working now
+
+34_11 r64
+ - deleted the symlinks script, as I've had two reports that it's broken
+ - updated the launched to use a custom file instead of onload.init to avoid conflicts (thanks Splinterz)
+
+34_11 r63
+ - Added script by Kevin Cathcart to create the symlinks, as they don't survive zipping (why does no one tell me these things?  Thanks!)
+ - Fixed the copy-script again, on more feedback from Kevin
+ - Updated many scripts to actually work with dfhack-r5; Fricy did all the work and I just dropped in a folder (thanks!)
+ - Fixed growthbug command syntax to work with script (thanks, molkemon)
+
+34_11 r62
+ - re-added 'Classic LNP' keybinds
+ - added TwbT versions of Phoebus and Spacefox; you just need to drop the plugin and never use stonesense in if you want to use them (thanks to Meph Fricy for the additional tilesets) 
+ - added/disabled Text will be Text, the plugin is under 'LNP/useful'
+ - fixed the copy script, which is meant to copy over soundsense music as well but has been broken for months (many thanks for the report /u/cvskeet)
+ - added the Rendermax plugin, a post-rendering lighting engine for DF (compatible with TwbT graphics packs only, but not with TwbT itself!)
+ - the DFHack tab now works, a late-night typo has been fixed (thanks, Splinterz)
+ - added Rendermax to DFHack tab
+ - clarified some of the tooltips on the dfhack tab
+ - I misread the Dwarf Therapist update; now back to v21.8 until the update is jugded stable and properly released
+
+34_11 r61
+ - more tweaks to stonesense config; now uses 'WINDOW' follow mode instead of 'FOCUS' - you can now scroll to the map edges in any window size
+ - Big update to the Starter Pack Launcher:  a configurable dfhack tab.  
+    Options currently include Isometric graphics, mouse controls, automatic job assignments, more automation (mutiple commands), performance tweaks  (mutiple commands), and bugfixes (enabled by default, many many commands).  
+    The whole list and functions can be configured in "LNP/LNPWin.txt", just never have that file and the launcher open at the same time - it'll crash and wipe the config completely.  
+ - tweaked dfhack.init; it should now be left alone - use the launcher for toggleable options unless you know what you're doing
+ - Dwarf Therapist updated to v22 (alpha)
+
+34_11 r60
+ - re-added Falcone's latest UI plugins (v49); adds Automelt, Date & Weather display, Assigning Rooms to Noble Positions, Hotkeys display
+ - re-added dfterm3; plugin updated for dfhack-r5
+ - changed stonesense init.txt settings:  now shows 1 z-level and a smaller X-Y area; this improves performance and should allow you to scroll to the edge of the map
+ - fixed script gui/unit-info-viewer
+ - fixed some keybindings to be propperly contextual (eg if cursor required, don't run without cursor)
+ - fixed the rare issue of embark controls clashing ('wxad' should now be frimly in place)
+ - removed DFMon, as development quietly ended a while ago without a properly stable version
+
+34_11 r59
+ - added Stonesense for dfhack-r5; including [url=https://imgur.com/a/IfKwv]the stonsense overlay[/url]
+ - made "tweak/confirm-embark" and "embark-tools" (dfhack UI upgrades) run by default
+ - removed old LNP GUI
+ - documentation:  dfhack.init clarified a little, add checksums and clear info on mirrors, better intro post
+
+34_11 r58
+ - updated Picturefort to v2.1
+ - removed Chromafort
+ - updated dfhack to r5, the long-awaited update.  [url=http://www.bay12forums.com/smf/index.php?topic=139553]See the DFHack changelog here.[/url]
+     This has a number of consequences - mostly dfhack-dependant components are removed until they update over the next few days. 
+     For this reason Starter Pack r57 will remain available for now, as the last dfhack-r3 version, to prevent anyone losing their favorite tool
+ - some scripts are no longer listed; they are now included in dfhack by default and the dfhack readme covers them 
+ - dfterm3 (utility+plugin) removed, until the plugin is updated
+ - Isoworld will not show any detailed view until the plugin is updated.  The large maps still work.
+ - Stonesense removed until it is updated for dfhack-r5 (ETA "next few days")
+ - DFfusion removed (legacy dfhack inclusion)
+ - growthbug plugin removed pending update; provisionally replaced by fix/growthbug.rb
+ - slight downgrade to Falconne's UI plugins; the ones included in dfhack-r5 are a month or so out of date
+ - new plugin "embark-tools" uses 's' on embark screen, keybindings adjusted slightly to compensate (move with 'waxd' now)
+
+34_11 r57
+ - upgraded the launcher:  "Starter Pack Launcher" uses new icons, more space for graphics and utilities, clarified some names and info.  The old GUI is still available for now, because it also requires .NET 4.0 instead of 3.5 and there may be other bugs.  They should be completely interchangeable.
+ - updated Falconne's UI plugins to v47; dwarf monitor now shows current date and weather in the border, buildingplanner allows you to assign a room to a position rather than person (eg will assign to the new mayor if that changes)
+ - added dfhack script feeding-timers; experimental but it's meant to fix the common failure to give lifesaving food or water to unconscious dwarves
+
+34_11 r56
+ - added Picturefort 1.0 - like Chromafort, but better
+ - updated Dwarf Therapist to v21.8; lots of little fixes and a few small upgrades
+ - added Dorven Realms R1 - a DF world map to minecraft converter
+ - updated Legends Viewer to 1.13.11; fix for an encdoing bug and some corrupted XMLs
+ - removed obsolete readme files (adding graphics packs: new version.  DT manual: now in utility folder.)
+ - changed some embark keybindings: now move embark selection with 'wasd' (from 'uhmk'), resize with 'uhmk' (was 'UHMK').  More intuitive, as resizing an embark uses the same keys as resizing constructions and 'wasd' for movement is common
+ - updated Falconne's UI plugins to v0.45 - mouse tracking is now automatically disabled while linking levers
+
+34_11 r55
+ - bugfix: defaults button now restores pack defaults, not older settings
+ - fixed folders menu item (now to the folder 'useful' instead of renamed 'extras')
+ - updated Legends viewer to v1.13.10; fixes harmless error popup
+ - updated Falconne's UI plugins to v0.44; fixed (and re-added) automelt plugin
+ - fixed missing files in Spacefox graphics (copied missing fonts from Phoebus)
+
+34_11 r54
+ - re-applied LAA patch
+ - updated dfterm3 to version 0.3.1 (bugfixing, some UI improvements)
+ - updated Dwarf Therapist to version 21.6
+ - removed automelt plugin at author's request - it's been crashing games and will be back once fixed
+ - added a symlink for Isoworld
+
+34_11 r53
+ - updated Quickfort plans to the new edition of the community archive, then updated to v2.1 - /u/Spfifle is awesome
+ - added symlink from "Legends Viewer" folder to "User Generated Content" - just click link for legends
+ - now using symlinks: default location for user quickfort blueprints and .dfmap files (for Overseer) is in the User content folder, other locations must be copied to a new install manually.  NB: symlinks may not work on Windows XP, please consider upgrading urgently; old methods (manual navigation) will continue to work
+ - upgraded the "copy data to new install" script to handle the new locations (it'll also work to move from old to new)
+ - updated the "move .dfmaps" script in the DF folder; goes to new folder and also gives short output if nothing is found
+
+34_11 r52
+ - upgraded the dfterm3 install script to handle XP (on which dfterm3 crashes)
+ - commented "start-dfterm3" out in dfhack.init - uncomment or call when you need it
+ - added soundsense script to dfhack.init for more useful gamelog info and sounds
+ - upgraded to version 18.3 of the LNP GUI - fixes the graphics issue in pack r50, 51; also other bugfixes
+
+34_11 r51
+ - removed a lot of stuff that was cluttering up the Dwarf Fortress folder...
+ - everything under LNP/extras was copied over; now renamed to LNP/useful
+ - I upgraded the legends exports processor so it now works entirely from a folder in LNP/utilities; deleted all related files from the DF folder and set it up as a utility.  This is release v3.0
+ - keybinding for dfstatus changed from ctrl-I to ctrl-shift-I, to avoid conflict with default for 'gui/workflow status'
+ - upgraded script log-region, so it won't throw an error if you load legends or adventure mode
+ - added dfhack.init call "tweak patrol-duty" (military training does not give unhappy thoughts)
+ - fixed spelling in exportmaps
+ - new script "exportlegends", bound to shift-A.  Exports the map/gen info, the legends XML, and all the detailed maps.
+ - removed script "processlegends", as it was always dodgy and now broken
+
+34_11 r50
+ - updated LNP GUI to v18.2; improvements to utilities pane and updated version info under help/about; .bat scripts can be run from the utilities pane (requested to fix broken dfterm3 implementation and allow the following)
+ - updated "__Process Legends Exports.bat"; now includes [url=http://www.bay12forums.com/smf/index.php?topic=137076]CharonM72's realistic map maker[/url] and can be used as a utilty in the LNP GUI - awesome with Legends Viewer.
+
+34_11 r49
+ - fixed the keybinding context for copystock (alt-P works now)
+ - updated PerfectWorld to v1.7; better sliders and more precise volcano placement
+ - updated the LNP GUI to version 18, adds a few options along with tweaks and bugfixes
+ - removed the alt-M keybinding for DFHack plugin "dwarfmonitor prefs", you can still get to this from ctrl-F (for the stats); that and the alt-tab bug was causing issues when people went to the military.  
+ - fixed broken aquifer toggling for Obsidian graphics
+
+34_11 r48
+ - updated Falconne's plugins to v0.42, adds autodump and automelt functions to stockpiles (like autotrade), changes some controls to avoid accidental triggering
+ - updated to dfstatus script to 1.02 and fixed keybinding
+ - Major Dwarf Therapist update to v21.2, heaps of bugfixes and a few good new features (see [url=https://github.com/splintermind/Dwarf-Therapist/wiki/Change-Log]the changelog[/url])
+
+34_11 r47
+ - Windows LNP GUI updated to V17.2 - now shows which tileset is installed, utilities don't display file extensions, supports multiple DF installs (not included); also has customisable menus
+ - On this basis, the beta cross-platform GUI has been removed - it is not feature-competetive at this time.  Back to just one GUI, and hopefully and end to confusion!
+
+34_11 r46
+ - Old LNP GUI updated to V17 (now keeps GUI settings when changing graphics packs, so no more resetting!  May be new enough to get an antivirus warning for a while)
+ - Falconne's UI plugins updated to v0.41 (bugfix for rare crash on mass-melting items)
+ - corrected some out-of-date documentation on the map maker script
+ - Added 'dfstatus' script (gives stocks overview/snapshot, keybinding Ctrl-I)
+
+34_11 r45
+ - ASCII Square now uses the proper pillar tile (a capital 'O', instead of '||')
+ - renamed the two LNP GUIs for clarity
+ - fixed (I think) the issue with Jolly Bastion walls displaying wrong
+ - updated displayed version number of Phoebus Graphics, overdue since... r12, it looks like.  
+ - ASCII Default tileset is now *really* default, copied without edits from the vanilla download.  This means that it's settings are different to other packs.  
+ - updated the data copying script a little (to handle SoundSense version change)
+ 
+34_11 r44
+ - updated Falconne's plugins to v0.40; many new features including melt from enhanced stocks screen
+ - updated Dwarf Therapist to version 20.7
+ - updated manual for Dwarf Therapist
+ - updated SoundSense to r43; now has a popup notification if you haven't downloaded the soundpack!
+
+34_11 r43
+ - fixed an issue loading ASCII graphics packs in the new launcher (configuration update)
+
+34_11 r42
+ - Updated Falconnes plugins to v0.37; Mousequery and Automaterial (now show construction / designation size), search works on workshop profiles screen
+ - Updated DFMon to v0.9, nearly out of beta now and includes documentation in the folder.  
+ - fixed a bug with the stripcaged script
+ - The old LNP has been formally discontinued in favor of this pack, since it hasn't been updated in more than a year.
+ - Split old 'ASCII Default' graphics into 'default' and 'square' - the default had been changed to square, and was somewhat confusing.  
+
+34_11 r41
+ - Updated Dwarf Therapist to v20.6.6
+ - Updated manual for Dwarf Therapist
+ - Added an iron anvil to the simple start embark profile
+ - Shuffled the online presentation of the pack around a bit
+ - Removed DwarfMapMaker (from extras), since it's built into the legends processor and thus redundant
+ - Updated "__Process Legends Exports.bat" to version 2.4, to allow the above (moves the .scm plugin to DF folder)
+
+34_11 r40
+ - updated to a newer version of the Dwarf Therapist manual
+ - fixed nested folder for DFMon (didn't start)
+ - changed default MACRO_MS to 0 miliseconds, which is better for Quickfort, on all graphics packs.  If you change init settings manually while the LNP is open, it resets the changes on closing, which this should work around for Quickfort.  
+ - added "repeat.lua" - set scripts to be re-run on a regular basis, eg a siege every two months with "repeat enable 2 months force siege EVIL"
+
+34_11 r39b
+ - tweak to the batch files, @echo off applies to itself too (thanks, /u/overand)
+ - took DFMon out of nested folder, it should work from the utilities list now
+
+34_11 r39
+ - Added new utility: DFMon V0.5 - handles announcements
+ - Upgraded to the new Dwarf Therapist (now 20.6); it has... actually too much to list here, see the patch notes for v20.6 and suffice to say it's an upgrade: https://code.google.com/r/splintermind-attributes/
+ - Added dfterm3:  enables multiplayer DF over the internet; requires some fiddling to work though I've minimised it with another batch script :)
+ - removed DF Designator to keep pack size within limit - Quickfort and Chromafort cover the functionality and are arguably superior in speed and power
+
+34_11 r38
+ - updated Falconne's plugins, some bugfixes for mouse support and zone-related crashes, search plugin no longer interferes with stocks, etc
+ - new plugin that shows hotkeys, press Ctrl-F1 anywhere to see what keybindings are active from dfhack
+ - another module for the legends processing script (now v2.2); this one fixes the damage workflow does to the exports (which otherwise crashes if you load legends from a world where you've had a fort with workflow)
+ - another fix for legends processor (v2.3) which used to set "region1" as a match for "region11"; it now also works for up to region999
+ - added a final message to the updating tool.  Tells you where it copied from, and that it doesn't do settings.
+ - a new binpatch to fix weapon momentum issues (http://www.bay12forums.com/smf/index.php?topic=131527)
+ - removed the embarkanywhere utility, the same function is offered by dfhack ('embark -h' for help) and it triggered someone's antivirus software
+ - new links menu item 'report bugs with this program' - on the program thread, not the pack thread.
+
+34_11 r37
+ - Fixed the many bugs with the 'new and improved' legends processor - now that it works as intended, it's actually an improvement.
+ - Wrote and added a simple script to start the legends processor from dfhack; Ctrl-Shift-L in legends mode will do it. 
+
+34_11 r36
+ - fixed the "16x16 ASCII default" graphics pack to remove and deactivate the example graphics
+ - added an item to the links menu, another story site
+ - added folder link to quickfort blueprints folder, and a brief note of apology for the mess.  
+ - Massive upgrades to "__Process Legends Exports.bat", to the point where I've uploaded it as a standalone utility
+ - Apparently using 'A' to export all the detailed maps from legends mode was causing issues, so the key is now shift-D.  Alt-X does the same thing, but the alt key isn't always recognised - that's why there's a second option.  
+
+34_11 r35
+ - better labeling and some expansion in the about folder
+ - further config for the announcement filter utility, there's a bit more colour now
+ - upgraded the data copying tool, it now (hopefully) handles the old LNP, the 'advanced' version of the old LNP, and the vanilla game.  It should also supply more useful feedback to users, and the commenting is better for anyone interested in modifying/extending it.  GPL3 as usual, and I'd appreciate any improvements.  
+ - added a 'support Bay12 Games' button/link to the description.  Do it, people - Toady has to eat!
+ - updated Falconne's plugins to 0.35, adds an unmark all for trade option and fixes some key issues in the enhanced stocks screen
+ - added context to a few dfhack keybindings; they work just as well when they're meant to and now don't misfire (thanks, Taverius)
+ - fixed soundsense config to point to the supplemental log properly (Taverius again, s/he is a legend)
+ - fixed the lnp.yaml calls to the alternative keybindings; they now actually work (ladies, gents, everyone: Taverius)
+
+34_11 r34
+ - updated the manual for Dwarf Therapist to completed status, saved in extras folder
+ - added keybinding for autochop, Ctrl-T will open it up
+ - added the donate page to links menu; the game is free, but Toady (the dev) still needs to eat - and he lives off donations.  Also added many other community links and some tutorial links.  
+ - fixed the Quickfort plans for the Mines of Moria, now v2.4; four version changes and lots of work and testing by Dragur
+ - changed the keybinding to xport all maps from legends mode to 'a'; it was x before and messing with the legends export.  
+
+34_11 r33
+ - Added DF Announcement Filter 1.1 (alternative, filterable, announcements screen in another window)
+ - removed two duplicated patches from dfhack.init
+ - MAJOR: updated to a new, cross-platform LNP GUI; this one is in active development, already feature-equal, and more customisable (meaning better tailored for you, by me)
+ - removed Shizzle tileset, due to low usage and file hosting limits :-(
+
+34_11 r32
+ - tweaked legends processor, works better without GIMP now (skipped the set region number part, potentially problematic)
+ - added a third (fourth?)-party manual/userguide for Splinterz Dwarf Therapist
+ - fixed the behaviour of LNP's restore embark profiles and world_gen files, they were still the older versions
+ - stuck all the licenses, readmes etc for the pack as a whole in a folder (LNP\about) to tidy up a bit, for individual components they're still with those.  Anything about this pack which is mine is officially released under GPL3, the bits which aren't mine have not changed.  
+ - updated Falconne's plugins to 0.34, with new 'autochop' - a variation of getplants that acts like workflow, and can be confined to any burrow, great for tree farming and later-game automation; also a bunch of bugfixes for the other plugins
+
+34_11 r31
+ - updated mousequery - designation right-click now works properly (paint with left, rectangle with right)
+ - upgraded embark profiles again, now includes many scenarios adapted from the masterwork mod package.  Thanks to everyone who helped with those.  
+ - legends processor should now just skip the map maker if GIMP is not installed
+ - modified log-region slightly, result now includes world name and is a little more readable
+
+34_11 r30
+ - updated Spacefox graphics to new v1.0
+ - put the standard settings in Spacefox and Obsidian graphics packs (should have remembered earlier)
+ - corrected an error in my earlier settings-standardisation between graphics packs (second set of tileset references in init.txt needs a different tag, thank bay12 user RS14 who pointed this out)
+ - more embark profiles, from (existing) classic LNP+Phoebus, I added two specialist sets off the wiki
+ - added 'forumdwarves' script (outputs a text description screen, eg detailed thoughts and description of a dwarf, to a text file formatted for posting on a forum); type 'forumdwarves help' for details.  Keybound to Ctrl-Shift-F for now.  
+ - also added scripts removewear.lua; showunitsyndromes.rb - give more info.  No keybindings for these yet, so call them from dfhack ("<script> help" will give instructions)
+ - changed keybinding for Falconne's Dwarfmonitor prefrences screen to Alt-M, since that seems to be the emerging standard.  
+
+34_11 r29
+ - removed a single misplaced backslash that was breaking the Legends Processor and fixed a number of other outstanding bugs which were probably harmless
+ - re-added the legacy legends processing scripts, in a folder under LNP/Extras
+ - Falconne's plugins updated to 0.31; improved stocks interface including GUI shortcut from standard stocks screen; DwarfMonitor can now summarise the prefenrences of your citizens (alt-p) and is enabled by default in dfhack.init
+ - Added Spacefox's graphics set - a retro kinda hybrid of Phoebus and Jolly Bastion
+ - Removed World Viewer, because I've got a 100MB limit and legends viewer accepts the auto-processed archives
+
+34_11 r28
+ - updated log-region with a minor fix for potentially poor behaviour, rearranged the first line for grammar and clarity, now outputs eg "Loaded region2," instead of "Loaded Region,".  
+ - upgraded the Legends Processor - you should no longer need to edit in your GIMP install location.  So long as you have it installed and the script in place, it'll just work.  The only downside is that if you have GIMP installed but DwarfMapMaker.scm is not in place it'll throw an error.  It'll also now put the exports in a folder called "region# stuff", creating it if no such folder exists yet.  It uses the region number in naming the legends archive and processed map too, so they're less likley to overwrite each other.  Handles up to region999.  
+ - big upgrade to the script to copy across all your stuff from the old pack: you no longer need to specify what version you are upgrading from, just click and go.  Out of beta, cause it should just work now.  It'll also avoid copying anything across if there are any save folders in the newer pack, so accidentally overwriting shouldn't happen.  Still doesn't delete the old folder, but I can't think of a way to make that safe enough.  
+ - I now have google-assisted scripting skills (ok, mostly google), and a personal contribution to this pack.  Yay!
+
+34_11 r27
+ - added Obsidian graphics 0.8a - a beautiful pack with unique moving grass (same mechanic as tentacles/eyeballs in evil biome); and edited the init and d_init to have the same settings as every other pack will restore.
+ - new mega-script to do all your legends export processing needs in one go (explained in new readme), compresses legends xml(new and very useful, but only works with Legends Viewer - feature coming to World Viewer soon); may break if certain components are removed from the Dwarf Fortress folder.  
+ - pack updater also copies soundsense configuration.xml, if you turn the GUI off for example
+ - added script "log-region", which puts a message in the gamelog identifying what just got loaded - very useful for sorting out which events happened in which fort, and essential to forthcoming versions of DF Story Maker; so best to get it in now
+
+34_11 r26
+ - replaced fix/growthbug script with compiled plugin version, removed line in dfhack.init which is now redundant.  The plugin runs automatically and can but need not be configured
+ - Added World Viewer 1.0 (a legends viewing utility), 32bit by default but includes a 64bit version which might work for larger files.  enable it by editing the 'exclude.txt' in LNP/Utilities 
+ - Added new keybinding for alternative stocks interface (keybinding add Z@overallstatus "stocks show"); the old one is still in and should contine to work just as well as before
+ - Updated Falconne's plugins (mousequery) to 0.29
+
+34_11 r25
+ - Added "DF Story Maker 1.0" - a utility that parses the gamelog and outputs a copy with only chosen categories of announcements; development is active on 1.1 and a major expansion is planned.  
+ - Added all the Quickfort blueprints on the community page as of 20/07/2013 to the /Quickfort 2.04/blueprints/ folder, and moved the Moria plans there too with an extra note on the problems these plans have, added a folder for "User Created Blueprints".  
+ - Added an experimental batch file to make moving to an updated pack less bother - just put the new in the same folder as the old, and edit the batch file to put the old folder name in the marked spot then run the file.  
+ - Added a batch file to move .dfmap files to the user content folder and the Overseer folder.  
+ - Added a few dfhack keynindings to deal with rare(ish?) issue with alt-something commands not working.  Workflow, quicksave, and exportmaps now all work with or without the alt key due to additional keybindings which can be seen in dfhack.init
+
+34_11 r24
+ - TL;DR - having exported everything, run the batch files in order.  
+ - A release focussed on making legends mode exports easier to use.  
+ - First, improvements to ease-of use for Dwarf Map Maker (the GIMP script).  The "compress-bitmaps.bat" has been renamed "aab Compress Bitmaps", and will now only affect files with "egion" somewhere in the name - this includes the outputs from legends exports and Map Maker, but not the seed files for the map which must be in .bmp format.  
+ - "aaa Make Map.bat" is now in the Dwarf Fortress folder, so repeated use is much less of a pain.  The map maker works as described in the readme in LNP/extras/Dwarf map maker.  
+ - I've added a batch script that moves your newly processed exported info to the folder for User Generated Content (the reason it exists is as a standard target...).  
+ - The batch files must be run in order but will work if earlier ones are skipped.  
+
+34_11 r23
+ - lots of fixes for the graphics.  
+ - added the phoebus embark profile to the main embark_profiles.txt; deleted the vanilla curses tileset from the graphics packs (duplication/pack size); deleted the non-phoebus stuff in raw/graphics (should fix the odd dwarf graphics people noticed - those were the default/example icons, big thanks to CLA who explained the problem).  
+ - Also some tweaks to the visualisers - Isoworld and Stonesense have slightly larger default view areas, no fog in stonesense, and a larger minimap for Isoworld.  
+ - Also modified the descriptions to reflect the fact that Falconne's plugins are still 0.27 following download issues which I should have caught last time.  
+ - Finally, verbose changelogs are long!
+
+34_11 r22
+ - added all dfhack binpatches back in (reports of training ammo issues make me wonder how effective the patched .exe really is...)
+ - updated mousequery (now allows designation painting with the mouse when enabled and an explicit option in the 'd' menu to go to box designation)
+ - emptied the gamelog from testing
+
+34_11 r21
+ - updated the colour codes (Vherid tweaked them a litle)
+ - added an explicit option in dfhack.init to disable the mouse control ("#mousequery plugin disable"), 
+
+34_11 r20
+ - hospital overstocking was meant to be patched in the .exe and is now renabled in dfhack since that didn't work
+ - deleted a few errorlogs produced in testing
+ - removed Mouse Fortress as mousequery is now a more stable replacement (still binpatched if you want to get it manually)
+
+34_11 r19
+ - added startdwarf script to embark with any number of dwarves
+ - added my quickfort plans for the mines of Moria
+
+34_11 r18
+ - removed binpatches from dfhack.init; duplicated patches in the .exe
+
+34_11 r17
+ - different fix for the growth bug
+
+34_11 r16
+ - fixed issue with CLA graphics missing cursor
+ - added changed keybindings to LNP keybinding function so changing is easy
+ - added a script that fixes the bug about born units never growing
+
+34_11 r15
+ - made my additions to dfhack.init a little clearer
+ - modified the init for each graphics pack so they all have the same newb-friendly settings
+ - added the cheatsheets from reddit to extras
+ - added unit info viewer GUI script
+
+34_11 r14
+ - updated mousequery; behaviour fixes (edge now requires track)
+ - removed DF Architect; made obsolete by DF Designator
+
+34_11 r13
+ - updated Falconne's plugins for mousequery again; now has live view when unpaused and can enable edge scrolling at all times
+ - moved Vherid's colour schemes to extras folder
+ - added top-level folder for user generated content to make updating easier
+
+34_11 r12
+ - cursor tracking now disabled by default; see dfhack.init to enable
+ - updated Phoebus Graphics
+ - added the new phoebus graphics customiser to extras
+
+34_11 r11
+ - added a new script to export all detailed maps from legends mode (exportmaps, keybinding Alt-X)
+ - added embark anywhere
+
+34_11 r10
+ - added a readme with some basic instructions to Overseer folder
+ - reduced filesize by removing some of the more bizzare bits like non-DF stuff and some bizzare plugins
+ - changes for ease of setup
+
+34_11 r9
+ - removed skill rust announcements from gamelog soundsense script due to personal experience of spam
+ - updated Falconne's plugins to 0.25 (mousequery updated again - mostly bugfixes)
+
+34_11 r8
+ - moved Isoworld to the utilities folder; works with LNP utilities tab
+ - fixed soundsense config to correct default gamelog placement
+
+34_11 r7
+ - updated Falconne's UI plugins to 0.24 for new mousequery and added to dfhack.init appropriately
+ - changed mousewheel keybindings from zooming to change z-levels for easy mouse use
+ - updated soundsense to r42 and installed the script for extended announcments
+ - added PerfectWorld DF v1.6 with updated xml config
+ - got a version of DF with binpatch bugfixes and modified it for Mouse Fortress compatibility (and added the hex editor to extras folder for user replication)
+
+34_11 r6
+ - added utility 'Dwarf Map Maker' (gimp script) to extras folder - and bundled GIMP 2.6.12
+ - added Putnam's scripts for DFHack (force events, etc)
+ - changed from .zip to .7z compression and consequently shuffled the extractor to the top level
+
+34_11 r5
+ - updated and fixed Jolly Bastion graphics
+ - added colour options (see graphics folder) per Vherid
+ - renamed 'launch.exe' to 'MouseFortress.exe' for clarity
+ - added tile size labels to graphics folders
+ - added two designation utilities; DF Architect 0.2 and DF Designator v1
+ - fixed incorrect naming of Shizzle tileset v1.0 to 1.3
+
+34_11 r4
+ - more graphics packs (from three to seven)
+ - moved extractor to LNP/extras
+ - cleaned up some logs from testing
+ - added Fortress Overseer utility (may not work, see notes in utilities folder)
+ - no longer automatically launches mouse fortress
+ - removed DFinit utility as it replicates a LNP function
+
+34_11 r3
+ - LNP updated to v16.2
+ - added universal extractor utility to make updating manually easier
+
+34_11 r2
+ - LNP launcher updated to v16.1
+ - added mayday graphics (experimental)
+
+34_11 r1
+ - initial release by PeridexisErrant, based on classic LNP (http://www.bay12forums.com/smf/index.php?topic=59026)

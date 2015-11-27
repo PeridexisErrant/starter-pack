@@ -29,11 +29,6 @@ Display Name and Tooltips:
 
 Exclusions:
 
-Armok Vision (custom 32/64 bit handling)
-[AV32.exe:EXCLUDE]
-[AV64.exe:EXCLUDE]
-[ArmokVision.exe:EXCLUDE]
-
 Quickfort
 [w9xpopen.exe:EXCLUDE]
 [qfconvert.exe:EXCLUDE]

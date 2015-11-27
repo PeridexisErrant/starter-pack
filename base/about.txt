@@ -1,0 +1,22 @@
+PeridexisErrant's Starter Pack bundles Dwarf Fortress with huge community upgrades - graphics, tools, bugfixes, and much more.
+
+[url=http://dffd.wimbli.com/file.php?id=7622][size=18pt]Download the latest Starter Pack here![/size][/url]
+
+It's suitable for anyone - if you've never tried DF before, or played for years.  For beginners, everything is bundled and set up for you; any setting can be safely ignored and the default will just work.  For advanced players, everything is open: customise, add, remove, update, or replace anything you want to.  The Starter Pack means you can spend hours setting up your fortress, instead of your DF install!
+
+There's [url=http://www.bay12forums.com/smf/index.php?topic=126076]a thread on the Bay12 forums[/url] for feedback, questions, suggestions, or anything else about the pack.  [url=http://www.bay12forums.com/smf/index.php?topic=126076.msg4250424#msg4250424]The second post [/url] has a complete table of contents, and recent changelogs.
+
+Besides the official download page on DFFD[/url], /u/Hecknar maintains [url]df.wicked-code.com[/url], which mirrors every release since 0.40.01!  The final 34.11 pack is [url=http://dffd.bay12games.com/file.php?id=8687]here.[/url]  If you need an older pack or that site is down, let me know and we'll sort something out.  OSX and Linux packs are available at http://lazynewbpack.com
+
+[b]INSTRUCTIONS:[/b]
+1. [url=http://dffd.wimbli.com/file.php?id=7622]Download[/url] and unzip the folder
+    [i]It's a bundle of portable apps; there's no further installation procedure.[/i]
+    [i]The pack must be able to read/write files though - so don't put it in a "Program Files" folder.[/i]
+2. [Optional]:  Use [url=https://md5file.com/calculator]this tool[/url] and the checksum on DFFD to confirm you got an uncorrupted file.
+3. [Optional]:  Upgrade from an earlier release by running the 'copy my data' script with both versions next to each other in a folder.
+                DO NOT try to upgrade by extracting or copying over an earlier pack.
+4. [Optional]:  Visit [url=http://dwarffortresswiki.org/Quickstart_guide]the DF wiki[/url] or [url=https://df-walkthrough.readthedocs.org]my tutorials[/url] for help learning to play.
+
+Finally, an appeal:  Dwarf Fortress is free, and [url=http://www.bay12forums.com/smf/index.php?topic=100851.msg5237823#msg5237823]redistributable[/url], because Toady lives off donations.  You can [url=http://www.bay12games.com/support.html]support Bay12 Games here[/url].  Or you can [url=https://www.patreon.com/PeridexisErrant]donate to cover my time and costs here[/url].  Even if you decide not to donate, Dwarf Fortress is still free - and so is this unofficial pack.
+
+[url=http://www.bay12games.com/support.html][img]http://www.bay12games.com/dwarves/imgs/support_large.png[/img][/url]
