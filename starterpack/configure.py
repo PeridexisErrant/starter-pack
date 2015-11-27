@@ -5,12 +5,12 @@ upstream changes or to alter the default configuration of the pack.
 """
 
 import collections
+import datetime
 import os
 import shutil
 
-import requests
-
 from . import build
+from . import component
 from . import paths
 
 
@@ -96,23 +96,6 @@ def graphics_simplified():
             print('{:30}{}'.format(p + ' graphics pack', 'not simplified'))
 
 
-def dwarf_therapist():
-    """Check that DT memory layout for the current version is present."""
-    fname = 'v{}_graphics.ini'.format(paths.DF_VERSION)
-    memfile = paths.utilities(
-        'Dwarf Therapist', 'share', 'memory_layouts', 'windows', fname)
-    if os.path.isfile(memfile):
-        return
-    if not os.path.isfile(os.path.join('component', fname)):
-        url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
-               '/DF2014/share/memory_layouts/windows/' + fname)
-        text = requests.get(url).text
-        with open(memfile, 'w') as f:
-            f.write(text)
-        print('{:30}{}'.format('Therapist memory layout', 'was downloaded'))
-    shutil.copy(os.path.join('component', fname), memfile)
-
-
 def twbt_config_and_files():
     """Check and update init files for TwbT settings.
 
@@ -140,6 +123,41 @@ def twbt_config_and_files():
                 f.writelines(init)
 
 
+def update_docs():
+    """Copy about and changelog; add date to latest changelog."""
+    if not os.path.isdir(paths.lnp('about')):
+        os.mkdir(paths.lnp('about'))
+    shutil.copy(paths.base('about.txt'), paths.lnp('about'))
+    with open(paths.base('changelog.txt')) as f:
+        changelog = f.readlines()
+        changelog.insert(0, 'Version {} ({})\n'.format(
+            paths.PACK_VERSION, datetime.date.today().isoformat()))
+        with open(paths.lnp('about', 'changelog.txt'), 'w') as f:
+            f.writelines(changelog)
+
+
+def generate_contents():
+    """Generate the contents post from a template (base/contents.txt)."""
+    #pylint:disable=missing-docstring
+    def link(comp, ver=True, dash=' - '):
+        vstr = ' ' + comp.version if ver else ''
+        return dash + '[url={}]{}[/url]'.format(comp.page, comp.name + vstr)
+
+    kwargs = {c.name: link(c, dash='') for c in component.FILES}
+    kwargs['graphics'] = '\n'.join(link(c, False) for c in component.GRAPHICS)
+    kwargs['utilities'] = '\n'.join(link(c) for c in component.UTILITIES)
+    with open(paths.base('changelog.txt')) as f:
+        kwargs['changelogs'] = '\n\n'.join(f.read().split('\n\n')[:5])
+    with open(paths.base('contents.txt')) as f:
+        template = f.read()
+    for item in kwargs:
+        if '{' + item + '}' not in template:
+            raise ValueError(item + ' not listed in base/docs/contents.txt')
+    with open(paths.lnp('about', 'contents.txt'), 'w') as f:
+        #pylint:disable=star-args
+        f.write(template.format(**kwargs))
+
+
 def configure_all():
     """Call all the configuration functions above."""
     install_lnp_dirs()
@@ -147,6 +165,7 @@ def configure_all():
     make_keybindings()
     soundsense_xml()
     graphics_simplified()
-    dwarf_therapist()
     twbt_config_and_files()
+    update_docs()
+    generate_contents()
     build.overwrite_dir(paths.graphics('Phoebus'), paths.df())

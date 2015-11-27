@@ -77,10 +77,10 @@ def rough_simplify(df_dir):
             shutil.rmtree(path)
 
 
-def _create_lnp_subdir(kind):
+def _create_lnp_subdir(comps):
     """Extract all of somethine to the build/LNP/something dir."""
-    for comp in (c for c in component.ALL.values() if c.category == kind):
-        target = paths.lnp(kind, comp.name)
+    for comp in comps:
+        target = paths.lnp(comp.category, comp.name)
         if os.path.isdir(target):
             print(target, 'already exists! skipping...')
             continue
@@ -89,14 +89,14 @@ def _create_lnp_subdir(kind):
 
 def create_utilities():
     """Extract all utilities to the build/LNP/Utilities dir."""
-    _create_lnp_subdir('utilities')
+    _create_lnp_subdir(component.UTILITIES)
     # TODO: generate utilities.txt instead of copying a static version
     shutil.copy(paths.base('utilities.txt'), paths.utilities())
 
 
 def create_graphics():
     """Extract all graphics packs to the build/LNP/Graphics dir."""
-    _create_lnp_subdir('graphics')
+    _create_lnp_subdir(component.GRAPHICS)
     unzip_to(component.ALL['Dwarf Fortress'].path,
              paths.graphics('ASCII'))
     # Only keep the 24px edition of Gemset
@@ -161,6 +161,9 @@ def install_misc_files():
 
 def build_all():
     """Build all components, in the required order."""
+    print('\nBuilding pack...')
+    if os.path.isdir('build'):
+        shutil.rmtree('build')
     create_df_dir()
     create_utilities()
     create_graphics()

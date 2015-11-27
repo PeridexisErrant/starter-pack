@@ -146,7 +146,7 @@ class ManualMetadata(AbstractMetadata):
 _template = collections.namedtuple('Component', [
     'category', 'name', 'path',
     'filename', 'dl_link', 'version',
-    'days_since_update', 'thread'])
+    'days_since_update', 'page'])
 
 
 def __component(category, item):
@@ -195,3 +195,8 @@ if __name__ != '__main__':
                    for i in vals if c != 'version')
         ALL = {i: __component(c, i) for c, i in __items}
     ALL['Dwarf Fortress'] = __component_DF()
+    FILES = [c for c in ALL.values() if c.category == 'files']
+    GRAPHICS = [c for c in ALL.values() if c.category == 'graphics']
+    UTILITIES = [c for c in ALL.values() if c.category == 'utilities']
+    for l in (FILES, GRAPHICS, UTILITIES):
+        l.sort(key=lambda c: c.name)
