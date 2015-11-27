@@ -20,7 +20,7 @@ Display Name and Tooltips:
 
 [soundSense.exe:SoundSense:A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.]
 
-[DFWV.bat:World Viewer:Another third-party legends viewer, with automatic 32/64 bit switching.  Can read extra information exported by DFHack with the "exportlegends" script.]
+[DFWV.exe:World Viewer:Another third-party legends viewer, with automatic 32/64 bit switching.  Can read extra information exported by DFHack with the "exportlegends" script.]
 
 [DwarfMockup-1.0.3.exe:DwarfMockup:DF-like interface for the creation of Quickfort blueprints, with some nice helper features]
 
@@ -46,6 +46,3 @@ SoundSense
 [jl1.0.1.jar:EXCLUDE]
 [mp3spi1.9.5.jar:EXCLUDE]
 [autoUpdater.jar:EXCLUDE]
-
-World Viewer
-[DFWV.exe:EXCLUDE]

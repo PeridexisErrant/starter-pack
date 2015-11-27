@@ -8,11 +8,10 @@ This code is highly specific to my pack - it's released under the GPL3,
 but don't expect it to be particularly reusable.
 """
 
-from starterpack import build, component, configure, dist
+from starterpack import build, component, dist
 
 if __name__ == '__main__':
     component.report()
     component.download_files()
     build.build_all()
-    configure.configure_all()
     dist.make()
