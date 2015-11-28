@@ -16,4 +16,4 @@ things up to date, and maybe other pack maintainers will find it useful.
 - Configure all the paths etc. that can be set automatically
 - Create some components at runtime; eg ASCII graphics
 - Zip up the built pack, ready to upload
-- Managing some text files (changelogs, forum post, checksum, etc - TODO)
+- Generate or manage changelogs, contents list, and forum post

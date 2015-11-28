@@ -146,10 +146,10 @@ class ManualMetadata(AbstractMetadata):
 _template = collections.namedtuple('Component', [
     'category', 'name', 'path',
     'filename', 'dl_link', 'version',
-    'days_since_update', 'page'])
+    'days_since_update', 'tooltip', 'page'])
 
 
-def __component(category, item):
+def _component(category, item):
     """Lighter weight than a class, but still easy to access."""
     with open('config.yml') as f:
         config = yaml.safe_load(f)[category][item]
@@ -160,6 +160,7 @@ def __component(category, item):
         category, item, os.path.join('components', meta.filename(ident)),
         meta.filename(ident), meta.dl_link(ident), meta.version(ident),
         meta.days_since_update(ident),
+        config.get('tooltip', '').replace('\n', ''),
         'http://www.bay12forums.com/smf/index.php?topic={}'.format(
             config.get('bay12', 126076)))
 
@@ -177,7 +178,7 @@ def df_metadata(null, ident):
     return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
 
 
-def __component_DF():
+def _component_DF():
     """DF is the sole, hard-coded special case to avoid manual management."""
     link = 'http://bay12games.com/dwarves/'
     df_version, updated = df_metadata('', 'Dwarf Fortress')
@@ -185,16 +186,15 @@ def __component_DF():
     return _template(
         'files', 'Dwarf Fortress', os.path.join('components', filename),
         filename, link + filename, df_version,
-        (datetime.datetime.today() - updated).days,
-        link)
+        (datetime.datetime.today() - updated).days, '', link)
 
 
 if __name__ != '__main__':
     with open('config.yml') as ymlfile:
-        __items = ((c, i) for c, vals in yaml.safe_load(ymlfile).items()
-                   for i in vals if c != 'version')
-        ALL = {i: __component(c, i) for c, i in __items}
-    ALL['Dwarf Fortress'] = __component_DF()
+        _items = ((c, i) for c, vals in yaml.safe_load(ymlfile).items()
+                  for i in vals if c != 'version')
+        ALL = {i: _component(c, i) for c, i in _items}
+    ALL['Dwarf Fortress'] = _component_DF()
     FILES = [c for c in ALL.values() if c.category == 'files']
     GRAPHICS = [c for c in ALL.values() if c.category == 'graphics']
     UTILITIES = [c for c in ALL.values() if c.category == 'utilities']

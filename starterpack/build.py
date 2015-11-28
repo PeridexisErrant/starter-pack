@@ -94,6 +94,7 @@ def install_lnp_dirs():
 def make_defaults():
     """Create and install LNP/Defaults - embark profiles, Phoebus settings."""
     default_dir = paths.lnp('Defaults')
+    os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
     for f in {'init.txt', 'd_init.txt'}:
         shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
@@ -155,8 +156,32 @@ def create_utilities():
     for comp in component.UTILITIES:
         unzip_to(comp.path, paths.lnp(comp.category, comp.name))
     _soundsense_xml()
-    # TODO: generate utilities.txt instead of copying a static version
-    shutil.copy(paths.base('utilities.txt'), paths.utilities())
+    # Only keep 64bit World Viewer
+    tmp = paths.utilities('DFWV')
+    shutil.move(paths.utilities('World Viewer', '64bit'), tmp)
+    shutil.copy(paths.utilities('World Viewer', 'Readme.txt'), tmp)
+    shutil.rmtree(paths.utilities('World Viewer'))
+    shutil.move(tmp, paths.utilities('World Viewer'))
+    # generate utilities.txt (waiting for a decent utility config format)
+    with open(paths.utilities('utilities.txt'), 'w') as f:
+        for util in component.UTILITIES:
+            if util.name == 'Quickfort':
+                f.write('[Quickfort.exe:Quickfort:{}]\n'.format(util.tooltip))
+                f.write('[qfconvert.exe:EXCLUDE]\n')
+                continue
+            exe, jars = [], []
+            for _, _, files in os.walk(paths.utilities(util.name)):
+                for fname in files:
+                    if fname.endswith('.exe'):
+                        exe.append(fname)
+                    elif fname.endswith('.jar'):
+                        jars.append(fname)
+            for j in jars:
+                f.write('[{}:EXCLUDE]\n'.format(j))
+            if len(exe) == 1:
+                f.write('[{}:{}:{}]\n'.format(exe[0], util.name, util.tooltip))
+            else:
+                print('WARNING:  found {} in {}'.format(exe, util.name))
 
 
 def _twbt_settings(pack):
@@ -224,12 +249,16 @@ def create_df_dir():
     # install TwbT
     plugins = ['{}/{}.plug.dll'.format(component.ALL['DFHack'].version, plug)
                for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
+    done = False
     with zipfile.ZipFile(component.ALL['TwbT'].path) as zf:
         for obj, name in zip(zf.infolist(), zf.namelist()):
             if name in plugins:
+                done = True
                 outpath = paths.df('hack', 'plugins', os.path.basename(name))
                 with open(outpath, 'wb') as out:
                     shutil.copyfileobj(zf.open(obj), out)
+    if not done:
+        print('WARNING:  TwbT not installed; not compatible with DFHack.')
 
 
 def create_baselines():
