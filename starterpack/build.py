@@ -162,6 +162,11 @@ def create_utilities():
     shutil.copy(paths.utilities('World Viewer', 'Readme.txt'), tmp)
     shutil.rmtree(paths.utilities('World Viewer'))
     shutil.move(tmp, paths.utilities('World Viewer'))
+    # Add xml for PerfectWorld, blueprints for Quickfort
+    unzip_to(component.ALL['PerfectWorld XML'].path,
+             paths.utilities('PerfectWorld'))
+    unzip_to(component.ALL['Quickfort Blueprints'].path,
+             paths.utilities('Quickfort', 'blueprints'))
     # generate utilities.txt (waiting for a decent utility config format)
     with open(paths.utilities('utilities.txt'), 'w') as f:
         for util in component.UTILITIES:
@@ -321,14 +326,6 @@ def setup_pylnp():
         f.write('# Placeholder file.\n')
 
 
-def install_misc_files():
-    """Install the various files that need to be added after the fact."""
-    unzip_to(component.ALL['PerfectWorld XML'].path,
-             paths.utilities('PerfectWorld'))
-    unzip_to(component.ALL['Quickfort Blueprints'].path,
-             paths.utilities('Quickfort', 'blueprints'))
-
-
 def build_all():
     """Build all components, in the required order."""
     print('\nBuilding pack...')
@@ -341,7 +338,6 @@ def build_all():
     create_graphics()
     overwrite_dir(paths.graphics('Phoebus'), paths.df())
     setup_pylnp()
-    install_misc_files()
     create_about()
     make_defaults()
     make_keybindings()

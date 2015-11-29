@@ -165,23 +165,26 @@ def _component(category, item):
             config.get('bay12', 126076)))
 
 
-@cache
-def df_metadata(null, ident):
+def df_metadata():
     """Fetch metadata about DF."""
-    #pylint:disable=unused-argument
-    for line in requests.get(
-            'http://bay12games.com/dwarves/dev_release.rss').text.split('\n'):
-        if line.startswith('      <title>'):
-            for s in ['      <title>', ' Released</title>']:
-                line = line.replace(s, '')
-            day, df_version = (s.strip() for s in line.split(': DF'))
-    return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
+    @cache
+    def _get_df_meta(null, ident):
+        """Use inner function to ensure cache key is identical across calls."""
+        #pylint:disable=unused-argument
+        url = 'http://bay12games.com/dwarves/dev_release.rss'
+        for line in requests.get(url).text.split('\n'):
+            if line.startswith('      <title>'):
+                for s in ['      <title>', ' Released</title>']:
+                    line = line.replace(s, '')
+                day, df_version = (s.strip() for s in line.split(': DF'))
+        return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
+    return _get_df_meta(None, 'Dwarf Fortress')
 
 
 def _component_DF():
     """DF is the sole, hard-coded special case to avoid manual management."""
     link = 'http://bay12games.com/dwarves/'
-    df_version, updated = df_metadata('', 'Dwarf Fortress')
+    df_version, updated = df_metadata()
     filename = 'df_{0[1]}_{0[2]}_win.zip'.format(df_version.split('.'))
     return _template(
         'files', 'Dwarf Fortress', os.path.join('components', filename),

@@ -7,7 +7,7 @@ import yaml
 from . import component
 
 
-DF_VERSION = component.df_metadata('', 'Dwarf Fortress')[0]
+DF_VERSION = component.df_metadata()[0]
 with open('config.yml') as f:
     PACK_VERSION = DF_VERSION + '-' + yaml.safe_load(f)['version']
 
