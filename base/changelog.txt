@@ -1,3 +1,10 @@
+40_24 r20
+ - updated graphics; Fricy did a lot of cleanup work
+ - updated DFHack to 40.24-r5
+ - updated TwbT to 5.50
+ - config changes to match DFHack bugfixes
+ - now using https://github.com/PeridexisErrant/starter-pack
+
 40_24 r19
  - disabled buggy confirmation dialogues; squad-disband and haul-delete
  - changed extra init file; now triggers on map load instead of world load

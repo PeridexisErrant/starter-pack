@@ -93,7 +93,7 @@ def install_lnp_dirs():
 
 def make_defaults():
     """Create and install LNP/Defaults - embark profiles, Phoebus settings."""
-    default_dir = paths.lnp('Defaults')
+    default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
     for f in {'init.txt', 'd_init.txt'}:
@@ -191,13 +191,9 @@ def create_utilities():
 
 def _twbt_settings(pack):
     """Set TwbT-specific options for a graphics pack."""
-    ors = paths.graphics(pack, 'data', 'init', 'overrides.txt')
-    if not os.path.isfile(ors) and pack != 'CLA':
-        print('{:30}{}'.format(pack + ' TwbT graphics', 'needs overrides'))
     init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
     with open(init_file) as f:
         init = f.readlines()
-        orig = init[:]
     for n, _ in enumerate(init):
         if init[n].startswith('[FONT:') and pack != 'CLA':
             init[n] = '[FONT:curses_640x300.png]\n'
@@ -205,9 +201,18 @@ def _twbt_settings(pack):
             init[n] = '[FULLFONT:curses_640x300.png]\n'
         elif init[n].startswith('[PRINT_MODE:'):
             init[n] = '[PRINT_MODE:TWBT]\n'
-    if init != orig:
-        with open(init_file, 'w') as f:
-            f.writelines(init)
+    with open(init_file, 'w') as f:
+        f.writelines(init)
+
+
+def _make_ascii_graphics():
+    """Create the ASCII graphics pack from a DF zip."""
+    unzip_to(component.ALL['Dwarf Fortress'].path,
+             paths.graphics('ASCII'))
+    manifest = {"author": "ToadyOne","content_version": paths.DF_VERSION,
+                "tooltip": "Default graphics for DF, exactly as they come."}
+    with open(paths.graphics('ASCII', 'manifest.json'), 'w') as f:
+        json.dump(manifest, f, indent=4)
 
 
 def create_graphics():
@@ -215,8 +220,7 @@ def create_graphics():
     # Unzip all packs
     for comp in component.GRAPHICS:
         unzip_to(comp.path, paths.lnp(comp.category, comp.name))
-    unzip_to(component.ALL['Dwarf Fortress'].path,
-             paths.graphics('ASCII'))
+    _make_ascii_graphics()
     # Only keep the 24px edition of Gemset
     gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
     shutil.move(gemset, paths.graphics('_temp'))
@@ -252,7 +256,8 @@ def create_df_dir():
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
     # install TwbT
-    plugins = ['{}/{}.plug.dll'.format(component.ALL['DFHack'].version, plug)
+    plugins = ['{}/{}.plug.dll'.format(
+        component.ALL['DFHack'].version.replace('v', ''), plug)
                for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
     done = False
     with zipfile.ZipFile(component.ALL['TwbT'].path) as zf:
@@ -274,7 +279,6 @@ def create_baselines():
 
 def _contents():
     """Make LNP/about/contents.txt from a template."""
-    # contents.txt
     def link(comp, ver=True, dash=' - '):
         """Return BBCode format link to the component."""
         vstr = ' ' + comp.version if ver else ''
@@ -304,6 +308,8 @@ def create_about():
     # changelog.txt
     with open(paths.base('changelog.txt')) as f:
         changelog = f.readlines()
+    # TODO:  conditional insertion, write updated header back to base file
+    # TODO:  Include checksum with each changelog entry
         changelog.insert(0, 'Version {} ({})\n'.format(
             paths.PACK_VERSION, datetime.date.today().isoformat()))
         with open(paths.lnp('about', 'changelog.txt'), 'w') as f:
@@ -322,8 +328,11 @@ def setup_pylnp():
     pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
-    with open(paths.df('PyLNP_dfhack_onLoad.init'), 'w') as f:
-        f.write('# Placeholder file.\n')
+    if component.ALL['PyLNP'].version == '0.10b':
+        with open(paths.df('PyLNP_dfhack_onLoad.init'), 'w') as f:
+            f.write('# Placeholder file.\n')
+    else:
+        print('Can remove old PyLNP DFHack init code now.')
 
 
 def build_all():

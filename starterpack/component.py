@@ -63,6 +63,12 @@ def download_files(comps=None):
         with open(c.path, 'wb') as f:
             f.write(buf)
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
+    fs = set(os.listdir('components')) - {c.filename for c in comps}
+    for file in fs - {'oldfiles'}:
+        if not os.path.isdir('components/oldfiles'):
+            os.makedirs('components/oldfiles')
+        os.rename('components/' + file, 'components/oldfiles/' + file)
+        print('Moved to components/oldfiles :  ' + file)
 
 
 class AbstractMetadata(object):
@@ -108,7 +114,7 @@ class GitHubMetadata(AbstractMetadata):
             release['filename'] = os.path.basename(release['dl_link'])
             for key in ['author', 'body', 'assets']:
                 release.pop(key)
-            release['version'] = release['name']
+            release['version'] = release['tag_name'].replace('\r', '')
             return release
         tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
         tags = requests.get(tags_url).json()

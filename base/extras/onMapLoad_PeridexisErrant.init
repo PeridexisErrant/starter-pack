@@ -9,9 +9,5 @@ autonestbox stop
 fix/blood-del enable
 repeat -time 1 -timeUnits months -command [ fix/stuckdoors ]
 
-# there's some bugs in the "confirm" plugin for DFHack 40.24-r4
-confirm disable haul-delete
-confirm disable squad-disband
-
 # Run the commands written by the dfhack tab (and maybe re-enable some plugins)
 script PyLNP_dfhack_onLoad.init
