@@ -4,6 +4,9 @@
  - updated TwbT to 5.50
  - config changes to match DFHack bugfixes
  - now using https://github.com/PeridexisErrant/starter-pack
+ - belatedly updated World Viewer to 2.1.3
+ - dropped 32bit World Viewer
+ - updated Dwarf Therapist to 32.0
 
 40_24 r19
  - disabled buggy confirmation dialogues; squad-disband and haul-delete

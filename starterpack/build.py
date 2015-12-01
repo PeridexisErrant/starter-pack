@@ -115,13 +115,13 @@ def _keybinds_serialiser(lines):
 
 def make_keybindings():
     """Create and install LNP/keybindings files from the vanilla files."""
-    os.makedirs(paths.lnp('keybindings'))
+    os.makedirs(paths.lnp('keybinds'))
     van_file = paths.df('data', 'init', 'interface.txt')
-    shutil.copy(van_file, paths.lnp('keybindings', 'Vanilla DF.txt'))
+    shutil.copy(van_file, paths.lnp('keybinds', 'Vanilla DF.txt'))
     with open(van_file, encoding='cp437') as f:
         vanbinds = _keybinds_serialiser(f.readlines())
-    for fname in os.listdir(paths.base('keybindings')):
-        with open(paths.base('keybindings', fname)) as f:
+    for fname in os.listdir(paths.base('keybinds')):
+        with open(paths.base('keybinds', fname)) as f:
             cfg = _keybinds_serialiser(f.readlines())
         lines = []
         for bind, vals in vanbinds.items():
@@ -130,7 +130,7 @@ def make_keybindings():
                 lines.extend(cfg[bind])
             else:
                 lines.extend(vals)
-        with open(paths.lnp('keybindings', fname), 'w', encoding='cp437') as f:
+        with open(paths.lnp('keybinds', fname), 'w', encoding='cp437') as f:
             f.write('\n' + '\n'.join(lines))
 
 

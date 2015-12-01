@@ -1,4 +1,5 @@
 """Zip the built pack and create thread posts."""
+# TODO:  calculate, save, and post checksums and timestamp.
 
 import os
 import shutil
