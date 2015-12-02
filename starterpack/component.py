@@ -63,12 +63,6 @@ def download_files(comps=None):
         with open(c.path, 'wb') as f:
             f.write(buf)
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
-    fs = set(os.listdir('components')) - {c.filename for c in comps}
-    for file in fs - {'oldfiles'}:
-        if not os.path.isdir('components/oldfiles'):
-            os.makedirs('components/oldfiles')
-        os.rename('components/' + file, 'components/oldfiles/' + file)
-        print('Moved to components/oldfiles :  ' + file)
 
 
 class AbstractMetadata(object):
