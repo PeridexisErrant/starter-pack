@@ -1,3 +1,9 @@
+0.42.01-r1
+ - updated DF to 0.42.01
+ - only ASCII and CLA graphics
+ - all utilities except DFHack, Therapist, PerfectWorld (some at reduced effectiveness)
+ - the launcher might be broken
+
 40_24 r20
  - updated graphics; Fricy did a lot of cleanup work
  - updated DFHack to 40.24-r5

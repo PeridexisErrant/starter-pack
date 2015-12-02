@@ -96,8 +96,8 @@ def make_defaults():
     default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
-    for f in {'init.txt', 'd_init.txt'}:
-        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
+#    for f in {'init.txt', 'd_init.txt'}:
+#        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
     overwrite_dir(default_dir, paths.df('data', 'init'))
 
 
@@ -163,8 +163,8 @@ def create_utilities():
     shutil.rmtree(paths.utilities('World Viewer'))
     shutil.move(tmp, paths.utilities('World Viewer'))
     # Add xml for PerfectWorld, blueprints for Quickfort
-    unzip_to(component.ALL['PerfectWorld XML'].path,
-             paths.utilities('PerfectWorld'))
+#    unzip_to(component.ALL['PerfectWorld XML'].path,
+#             paths.utilities('PerfectWorld'))
     unzip_to(component.ALL['Quickfort Blueprints'].path,
              paths.utilities('Quickfort', 'blueprints'))
     # generate utilities.txt (waiting for a decent utility config format)
@@ -222,10 +222,10 @@ def create_graphics():
         unzip_to(comp.path, paths.lnp(comp.category, comp.name))
     _make_ascii_graphics()
     # Only keep the 24px edition of Gemset
-    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
-    shutil.move(gemset, paths.graphics('_temp'))
-    shutil.rmtree(paths.graphics('Gemset'))
-    shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
+#    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
+#    shutil.move(gemset, paths.graphics('_temp'))
+#    shutil.rmtree(paths.graphics('Gemset'))
+#    shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
 
     for pack in os.listdir(paths.graphics()):
         # Reduce filesize of graphics packs
@@ -241,8 +241,8 @@ def create_graphics():
         elif len(files) > 3:
             print(pack + ' graphics pack not simplified!')
         # Set up TwbT config...
-        if pack not in {'ASCII', 'Gemset'}:
-            _twbt_settings(pack)
+#        if pack not in {'ASCII', 'Gemset'}:
+#            _twbt_settings(pack)
 
 
 def create_df_dir():
@@ -253,6 +253,7 @@ def create_df_dir():
     for item, path in zip(items, destinations):
         comp = component.ALL[item]
         unzip_to(comp.path, path)
+        return
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
     # install TwbT
@@ -310,8 +311,8 @@ def create_about():
         changelog = f.readlines()
     # TODO:  conditional insertion, write updated header back to base file
     # TODO:  Include checksum with each changelog entry
-        changelog.insert(0, 'Version {} ({})\n'.format(
-            paths.PACK_VERSION, datetime.date.today().isoformat()))
+#        changelog.insert(0, 'Version {} ({})\n'.format(
+#            paths.PACK_VERSION, datetime.date.today().isoformat()))
         with open(paths.lnp('about', 'changelog.txt'), 'w') as f:
             f.writelines(changelog)
     _contents()
@@ -345,7 +346,7 @@ def build_all():
     install_lnp_dirs()
     create_utilities()
     create_graphics()
-    overwrite_dir(paths.graphics('Phoebus'), paths.df())
+#    overwrite_dir(paths.graphics('Phoebus'), paths.df())
     setup_pylnp()
     create_about()
     make_defaults()
