@@ -1,3 +1,9 @@
+0.42.01-r2
+ - added Phoebus graphics
+ - update PyLNP to 0.10c; handles new init entries now
+ - added PerfectWorld; should still work
+ - better DFHack settings (but still no DFHack!)
+
 0.42.01-r1
  - updated DF to 0.42.01
  - only ASCII and CLA graphics

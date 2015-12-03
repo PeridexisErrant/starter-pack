@@ -4,12 +4,8 @@
 #     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 #     SHOULD provide a tooltip string if the component is a utility
 # The pack version is appended to the DF version, eg "0.40.24-r18"
-version: r20
+version: r02
 files:
-    DFHack:
-        bay12: 139553
-        host: github
-        ident: DFHack/dfhack
     PerfectWorld XML:
         bay12: 57428
         host: dffd
@@ -17,31 +13,18 @@ files:
     PyLNP:
         bay12: 140808
         host: manual
-        dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10b-win32.zip
-        version: 0.10b
-        updated: 2015-05-19
+        dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10c-win32.zip
+        version: 0.10c
+        updated: 2015-12-02
     Quickfort Blueprints:
         host: dffd
         ident: 8185
-    Stocksettings:
-        bay12: 146213
-        host: dffd
-        ident: 10170
-    TwbT:
-        bay12: 138754
-        host: github
-        ident: mifki/df-twbt
 utilities:
     Announcement Window:
         bay12: 153777
         host: github
         ident: NuAoA/AnnouncementWindow
         tooltip: A window for announcements, with customisable colours and filters.
-    Armok Vision:
-        bay12: 146473
-        host: github
-        ident: JapaMala/armok-vision
-        tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
     DF Story Maker:
         bay12: 128570
         host: dffd
@@ -57,11 +40,6 @@ utilities:
         host: dffd
         ident: 9654
         tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
-    Dwarf Therapist:
-        bay12: 122968
-        host: dffd
-        ident: 9040
-        tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         bay12: 70700
         host: dffd
@@ -104,29 +82,9 @@ utilities:
 graphics:
     CLA:
         bay12: 105376
-        host: github
-        ident: fricy/CLA
-    Gemset:
-        bay12: 150753
         host: dffd
-        ident: 10857
-    Ironhand:
-        bay12: 53180
-        host: github
-        ident: fricy/Ironhand
-    Mayday:
-        bay12: 137370
-        host: github
-        ident: fricy/Mayday
-    Obsidian:
-        bay12: 126934
-        host: github
-        ident: fricy/Obsidian
+        ident: 5945
     Phoebus:
-        bay12: 152698
-        host: github
-        ident: fricy/Phoebus
-    Spacefox:
-        bay12: 129219
-        host: github
-        ident: fricy/Spacefox
+        bay12: 137096
+        host: dffd
+        ident: 11330

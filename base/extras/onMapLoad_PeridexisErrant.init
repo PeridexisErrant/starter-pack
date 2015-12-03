@@ -8,6 +8,3 @@ autonestbox stop
 # should-be-standard bugfixes
 fix/blood-del enable
 repeat -time 1 -timeUnits months -command [ fix/stuckdoors ]
-
-# Run the commands written by the dfhack tab (and maybe re-enable some plugins)
-script PyLNP_dfhack_onLoad.init

@@ -6,8 +6,6 @@ and other special categories, and individual logic for other files.
 Many functions are VERY tightly coupled to the contents of config.yml
 """
 
-import collections
-import datetime
 import glob
 import json
 import os
@@ -81,9 +79,12 @@ def rough_simplify(df_dir):
 
 def install_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
-    for d in ('colors', 'embarks', 'extras', 'tilesets'):
+    for d in ('colors', 'embarks', 'extras', 'keybinds', 'tilesets'):
         shutil.copytree(paths.base(d), paths.lnp(d))
     overwrite_dir(paths.lnp('extras'), paths.df())
+    with open(paths.lnp('keybinds', 'Vanilla DF.txt'), 'w',
+              encoding='cp437') as f:
+        f.write('\n')
     for img in {'curses_640x300', 'curses_800x600',
                 'curses_square_16x16', 'mouse'}:
         shutil.copy(paths.curr_baseline('data', 'art', img + '.png'),
@@ -96,42 +97,9 @@ def make_defaults():
     default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
-#    for f in {'init.txt', 'd_init.txt'}:
-#        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
+    for f in {'init.txt', 'd_init.txt'}:
+        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
     overwrite_dir(default_dir, paths.df('data', 'init'))
-
-
-def _keybinds_serialiser(lines):
-    """Turn lines into an ordered dict, to preserve structure of file."""
-    od, lastkey = collections.OrderedDict(), None
-    for line in (l.strip() for l in lines):
-        if line and line.startswith('[BIND:'):
-            od[line], lastkey = [], line
-        elif line:
-            if lastkey is not None:
-                od[lastkey].append(line)
-    return od
-
-
-def make_keybindings():
-    """Create and install LNP/keybindings files from the vanilla files."""
-    os.makedirs(paths.lnp('keybinds'))
-    van_file = paths.df('data', 'init', 'interface.txt')
-    shutil.copy(van_file, paths.lnp('keybinds', 'Vanilla DF.txt'))
-    with open(van_file, encoding='cp437') as f:
-        vanbinds = _keybinds_serialiser(f.readlines())
-    for fname in os.listdir(paths.base('keybinds')):
-        with open(paths.base('keybinds', fname)) as f:
-            cfg = _keybinds_serialiser(f.readlines())
-        lines = []
-        for bind, vals in vanbinds.items():
-            lines.append(bind)
-            if bind in cfg:
-                lines.extend(cfg[bind])
-            else:
-                lines.extend(vals)
-        with open(paths.lnp('keybinds', fname), 'w', encoding='cp437') as f:
-            f.write('\n' + '\n'.join(lines))
 
 
 def _soundsense_xml():
@@ -163,8 +131,8 @@ def create_utilities():
     shutil.rmtree(paths.utilities('World Viewer'))
     shutil.move(tmp, paths.utilities('World Viewer'))
     # Add xml for PerfectWorld, blueprints for Quickfort
-#    unzip_to(component.ALL['PerfectWorld XML'].path,
-#             paths.utilities('PerfectWorld'))
+    unzip_to(component.ALL['PerfectWorld XML'].path,
+             paths.utilities('PerfectWorld'))
     unzip_to(component.ALL['Quickfort Blueprints'].path,
              paths.utilities('Quickfort', 'blueprints'))
     # generate utilities.txt (waiting for a decent utility config format)
@@ -209,7 +177,7 @@ def _make_ascii_graphics():
     """Create the ASCII graphics pack from a DF zip."""
     unzip_to(component.ALL['Dwarf Fortress'].path,
              paths.graphics('ASCII'))
-    manifest = {"author": "ToadyOne","content_version": paths.DF_VERSION,
+    manifest = {"author": "ToadyOne", "content_version": paths.DF_VERSION,
                 "tooltip": "Default graphics for DF, exactly as they come."}
     with open(paths.graphics('ASCII', 'manifest.json'), 'w') as f:
         json.dump(manifest, f, indent=4)
@@ -222,10 +190,11 @@ def create_graphics():
         unzip_to(comp.path, paths.lnp(comp.category, comp.name))
     _make_ascii_graphics()
     # Only keep the 24px edition of Gemset
-#    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))[0]
-#    shutil.move(gemset, paths.graphics('_temp'))
-#    shutil.rmtree(paths.graphics('Gemset'))
-#    shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
+    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))
+    if gemset:
+        shutil.move(gemset[0], paths.graphics('_temp'))
+        shutil.rmtree(paths.graphics('Gemset'))
+        shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
 
     for pack in os.listdir(paths.graphics()):
         # Reduce filesize of graphics packs
@@ -253,6 +222,7 @@ def create_df_dir():
     for item, path in zip(items, destinations):
         comp = component.ALL[item]
         unzip_to(comp.path, path)
+#       TODO:  more elegant handling of incompatible DFHack & TwbT versions
         return
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
@@ -302,19 +272,12 @@ def _contents():
 
 def create_about():
     """Create the LNP/About folder contents."""
-    # about.txt
     if not os.path.isdir(paths.lnp('about')):
         os.mkdir(paths.lnp('about'))
     shutil.copy(paths.base('about.txt'), paths.lnp('about'))
-    # changelog.txt
-    with open(paths.base('changelog.txt')) as f:
-        changelog = f.readlines()
-    # TODO:  conditional insertion, write updated header back to base file
-    # TODO:  Include checksum with each changelog entry
-#        changelog.insert(0, 'Version {} ({})\n'.format(
-#            paths.PACK_VERSION, datetime.date.today().isoformat()))
-        with open(paths.lnp('about', 'changelog.txt'), 'w') as f:
-            f.writelines(changelog)
+    # TODO:  Update base file?  Include checksum with each changelog entry?
+    shutil.copy(paths.base('changelog.txt'),
+                paths.lnp('about', 'changelog.txt'))
     _contents()
 
 
@@ -346,8 +309,7 @@ def build_all():
     install_lnp_dirs()
     create_utilities()
     create_graphics()
-#    overwrite_dir(paths.graphics('Phoebus'), paths.df())
+    overwrite_dir(paths.graphics('Phoebus'), paths.df())
     setup_pylnp()
     create_about()
     make_defaults()
-    make_keybindings()

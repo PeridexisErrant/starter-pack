@@ -12,6 +12,7 @@
 {graphics}
 
 [b]Other Content:[/b]
+ - {PerfectWorld XML}
  - {Quickfort Blueprints}
 
 
