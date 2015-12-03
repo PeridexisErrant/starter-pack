@@ -292,11 +292,6 @@ def setup_pylnp():
     pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
-    if component.ALL['PyLNP'].version == '0.10b':
-        with open(paths.df('PyLNP_dfhack_onLoad.init'), 'w') as f:
-            f.write('# Placeholder file.\n')
-    else:
-        print('Can remove old PyLNP DFHack init code now.')
 
 
 def build_all():
