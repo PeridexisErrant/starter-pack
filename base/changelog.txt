@@ -1,10 +1,15 @@
-0.42.01-r2
+0.42.01-r03
+ - added Ironhand graphics
+ - fix:  PyLNP now updates graphics on new saves
+   (copy raw/installed_raws.txt to allow updating old saves)
+
+0.42.01-r03
  - added Phoebus graphics
  - update PyLNP to 0.10c; handles new init entries now
  - added PerfectWorld; should still work
  - better DFHack settings (but still no DFHack!)
 
-0.42.01-r1
+0.42.01-r01
  - updated DF to 0.42.01
  - only ASCII and CLA graphics
  - all utilities except DFHack, Therapist, PerfectWorld (some at reduced effectiveness)

@@ -183,6 +183,14 @@ def _make_ascii_graphics():
         json.dump(manifest, f, indent=4)
 
 
+def _install_graphics_pack(pack='Phoebus'):
+    """Install the given pack; write installed_raws so PyLNP updates saves."""
+    overwrite_dir(paths.graphics('Phoebus'), paths.df())
+    with open(paths.df('raw', 'installed_raws.txt'), 'w') as f:
+        txt = '# List of raws merged by PyLNP:\nbaselines/{}\ngraphics/{}\n'
+        f.write(txt.format(os.path.basename(paths.curr_baseline()), pack))
+
+
 def create_graphics():
     """Extract all graphics packs to the build/LNP/Graphics dir."""
     # Unzip all packs
@@ -212,6 +220,7 @@ def create_graphics():
         # Set up TwbT config...
 #        if pack not in {'ASCII', 'Gemset'}:
 #            _twbt_settings(pack)
+    _install_graphics_pack()
 
 
 def create_df_dir():
@@ -304,7 +313,6 @@ def build_all():
     install_lnp_dirs()
     create_utilities()
     create_graphics()
-    overwrite_dir(paths.graphics('Phoebus'), paths.df())
     setup_pylnp()
     create_about()
     make_defaults()

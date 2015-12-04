@@ -4,7 +4,7 @@
 #     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 #     SHOULD provide a tooltip string if the component is a utility
 # The pack version is appended to the DF version, eg "0.40.24-r18"
-version: r02
+version: r03
 files:
     PerfectWorld XML:
         bay12: 57428
@@ -84,6 +84,10 @@ graphics:
         bay12: 105376
         host: dffd
         ident: 5945
+    Ironhand:
+        bay12: 53180
+        host: dffd
+        ident: 11349
     Phoebus:
         bay12: 137096
         host: dffd
