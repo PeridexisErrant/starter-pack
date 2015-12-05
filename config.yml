@@ -4,7 +4,7 @@
 #     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 #     SHOULD provide a tooltip string if the component is a utility
 # The pack version is appended to the DF version, eg "0.40.24-r18"
-version: r03
+version: r01
 files:
     PerfectWorld XML:
         bay12: 57428
@@ -13,9 +13,9 @@ files:
     PyLNP:
         bay12: 140808
         host: manual
-        dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10c-win32.zip
-        version: 0.10c
-        updated: 2015-12-02
+        dl_link: https://bitbucket.org/Pidgeot/python-lnp/downloads/PyLNP_0.10d-win32.zip
+        version: 0.10d
+        updated: 2015-12-05
     Quickfort Blueprints:
         host: dffd
         ident: 8185
