@@ -28,7 +28,7 @@ def overwrite_dir(src, dest):
         shutil.copy(src, os.path.dirname(dest))
 
 
-def unzip_to(filename, target_dir, *, makedirs=True):
+def unzip_to(filename, target_dir):
     """Extract the contents of the given archive to the target directory.
 
     - If the filename is not a zip file, copy '.exe's to target_dir.
@@ -36,21 +36,9 @@ def unzip_to(filename, target_dir, *, makedirs=True):
     - If the zip is all in a single compressed folder, traverse it.
         We want the target_dir to hold files, not a single subdir.
     """
+    if not (filename.endswith('.zip') and zipfile.is_zipfile(filename)):
+        raise IOError(filename + ' is not a valid .zip file.')
     print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], target_dir))
-    if makedirs:
-        try:
-            os.makedirs(target_dir)
-        except FileExistsError:
-            pass
-    if not filename.endswith('.zip'):
-        if filename.endswith('.exe'):
-            # Rare utilities, basically just Dorven Realms
-            shutil.copy(filename, target_dir)
-            return
-        raise ValueError('Only .zip and .exe files are handled by unzip_to()')
-    if not zipfile.is_zipfile(filename):
-        raise ValueError(filename + ' is not a valid .zip file.')
-
     with zipfile.ZipFile(filename) as zf:
         contents = [a for a in zip(zf.infolist(), zf.namelist())
                     if not a[1].endswith('/')]
@@ -122,7 +110,13 @@ def _soundsense_xml():
 def create_utilities():
     """Extract all utilities to the build/LNP/Utilities dir."""
     for comp in component.UTILITIES:
-        unzip_to(comp.path, paths.lnp(comp.category, comp.name))
+        targetdir = paths.lnp(comp.category, comp.name)
+        try:
+            unzip_to(comp.path, targetdir)
+        except IOError:
+            if not os.path.isdir(targetdir):
+                os.makedirs(targetdir)
+            shutil.copy(comp.path, targetdir)
     _soundsense_xml()
     # Only keep 64bit World Viewer
     tmp = paths.utilities('DFWV')
