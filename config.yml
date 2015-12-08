@@ -3,8 +3,6 @@
 #     MUST have "host" set to one of "dffd", "github", or "manual"
 #     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 #     SHOULD provide a tooltip string if the component is a utility
-# The pack version is appended to the DF version, eg "0.40.24-r18"
-version: r01
 files:
     PerfectWorld XML:
         bay12: 57428
@@ -82,13 +80,29 @@ utilities:
 graphics:
     CLA:
         bay12: 105376
+        host: github
+        ident: fricy/CLA
+    Gemset:
+        bay12: 150753
         host: dffd
-        ident: 5945
+        ident: 10857
     Ironhand:
         bay12: 53180
-        host: dffd
-        ident: 11349
+        host: github
+        ident: fricy/Ironhand
+    Mayday:
+        bay12: 137370
+        host: github
+        ident: fricy/Mayday
+    Obsidian:
+        bay12: 126934
+        host: github
+        ident: fricy/Obsidian
     Phoebus:
-        bay12: 137096
-        host: dffd
-        ident: 11330
+        bay12: 152698
+        host: github
+        ident: fricy/Phoebus
+    Spacefox:
+        bay12: 129219
+        host: github
+        ident: fricy/Spacefox

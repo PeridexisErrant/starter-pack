@@ -2,15 +2,15 @@
 #pylint:disable=missing-docstring
 
 import os
-import yaml
 
 from . import component
 
 
 DF_VERSION = component.df_metadata()[0]
-with open('config.yml') as f:
-    PACK_VERSION = DF_VERSION + '-' + yaml.safe_load(f)['version']
-
+with open('base/changelog.txt') as f:
+    PACK_VERSION = f.readline().strip()
+if not PACK_VERSION.startswith(DF_VERSION):
+    raise ValueError('Error:  pack version must start with DF version.')
 
 def build(*paths):
     """Return the path to the main pack directory ('build')."""

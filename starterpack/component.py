@@ -193,9 +193,8 @@ def _component_DF():
 
 
 if __name__ != '__main__':
-    with open('config.yml') as ymlfile:
-        _items = ((c, i) for c, vals in yaml.safe_load(ymlfile).items()
-                  for i in vals if c != 'version')
+    with open('config.yml') as ymlf:
+        _items = ((c, i) for c, v in yaml.safe_load(ymlf).items() for i in v)
         ALL = {i: _component(c, i) for c, i in _items}
     ALL['Dwarf Fortress'] = _component_DF()
     FILES = [c for c in ALL.values() if c.category == 'files']
