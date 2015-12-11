@@ -1,3 +1,9 @@
+0.42.02-r04
+ - removed Gemset graphics; not updated for 42.xx yet
+
+0.42.02-r03
+ - added Dwarf Therapist; beta release for 42.xx
+
 0.42.02-r02
  - using Fricy's graphics repo again; all packs from 40.24 are back
  - data/index problem vanished; was a heisenbug? (hotfixed for r01)

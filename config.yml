@@ -38,6 +38,11 @@ utilities:
         host: dffd
         ident: 9654
         tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
+    Dwarf Therapist:
+        bay12: 122968
+        host: github
+        ident: splintermind/Dwarf-Therapist
+        tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         bay12: 70700
         host: dffd
@@ -82,10 +87,6 @@ graphics:
         bay12: 105376
         host: github
         ident: fricy/CLA
-    Gemset:
-        bay12: 150753
-        host: dffd
-        ident: 10857
     Ironhand:
         bay12: 53180
         host: github
