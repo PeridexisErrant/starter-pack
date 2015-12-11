@@ -77,7 +77,9 @@ def install_lnp_dirs():
                 'curses_square_16x16', 'mouse'}:
         shutil.copy(paths.curr_baseline('data', 'art', img + '.png'),
                     paths.lnp('tilesets'))
-    overwrite_dir(paths.lnp('tilesets'), paths.df('data', 'art'))
+    overwrite_dir(paths.lnp('tilesets'), paths.curr_baseline('data', 'art'))
+    shutil.copy(paths.curr_baseline('data', 'init', 'colors.txt'),
+                paths.lnp('colors', 'ASCII Default.txt'))
 
 
 def make_defaults():
