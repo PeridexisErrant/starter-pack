@@ -55,6 +55,8 @@ def download_files(comps=None):
     """Download files which are in config.yml, but not saved in components."""
     if comps is None:
         comps = ALL.values()
+    if not os.path.isdir('components'):
+        os.mkdir('components')
     for c in comps:
         if os.path.isfile(c.path):
             continue

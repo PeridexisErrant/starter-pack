@@ -80,7 +80,7 @@ utilities:
     World Viewer:
         bay12: 128932
         host: dffd
-        ident: 7851
+        ident: 11454
         tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
 graphics:
     CLA:

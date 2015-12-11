@@ -118,12 +118,6 @@ def create_utilities():
                 os.makedirs(targetdir)
             shutil.copy(comp.path, targetdir)
     _soundsense_xml()
-    # Only keep 64bit World Viewer
-    tmp = paths.utilities('DFWV')
-    shutil.move(paths.utilities('World Viewer', '64bit'), tmp)
-    shutil.copy(paths.utilities('World Viewer', 'Readme.txt'), tmp)
-    shutil.rmtree(paths.utilities('World Viewer'))
-    shutil.move(tmp, paths.utilities('World Viewer'))
     # Add xml for PerfectWorld, blueprints for Quickfort
     unzip_to(component.ALL['PerfectWorld XML'].path,
              paths.utilities('PerfectWorld'))
