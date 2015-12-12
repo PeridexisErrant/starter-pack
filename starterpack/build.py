@@ -128,10 +128,6 @@ def create_utilities():
     # generate utilities.txt (waiting for a decent utility config format)
     with open(paths.utilities('utilities.txt'), 'w') as f:
         for util in component.UTILITIES:
-            if util.name == 'Quickfort':
-                f.write('[Quickfort.exe:Quickfort:{}]\n'.format(util.tooltip))
-                f.write('[qfconvert.exe:EXCLUDE]\n')
-                continue
             exe, jars = [], []
             for _, _, files in os.walk(paths.utilities(util.name)):
                 for fname in files:
@@ -139,12 +135,9 @@ def create_utilities():
                         exe.append(fname)
                     elif fname.endswith('.jar'):
                         jars.append(fname)
-            for j in jars:
-                f.write('[{}:EXCLUDE]\n'.format(j))
-            if len(exe) == 1:
-                f.write('[{}:{}:{}]\n'.format(exe[0], util.name, util.tooltip))
-            else:
-                print('WARNING:  found {} in {}'.format(exe, util.name))
+            f.write(''.join('[{}:EXCLUDE]\n'.format(j) for j in jars))
+            f.write('[{}:{}:{}]\n\n'.format(
+                sorted(exe)[0], util.name, util.tooltip))
 
 
 def _twbt_settings(pack):
