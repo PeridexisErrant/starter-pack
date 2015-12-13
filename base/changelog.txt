@@ -1,7 +1,10 @@
-0.42.02-r04
+0.42.03-r01
  - removed Gemset graphics; not updated for 42.xx yet
- - updated World Viewer; now handles 0.42.02 events
- - updated Legends Viewer; unofficial update for 42.02
+ - updated World Viewer; now handles 0.42.xx events
+ - updated Legends Viewer; unofficial update for 0.42.xx
+ - fixed dwarf graphics (by removing example sprite)
+ - updated Dwarf Fortress to 0.42.03
+ - consequential changes to graphics packs
 
 0.42.02-r03
  - added Dwarf Therapist; beta release for 42.xx

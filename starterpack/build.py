@@ -168,6 +168,7 @@ def _make_ascii_graphics():
 
 def _install_graphics_pack(pack='Phoebus'):
     """Install the given pack; write installed_raws so PyLNP updates saves."""
+    shutil.rmtree(paths.df('raw', 'graphics'))
     overwrite_dir(paths.graphics('Phoebus'), paths.df())
     with open(paths.df('raw', 'installed_raws.txt'), 'w') as f:
         txt = '# List of raws merged by PyLNP:\nbaselines/{}\ngraphics/{}\n'
