@@ -5,6 +5,8 @@
  - fixed dwarf graphics (by removing example sprite)
  - updated Dwarf Fortress to 0.42.03
  - consequential changes to graphics packs
+ - updated Dwarf Therapist; added 0.42.03 memory layout
+ - fixed Soundsense issue
 
 0.42.02-r03
  - added Dwarf Therapist; beta release for 42.xx

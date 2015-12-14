@@ -10,8 +10,9 @@ import glob
 import json
 import os
 import shutil
-import yaml
 import zipfile
+
+import yaml
 
 from . import component
 from . import paths
@@ -109,6 +110,23 @@ def _soundsense_xml():
         f.writelines(config)
 
 
+def _therapist_ini():
+    """Ensure memory layout for Dwarf Therapist is present."""
+    fname = 'v{}_graphics.ini'.format(paths.DF_VERSION)
+    comp_path = os.path.join('components', fname)
+    util_path = paths.utilities('Dwarf Therapist', 'share', 'memory_layouts',
+                                'windows', fname)
+    url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
+           '/DF2016/share/memory_layouts/windows/' + fname)
+    if not os.path.isfile(util_path):
+        try:
+            if not os.path.isfile(comp_path):
+                component.download(url, comp_path)
+            shutil.copy(comp_path, util_path)
+        except Exception:
+            print('WARNING:  Therapist memory layout unavailable!')
+
+
 def create_utilities():
     """Extract all utilities to the build/LNP/Utilities dir."""
     for comp in component.UTILITIES:
@@ -120,6 +138,7 @@ def create_utilities():
                 os.makedirs(targetdir)
             shutil.copy(comp.path, targetdir)
     _soundsense_xml()
+    _therapist_ini()
     # Add xml for PerfectWorld, blueprints for Quickfort
     unzip_to(component.ALL['PerfectWorld XML'].path,
              paths.utilities('PerfectWorld'))
@@ -136,8 +155,11 @@ def create_utilities():
                     elif fname.endswith('.jar'):
                         jars.append(fname)
             f.write(''.join('[{}:EXCLUDE]\n'.format(j) for j in jars))
-            f.write('[{}:{}:{}]\n\n'.format(
-                sorted(exe)[0], util.name, util.tooltip))
+            if exe:
+                f.write('[{}:{}:{}]\n\n'.format(
+                    sorted(exe)[0], util.name, util.tooltip))
+            else:
+                print('WARNING: no executable for {}'.format(util.name))
 
 
 def _twbt_settings(pack):
@@ -201,9 +223,9 @@ def create_graphics():
             print(pack + ' graphics pack malformed!')
         elif len(files) > 3:
             print(pack + ' graphics pack not simplified!')
-        # Set up TwbT config...
-#        if pack not in {'ASCII', 'Gemset'}:
-#            _twbt_settings(pack)
+        if os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
+            if pack not in {'ASCII', 'Gemset'}:
+                _twbt_settings(pack)
     _install_graphics_pack()
 
 
@@ -217,6 +239,9 @@ def create_df_dir():
         unzip_to(comp.path, path)
 #       TODO:  more elegant handling of incompatible DFHack & TwbT versions
         return
+    # Several utilities assume gamelog.txt exists and misbehave otherwise
+    with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
+        f.write('*** STARTING NEW GAME ***\n')
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
     # install TwbT
@@ -259,7 +284,6 @@ def _contents():
         if '{' + item + '}' not in template:
             raise ValueError(item + ' not listed in base/docs/contents.txt')
     with open(paths.lnp('about', 'contents.txt'), 'w') as f:
-        #pylint:disable=star-args
         f.write(template.format(**kwargs))
 
 

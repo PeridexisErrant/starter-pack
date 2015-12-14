@@ -51,19 +51,23 @@ def report(comps=None):
     cache(lambda s, x: None, dump=True)
 
 
-def download_files(comps=None):
+def download(url, filename):
+    """Save the content of url to filename."""
+    req = requests.get(url)
+    req.raise_for_status()
+    with open(filename, 'wb') as f:
+        f.write(b''.join(req.iter_content(1024)))
+
+
+def download_files():
     """Download files which are in config.yml, but not saved in components."""
-    if comps is None:
-        comps = ALL.values()
     if not os.path.isdir('components'):
         os.mkdir('components')
-    for c in comps:
+    for c in ALL.values():
         if os.path.isfile(c.path):
             continue
         print('downloading {}...'.format(c.name))
-        buf = b''.join(requests.get(c.dl_link).iter_content(1024))
-        with open(c.path, 'wb') as f:
-            f.write(buf)
+        download(c.dl_link, c.path)
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
 
 
