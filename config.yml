@@ -4,6 +4,10 @@
 #     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
 #     SHOULD provide a tooltip string if the component is a utility
 files:
+    DFHack:
+        bay12: 139553
+        host: github
+        ident: DFHack/dfhack
     PerfectWorld XML:
         bay12: 57428
         host: dffd
@@ -17,11 +21,21 @@ files:
     Quickfort Blueprints:
         host: dffd
         ident: 8185
+    Stocksettings:
+        bay12: 146213
+        host: dffd
+        ident: 10170
+    TwbT:
+        bay12: 138754
+        host: github
+        ident: mifki/df-twbt
 utilities:
     Announcement Window:
         bay12: 153777
-        host: github
-        ident: NuAoA/AnnouncementWindow
+        host: manual
+        dl_link: https://github.com/NuAoA/AnnouncementWindow/releases/download/1.1b/AnnouncementWindow-1.1b-win32.zip
+        version: 1.1b
+        updated: 2015-11-10
         tooltip: A window for announcements, with customisable colours and filters.
     DF Story Maker:
         bay12: 128570

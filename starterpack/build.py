@@ -231,19 +231,26 @@ def create_graphics():
 
 def create_df_dir():
     """Create the Dwarf Fortress directory, with DFHack and other content."""
-    # Extract the items below
-    items = ['Dwarf Fortress', 'DFHack', 'Stocksettings']
-    destinations = [paths.df(), paths.df(), paths.df('stocksettings')]
-    for item, path in zip(items, destinations):
-        comp = component.ALL[item]
-        unzip_to(comp.path, path)
-#       TODO:  more elegant handling of incompatible DFHack & TwbT versions
-        return
+    unzip_to(component.ALL['Dwarf Fortress'].path, paths.df())
+    # 0.42.03 bug - can't save macros without this dir; breaks Quickfort
+    # http://www.bay12games.com/dwarves/mantisbt/view.php?id=9398
+    os.makedirs(paths.df('data', 'init', 'macros'))
     # Several utilities assume gamelog.txt exists and misbehave otherwise
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')
+
+    hack = component.ALL.get('DFHack')
+    if not hack:
+        print('WARNING:  DFHack not in config, will not be installed.')
+        return
+    if paths.DF_VERSION not in hack.version:
+        print('Incompatible DF, DFHack versions!  Aborting...')
+        return
+    unzip_to(hack.path, paths.df())
     # Rename the example init file
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
+    # Install Stocksettings
+    unzip_to(component.ALL['Stocksettings'].path, paths.df('stocksettings'))
     # install TwbT
     plugins = ['{}/{}.plug.dll'.format(
         component.ALL['DFHack'].version.replace('v', ''), plug)
@@ -282,7 +289,7 @@ def _contents():
         template = f.read()
     for item in kwargs:
         if '{' + item + '}' not in template:
-            raise ValueError(item + ' not listed in base/docs/contents.txt')
+            print('WARNING: ' + item + ' not listed in base/docs/contents.txt')
     with open(paths.lnp('about', 'contents.txt'), 'w') as f:
         f.write(template.format(**kwargs))
 
