@@ -68,7 +68,7 @@ utilities:
         ident: 3418
         tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
     Legends Viewer:
-        bay12: 72702.msg6658295#msg6658295
+        bay12: 154617
         host: dffd
         ident: 11455
         tooltip: You've always wished legends mode was this good.  Sorting, searching, hyperlinks, mapped locations...

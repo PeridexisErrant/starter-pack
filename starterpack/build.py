@@ -250,6 +250,7 @@ def create_df_dir():
     # Rename the example init file; disable prerelease builds
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
     if '-r' not in hack.version:
+        shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
         shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
     # Install Stocksettings
     unzip_to(component.ALL['Stocksettings'].path, paths.df('stocksettings'))
