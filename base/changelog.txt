@@ -1,3 +1,10 @@
+0.42.03-r02
+ - fixed bug with saving macros (broke Quickfort)
+ - updated Legends Viewer; misc. improvements
+ - added DFHack 0.42.03-alpha1; disabled by default
+ - added Stocksettings
+ - added Armok Vision
+
 0.42.03-r01
  - removed Gemset graphics; not updated for 42.xx yet
  - updated World Viewer; now handles 0.42.xx events

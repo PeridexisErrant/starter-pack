@@ -37,6 +37,11 @@ utilities:
         version: 1.1b
         updated: 2015-11-10
         tooltip: A window for announcements, with customisable colours and filters.
+    Armok Vision:
+        bay12: 146473
+        host: github
+        ident: JapaMala/armok-vision
+        tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
     DF Story Maker:
         bay12: 128570
         host: dffd

@@ -247,13 +247,14 @@ def create_df_dir():
         print('Incompatible DF, DFHack versions!  Aborting...')
         return
     unzip_to(hack.path, paths.df())
-    # Rename the example init file
+    # Rename the example init file; disable prerelease builds
     os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
+    if '-r' not in hack.version:
+        shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
     # Install Stocksettings
     unzip_to(component.ALL['Stocksettings'].path, paths.df('stocksettings'))
     # install TwbT
-    plugins = ['{}/{}.plug.dll'.format(
-        component.ALL['DFHack'].version.replace('v', ''), plug)
+    plugins = ['{}/{}.plug.dll'.format(hack.version.replace('v', ''), plug)
                for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
     done = False
     with zipfile.ZipFile(component.ALL['TwbT'].path) as zf:
