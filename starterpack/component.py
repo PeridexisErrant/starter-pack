@@ -12,6 +12,7 @@ are described in config.yml
 #pylint:disable=missing-docstring
 
 import collections
+import concurrent.futures
 import datetime
 import os
 import yaml
@@ -51,24 +52,23 @@ def report(comps=None):
     cache(lambda s, x: None, dump=True)
 
 
-def download(url, filename):
+def download(c):
     """Save the content of url to filename."""
-    req = requests.get(url)
-    req.raise_for_status()
-    with open(filename, 'wb') as f:
-        f.write(b''.join(req.iter_content(1024)))
+    if not os.path.isfile(c.path):
+        print('downloading {}...'.format(c.name))
+        req = requests.get(c.dl_link)
+        req.raise_for_status()
+        with open(c.path, 'wb') as f:
+            f.write(b''.join(req.iter_content(1024)))
+        print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
 
 
 def download_files():
     """Download files which are in config.yml, but not saved in components."""
     if not os.path.isdir('components'):
         os.mkdir('components')
-    for c in ALL.values():
-        if os.path.isfile(c.path):
-            continue
-        print('downloading {}...'.format(c.name))
-        download(c.dl_link, c.path)
-        print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(download, ALL.values(), timeout=60)
 
 
 class AbstractMetadata(object):
@@ -104,7 +104,13 @@ class GitHubMetadata(AbstractMetadata):
     def json(self, repo):
         # Abstract the release/tag differences here if possible
         url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
-        release = requests.get(url).json()
+        with open('_CRED') as f:
+            auth = tuple(f.read().split())
+        release = requests.get(url, auth=auth).json()
+        if repo == 'DFHack/dfhack':  # get a prerelease build if available
+            url = 'https://api.github.com/repos/DFHack/dfhack/releases'
+            release = requests.get(url, auth=auth).json()[0]
+
         if release.get('assets'):
             assets = sorted(release['assets'], key=lambda a: len(a['name']))
             win = [a for a in assets if 'win' in a['name'].lower()]
@@ -116,16 +122,17 @@ class GitHubMetadata(AbstractMetadata):
                 release.pop(key)
             release['version'] = release['tag_name'].replace('\r', '')
             return release
+
         tags_url = 'https://api.github.com/repos/{}/tags'.format(repo)
-        tags = requests.get(tags_url).json()
+        tags = requests.get(tags_url, auth=auth).json()
         if 'message' in tags:
-            print(tags['message'])  # Probably hit API rate limit; wait 5
+            print(tags['message'])  # Probably hit API rate limit; wait an hour
         tag = tags[0]
         tag['dl_link'] = tag['zipball_url']
         tag['filename'] = '{}_{}.zip'.format(
             repo.replace('/', '_'), os.path.basename(tag['dl_link']))
         tag['published_at'] = requests.get(
-            tag['commit']['url']).json()['commit']['author']['date']
+            tag['commit']['url'], auth=auth).json()['commit']['author']['date']
         tag['version'] = tag['name']
         return tag
 
@@ -155,8 +162,9 @@ _template = collections.namedtuple('Component', [
     'days_since_update', 'tooltip', 'page'])
 
 
-def _component(category, item):
+def _component(data):
     """Lighter weight than a class, but still easy to access."""
+    category, item = data
     with open('config.yml') as f:
         config = yaml.safe_load(f)[category][item]
     ident = item if config['host'] == 'manual' else config['ident']
@@ -198,13 +206,19 @@ def _component_DF():
         (datetime.datetime.today() - updated).days, '', link)
 
 
-if __name__ != '__main__':
+def get_globals():
+    """Returns the dict and lists for the module variables
+    ALL, FILES, GRAPHICS, and UTILITIES."""
     with open('config.yml') as ymlf:
-        _items = ((c, i) for c, v in yaml.safe_load(ymlf).items() for i in v)
-        ALL = {i: _component(c, i) for c, i in _items}
+        items = [(c, i) for c, v in yaml.safe_load(ymlf).items() for i in v]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = executor.map(_component, items, timeout=20)
+    ALL = {r.name: r for r in results}
     ALL['Dwarf Fortress'] = _component_DF()
-    FILES = [c for c in ALL.values() if c.category == 'files']
-    GRAPHICS = [c for c in ALL.values() if c.category == 'graphics']
-    UTILITIES = [c for c in ALL.values() if c.category == 'utilities']
-    for l in (FILES, GRAPHICS, UTILITIES):
-        l.sort(key=lambda c: c.name)
+    yield ALL
+    yield from [sorted(filter(lambda c: c.category == t, ALL.values()),
+                       key=lambda c: c.name)
+                for t in ('files', 'graphics', 'utilities')]
+
+if __name__ != '__main__':
+    ALL, FILES, GRAPHICS, UTILITIES = get_globals()
