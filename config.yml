@@ -67,6 +67,11 @@ utilities:
         host: dffd
         ident: 3418
         tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
+    Legends Browser:
+        bay12: 155307
+        host: dffd
+        ident: 11619
+        tooltip: An in-browser legends utility, available for all operating systems.
     Legends Viewer:
         bay12: 154617
         host: dffd

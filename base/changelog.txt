@@ -1,3 +1,11 @@
+0.42.04-r01
+ - updated DF
+ - updated Dwarf Therapist
+ - updated Legends Viewer
+ - updated all graphics packs
+ - added Legends Browser
+ - updated DFHack
+
 0.42.03-r03
  - added TwbT
  - updated Dwarf Therapist

@@ -104,8 +104,10 @@ class GitHubMetadata(AbstractMetadata):
     def json(self, repo):
         # Abstract the release/tag differences here if possible
         url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
-        with open('_CRED') as f:
-            auth = tuple(f.read().split())
+        auth = None
+        if os.path.isfile('_CRED'):
+            with open('_CRED') as f:
+                auth = tuple(f.read().split())
         release = requests.get(url, auth=auth).json()
         if repo == 'DFHack/dfhack':  # get a prerelease build if available
             url = 'https://api.github.com/repos/DFHack/dfhack/releases'
