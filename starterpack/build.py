@@ -265,7 +265,10 @@ def create_df_dir():
                 outpath = paths.df('hack', 'plugins', os.path.basename(name))
                 with open(outpath, 'wb') as out:
                     shutil.copyfileobj(zf.open(obj), out)
-    if not done:
+    if done:
+        print('{:20}  ->  {}'.format(os.path.basename(
+            component.ALL['TwbT'].path)[:20], os.path.dirname(outpath)))
+    else:
         print('WARNING:  TwbT not installed; not compatible with DFHack.')
 
 

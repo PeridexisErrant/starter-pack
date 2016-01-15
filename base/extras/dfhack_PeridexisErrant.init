@@ -1,7 +1,7 @@
 # This file adds various things I think should be in the standard dfhack.init
 
 # TwbT multilevel view
-#multilevel 5
+multilevel 5
 
 # add fertility indicator to nestboxes
 tweak eggs-fertile

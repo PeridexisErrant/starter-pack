@@ -24,10 +24,10 @@ def lnp(*paths):
     return build('LNP', *paths)
 
 def utilities(*paths):
-    return lnp('Utilities', *paths)
+    return lnp('utilities', *paths)
 
 def graphics(*paths):
-    return lnp('Graphics', *paths)
+    return lnp('graphics', *paths)
 
 def curr_baseline(*paths):
     dname = 'df_{0[1]}_{0[2]}'.format(DF_VERSION.split('.'))

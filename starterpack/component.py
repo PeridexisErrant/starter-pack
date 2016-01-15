@@ -15,6 +15,7 @@ import collections
 import concurrent.futures
 import datetime
 import os
+import time
 import yaml
 
 import requests
@@ -23,14 +24,18 @@ import requests
 def cache(method, *, saved={}, dump=False):
     """A local cache is faster, and avoids GitHub API ratelimit."""
     if not saved:
+        saved['notified'] = True
         try:
-            with open('_cached.yml') as f:
-                saved.update(yaml.load(f))
-            print('Loaded metadata cache; delete "_cached.yml" to refresh.\n')
+            if time.time() - os.stat('_cached.yml').st_mtime < 60*60:
+                with open('_cached.yml') as f:
+                    saved.update(yaml.load(f))
+                print('Loaded metadata from "_cached.yml".\n')
+            else:
+                print('Cache expired, downloading latest metadata.\n')
+                os.remove('_cached.yml')
         except IOError:
-            saved['notified'] = True
             print('No metadata cache; will download from APIs.\n')
-    if saved and dump and not os.path.isfile('_cached.yml'):
+    elif dump and not os.path.isfile('_cached.yml'):
         with open('_cached.yml', 'w') as f:
             yaml.dump(saved, f, indent=4)
 
@@ -53,7 +58,7 @@ def report(comps=None):
 
 
 def download(c):
-    """Save the content of url to filename."""
+    """Download a component if the file does not exist; warn if too old."""
     if not os.path.isfile(c.path):
         print('downloading {}...'.format(c.name))
         req = requests.get(c.dl_link)
@@ -61,6 +66,8 @@ def download(c):
         with open(c.path, 'wb') as f:
             f.write(b''.join(req.iter_content(1024)))
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
+    if time.time() - os.stat(c.path).st_mtime > 86400*(c.days_since_update+1):
+        print('WARNING: {0.name} file older than update!'.format(c))
 
 
 def download_files():

@@ -1,3 +1,8 @@
+0.42.04-r02
+ - (re)activated TwbT multilevel mode
+ - updated Phoebus, Mayday graphics; avoids save-update issues
+ - update PyLNP; many bugfixes
+
 0.42.04-r01
  - updated DF
  - updated Dwarf Therapist
