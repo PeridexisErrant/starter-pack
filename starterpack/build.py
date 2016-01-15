@@ -121,9 +121,9 @@ def _therapist_ini():
     if not os.path.isfile(util_path):
         try:
             if not os.path.isfile(comp_path):
-                component.download(url, comp_path)
+                component.raw_dl(url, comp_path)
             shutil.copy(comp_path, util_path)
-        except Exception:
+        except IOError:
             print('WARNING:  Therapist memory layout unavailable!')
 
 
@@ -304,7 +304,6 @@ def create_about():
     if not os.path.isdir(paths.lnp('about')):
         os.mkdir(paths.lnp('about'))
     shutil.copy(paths.base('about.txt'), paths.lnp('about'))
-    # TODO:  Update base file?  Include checksum with each changelog entry?
     shutil.copy(paths.base('changelog.txt'),
                 paths.lnp('about', 'changelog.txt'))
     _contents()

@@ -57,14 +57,19 @@ def report(comps=None):
     cache(lambda s, x: None, dump=True)
 
 
+def raw_dl(url, path):
+    """Save url contents to a file."""
+    req = requests.get(url)
+    req.raise_for_status()
+    with open(path, 'wb') as f:
+        f.write(b''.join(req.iter_content(1024)))
+
+
 def download(c):
     """Download a component if the file does not exist; warn if too old."""
     if not os.path.isfile(c.path):
         print('downloading {}...'.format(c.name))
-        req = requests.get(c.dl_link)
-        req.raise_for_status()
-        with open(c.path, 'wb') as f:
-            f.write(b''.join(req.iter_content(1024)))
+        raw_dl(c.dl_link, c.path)
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
     if time.time() - os.stat(c.path).st_mtime > 86400*(c.days_since_update+1):
         print('WARNING: {0.name} file older than update!'.format(c))
@@ -222,10 +227,10 @@ def get_globals():
         items = [(c, i) for c, v in yaml.safe_load(ymlf).items() for i in v]
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
-    ALL = {r.name: r for r in results}
-    ALL['Dwarf Fortress'] = _component_DF()
-    yield ALL
-    yield from [sorted(filter(lambda c: c.category == t, ALL.values()),
+    all_comps = {r.name: r for r in results}
+    all_comps['Dwarf Fortress'] = _component_DF()
+    yield all_comps
+    yield from [sorted({c for c in all_comps.values() if c.category == t},
                        key=lambda c: c.name)
                 for t in ('files', 'graphics', 'utilities')]
 
