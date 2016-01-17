@@ -1,3 +1,9 @@
+0.42.04-r03
+ - updated TwbT
+ - added Gemset graphics
+ - updated Legends Browser
+ - updated PyLNP; additional bugfixes
+
 0.42.04-r02
  - (re)activated TwbT multilevel mode
  - updated Phoebus, Mayday graphics; avoids save-update issues

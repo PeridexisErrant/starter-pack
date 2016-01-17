@@ -111,6 +111,10 @@ graphics:
         bay12: 105376
         host: github
         ident: fricy/CLA
+    Gemset:
+        bay12: 150753
+        host: dffd
+        ident: 10857
     Ironhand:
         bay12: 53180
         host: github
