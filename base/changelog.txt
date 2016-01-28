@@ -1,3 +1,11 @@
+0.42.05-r01
+ - updated DF
+ - updated all graphics packs
+ - updated Dwarf Therapist
+ - updated Dwarf Mockup
+ - updated Legends Browser
+ - updated Legends Viewer
+
 0.42.04-r03
  - updated TwbT
  - added Gemset graphics
