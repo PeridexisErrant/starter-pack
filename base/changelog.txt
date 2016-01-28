@@ -5,6 +5,7 @@
  - updated Dwarf Mockup
  - updated Legends Browser
  - updated Legends Viewer
+ - added Nadigal's tileset and colors
 
 0.42.04-r03
  - updated TwbT
