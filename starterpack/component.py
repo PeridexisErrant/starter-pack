@@ -150,9 +150,36 @@ class GitHubMetadata(AbstractMetadata):
         tag['version'] = tag['name']
         return tag
 
-    def days_since_update(self, ID):
+    def days_since_update(self, repo):
         return (datetime.datetime.today() - datetime.datetime.strptime(
-            self.json(ID)['published_at'], '%Y-%m-%dT%H:%M:%SZ')).days
+            self.json(repo)['published_at'], '%Y-%m-%dT%H:%M:%SZ')).days
+
+
+class BitbucketMetadata(AbstractMetadata):
+    @cache
+    def json(self, repo):
+        # Only works for repos with releases, but that's fine
+        url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'.format(
+            repo)
+        release = requests.get(url).json().get('values', [])
+        if not release:
+            raise IOError('No releases for ' + repo + ' on bitbucket!')
+        win_only = [r for r in release if 'win' in r.get('name', '')]
+        return win_only[0] if win_only else release[0]
+
+    def filename(self, repo):
+        return self.json(repo)['name']
+
+    def dl_link(self, repo):
+        return self.json(repo)['links']['self']['href']
+
+    def version(self, repo):
+        return os.path.splitext(self.filename(repo))[0].replace('-win32', '')
+
+    def days_since_update(self, repo):
+        return (datetime.datetime.today() - datetime.datetime.strptime(
+            self.json(repo)['created_on'].split('.')[0],
+            '%Y-%m-%dT%H:%M:%S')).days
 
 
 class ManualMetadata(AbstractMetadata):
@@ -182,8 +209,11 @@ def _component(data):
     with open('config.yml') as f:
         config = yaml.safe_load(f)[category][item]
     ident = item if config['host'] == 'manual' else config['ident']
-    meta = {'dffd': DFFDMetadata, 'github': GitHubMetadata,
-            'manual': ManualMetadata}[config['host']]()
+    meta = {'dffd': DFFDMetadata,
+            'github': GitHubMetadata,
+            'bitbucket': BitbucketMetadata,
+            'manual': ManualMetadata
+            }[config['host']]()
     return _template(
         category, item, os.path.join('components', meta.filename(ident)),
         meta.filename(ident), meta.dl_link(ident), meta.version(ident),
