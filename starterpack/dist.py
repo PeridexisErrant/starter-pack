@@ -1,12 +1,11 @@
 """Zip the built pack and create thread posts."""
-# TODO:  calculate, save, and post checksums and timestamp.
 
 import os
 import shutil
 import zipfile
 
 from . import paths
-
+# TODO: warn if recent updates are not reflected in the changelog
 
 def zip_pack():
     """Compress the build dir to a zipped pack."""
@@ -29,6 +28,7 @@ def release_docs():
              '\n\n{}').format(paths.PACK_VERSION, f.read().split('\n\n')[0])
     with open(paths.dist('forum_post.txt'), 'w') as f:
         f.write(s)
+    # TODO:  find a reasonably elegant way to document checksum, timestamp
 
 
 def make():
