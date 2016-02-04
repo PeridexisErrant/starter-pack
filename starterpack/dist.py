@@ -5,6 +5,8 @@ import os
 import shutil
 import zipfile
 
+import yaml
+
 from . import paths
 
 
@@ -24,9 +26,11 @@ def release_docs():
     """Document the file checksum and create a forum post."""
     shutil.copy(paths.lnp('about', 'contents.txt'), paths.dist())
     with open(paths.lnp('about', 'changelog.txt')) as f:
+        dffd_id = yaml.load(paths.base('PyLNP-json.yml'))['updates']['dffdID']
+        changes = f.read().split('\n\n')[0]
         s = ('The Starter Pack has updated to {}!  As usual, [url=http://dffd'
-             '.bay12games.com/file.php?id=7622]you can get it here.[/url]\n\n'
-             '\n\n{}').format(paths.PACK_VERSION, f.read().split('\n\n')[0])
+             '.bay12games.com/file.php?id={}]you can get it here.[/url]\n\n'
+             '\n\n{}').format(paths.PACK_VERSION, dffd_id, changes)
     with open(paths.dist('forum_post.txt'), 'w') as f:
         f.write(s)
 

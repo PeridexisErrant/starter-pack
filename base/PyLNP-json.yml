@@ -2,7 +2,7 @@ hideUtilityExt: false
 hideUtilityPath: true
 updates:
     updateMethod: dffd
-    dffdID: 11309
+    dffdID: "11309"
 dfhack:
     Workflow - production targets:
         command: enable workflow

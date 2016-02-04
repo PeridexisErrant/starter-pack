@@ -16,9 +16,9 @@ import concurrent.futures
 import datetime
 import os
 import time
-import yaml
 
 import requests
+import yaml
 
 
 def cache(method, *, saved={}, dump=False):
@@ -213,7 +213,7 @@ def _component(data):
             'github': GitHubMetadata,
             'bitbucket': BitbucketMetadata,
             'manual': ManualMetadata
-            }[config['host']]()
+           }[config['host']]()
     return _template(
         category, item, os.path.join('components', meta.filename(ident)),
         meta.filename(ident), meta.dl_link(ident), meta.version(ident),
