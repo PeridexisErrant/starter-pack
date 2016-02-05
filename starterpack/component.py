@@ -159,9 +159,8 @@ class BitbucketMetadata(AbstractMetadata):
     @cache
     def json(self, repo):
         # Only works for repos with releases, but that's fine
-        url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'.format(
-            repo)
-        release = requests.get(url).json().get('values', [])
+        url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'
+        release = requests.get(url.format(repo)).json().get('values', [])
         if not release:
             raise IOError('No releases for ' + repo + ' on bitbucket!')
         win_only = [r for r in release if 'win' in r.get('name', '')]

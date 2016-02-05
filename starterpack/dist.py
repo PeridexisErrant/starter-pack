@@ -1,6 +1,7 @@
 """Zip the built pack and create thread posts."""
-# TODO:  calculate, save, and post checksums and timestamp.
+# TODO:  save checksums and timestamp in changelog or history file
 
+import hashlib
 import os
 import shutil
 import zipfile
@@ -25,12 +26,19 @@ def zip_pack():
 def release_docs():
     """Document the file checksum and create a forum post."""
     shutil.copy(paths.lnp('about', 'contents.txt'), paths.dist())
+    with open(paths.base('PyLNP-json.yml')) as config:
+        dffd_id = yaml.load(config)['updates']['dffdID']
     with open(paths.lnp('about', 'changelog.txt')) as f:
-        dffd_id = yaml.load(paths.base('PyLNP-json.yml'))['updates']['dffdID']
         changes = f.read().split('\n\n')[0]
-        s = ('The Starter Pack has updated to {}!  As usual, [url=http://dffd'
-             '.bay12games.com/file.php?id={}]you can get it here.[/url]\n\n'
-             '\n\n{}').format(paths.PACK_VERSION, dffd_id, changes)
+    sha256 = hashlib.sha256()
+    with open(paths.zipped(), 'rb') as f:
+        for chunk in iter(lambda: f.read(8192), b''):
+            sha256.update(chunk)
+    checksum = sha256.hexdigest()
+    s = ('The Starter Pack has updated to {}!  As usual, [url=http://dffd'
+         '.bay12games.com/file.php?id={}]you can get it here.[/url]\n\n'
+         '\n\n{}\n\nSHA256:  {}').format(
+             paths.PACK_VERSION, dffd_id, changes, checksum)
     with open(paths.dist('forum_post.txt'), 'w') as f:
         f.write(s)
 
