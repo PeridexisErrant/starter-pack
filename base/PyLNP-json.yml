@@ -7,7 +7,7 @@ dfhack:
     Workflow - production targets:
         command: enable workflow
         enabled: false
-        file: dfhack
+        file: onMapLoad
         tooltip: |
             The 'workflow' plugin disables cancelling repeat jobs.
             Use 'alt-W' to set targets (eg 'if less than 100 drinks, unsuspend drink production until 200 drinks').
@@ -27,7 +27,6 @@ dfhack:
     Mouse Controls:
         command: mousequery edge enable
         enabled: false
-        file: dfhack
         tooltip: allows scrolling by hovering near edge of map - pair with 'laptop with mouse' keybindings
     Performance Tweaks:
         command: multicmd tweak fast-heat 100; repeat -time 1 -timeUnits months -command [ multicmd cleanowned X ; clean all ]
