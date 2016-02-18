@@ -9,7 +9,7 @@ Any modules that use this data should just access the dict ALL (bottom).
 This should be the only module that touches the network or which components
 are described in config.yml
 """
-#pylint:disable=missing-docstring
+# pylint:disable=missing-docstring
 
 import collections
 import concurrent.futures
@@ -46,11 +46,9 @@ def cache(method, *, saved={}, dump=False):
     return wrapper
 
 
-def report(comps=None):
-    if comps is None:
-        comps = ALL.values()
+def report():
     print('Component:            Age:   Version:       Filename:')
-    for comp in sorted(comps, key=lambda c: c.days_since_update):
+    for comp in sorted(ALL.values(), key=lambda c: c.days_since_update):
         print(' {:22}{:4}   {:15}{:30}'.format(
             comp.name[:19], comp.days_since_update,
             comp.version, comp.filename[:30]))
@@ -87,12 +85,16 @@ class AbstractMetadata(object):
     """Base class for site-specific downloaders."""
     def json(self, identifier):
         raise NotImplementedError()
+
     def filename(self, identifier):
         return self.json(identifier)['filename']
+
     def dl_link(self, identifier):
         return self.json(identifier)['dl_link']
+
     def version(self, identifier):
         return self.json(identifier)['version']
+
     def days_since_update(self, identifier):
         raise NotImplementedError()
 
@@ -183,7 +185,7 @@ class BitbucketMetadata(AbstractMetadata):
 
 class ManualMetadata(AbstractMetadata):
     def json(self, identifier):
-        with open('config.yml') as f:
+        with open('components.yml') as f:
             for category in yaml.safe_load(f).values():
                 if identifier in category:
                     return category[identifier]
@@ -196,6 +198,19 @@ class ManualMetadata(AbstractMetadata):
                 self.json(ID).get('updated', datetime.date(2005, 1, 1))).days
 
 
+@cache
+def _get_df_meta(null, ident):
+    """Use inner function to ensure cache key is identical across calls."""
+    # pylint:disable=unused-argument
+    url = 'http://bay12games.com/dwarves/dev_release.rss'
+    for line in requests.get(url).text.split('\n'):
+        if line.startswith('      <title>'):
+            for s in ['      <title>', ' Released</title>']:
+                line = line.replace(s, '')
+            day, df_version = (s.strip() for s in line.split(': DF'))
+    return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
+
+
 _template = collections.namedtuple('Component', [
     'category', 'name', 'path',
     'filename', 'dl_link', 'version',
@@ -204,60 +219,40 @@ _template = collections.namedtuple('Component', [
 
 def _component(data):
     """Lighter weight than a class, but still easy to access."""
-    category, item = data
-    with open('config.yml') as f:
-        config = yaml.safe_load(f)[category][item]
+    if data == 'Dwarf Fortress':
+        # DF is a special case; unique so no class but crucial so not manual
+        df_version, updated = _get_df_meta(None, 'Dwarf Fortress')
+        link = 'http://bay12games.com/dwarves/'
+        filename = 'df_{0[1]}_{0[2]}_win.zip'.format(df_version.split('.'))
+        return _template(
+            'files', 'Dwarf Fortress', os.path.join('components', filename),
+            filename, link + filename, df_version,
+            (datetime.datetime.today() - updated).days, '', link)
+
+    category, item, config = data
     ident = item if config['host'] == 'manual' else config['ident']
-    meta = {'dffd': DFFDMetadata,
-            'github': GitHubMetadata,
+    meta = {'dffd': DFFDMetadata, 'github': GitHubMetadata,
             'bitbucket': BitbucketMetadata,
-            'manual': ManualMetadata
-           }[config['host']]()
+            'manual': ManualMetadata}[config['host']]()
     return _template(
         category, item, os.path.join('components', meta.filename(ident)),
         meta.filename(ident), meta.dl_link(ident), meta.version(ident),
         meta.days_since_update(ident),
-        config.get('tooltip', '').replace('\n', ''),
+        config.get('tooltip', '').replace('\n', ' '),
         'http://www.bay12forums.com/smf/index.php?topic={}'.format(
             config.get('bay12', 126076)))
-
-
-def df_metadata():
-    """Fetch metadata about DF."""
-    @cache
-    def _get_df_meta(null, ident):
-        """Use inner function to ensure cache key is identical across calls."""
-        #pylint:disable=unused-argument
-        url = 'http://bay12games.com/dwarves/dev_release.rss'
-        for line in requests.get(url).text.split('\n'):
-            if line.startswith('      <title>'):
-                for s in ['      <title>', ' Released</title>']:
-                    line = line.replace(s, '')
-                day, df_version = (s.strip() for s in line.split(': DF'))
-        return df_version, datetime.datetime.strptime(day, '%Y-%m-%d')
-    return _get_df_meta(None, 'Dwarf Fortress')
-
-
-def _component_DF():
-    """DF is the sole, hard-coded special case to avoid manual management."""
-    link = 'http://bay12games.com/dwarves/'
-    df_version, updated = df_metadata()
-    filename = 'df_{0[1]}_{0[2]}_win.zip'.format(df_version.split('.'))
-    return _template(
-        'files', 'Dwarf Fortress', os.path.join('components', filename),
-        filename, link + filename, df_version,
-        (datetime.datetime.today() - updated).days, '', link)
 
 
 def get_globals():
     """Returns the dict and lists for the module variables
     ALL, FILES, GRAPHICS, and UTILITIES."""
-    with open('config.yml') as ymlf:
-        items = [(c, i) for c, v in yaml.safe_load(ymlf).items() for i in v]
+    with open('components.yml') as ymlf:
+        config = yaml.safe_load(ymlf)
+    items = ['Dwarf Fortress']
+    items.extend((c, i, config[c][i]) for c, v in config.items() for i in v)
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
     all_comps = {r.name: r for r in results}
-    all_comps['Dwarf Fortress'] = _component_DF()
     yield all_comps
     yield from [sorted({c for c in all_comps.values() if c.category == t},
                        key=lambda c: c.name)

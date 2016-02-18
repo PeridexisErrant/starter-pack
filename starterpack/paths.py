@@ -1,12 +1,12 @@
 """Utility methods to get various paths.  Acts as a single source of truth."""
-#pylint:disable=missing-docstring
+# pylint:disable=missing-docstring
 
 import os
 
 from . import component
 
 
-DF_VERSION = component.df_metadata()[0]
+DF_VERSION = component.ALL['Dwarf Fortress'].version
 with open('base/changelog.txt') as f:
     PACK_VERSION = f.readline().strip()
 if not PACK_VERSION.startswith(DF_VERSION):
@@ -44,5 +44,5 @@ def zipped():
 
 
 def base(*paths):
-    """Return the path to the main pack directory ('build')."""
+    """Return the path to the persistent content directory."""
     return os.path.join('base', *paths)
