@@ -11,7 +11,6 @@ files:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
-        extract_to: df
     PerfectWorld XML:
         bay12: 57428
         host: dffd
@@ -24,6 +23,7 @@ files:
         extract_to: |
             PyLNP.exe:build/Starter Pack Launcher (PyLNP).exe
     Quickfort Blueprints:
+        bay12: 126076
         host: dffd
         ident: 8185
         extract_to: utilities/Quickfort/blueprints
@@ -124,30 +124,30 @@ utilities:
 graphics:
     CLA:
         bay12: 105376
-        host: github
+        host: github/tag
         ident: fricy/CLA
     Gemset:
         bay12: 150753
-        host: github
+        host: github/tag
         ident: fricy/GemSet
         needs_dfhack: True
     Ironhand:
         bay12: 53180
-        host: github
+        host: github/tag
         ident: fricy/Ironhand
     Mayday:
         bay12: 137370
-        host: github
+        host: github/tag
         ident: fricy/Mayday
     Obsidian:
         bay12: 126934
-        host: github
+        host: github/tag
         ident: fricy/Obsidian
     Phoebus:
         bay12: 152698
-        host: github
+        host: github/tag
         ident: fricy/Phoebus
     Spacefox:
         bay12: 129219
-        host: github
+        host: github/tag
         ident: fricy/Spacefox

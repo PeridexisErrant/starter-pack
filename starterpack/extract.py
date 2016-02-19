@@ -35,8 +35,8 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
             shutil.copyfileobj(zf.open(in_obj), out)
 
     with zipfile.ZipFile(filename) as zf:
-        files = dict(filter(lambda a: not a[0].endswith('/'),
-                            zip(zf.namelist(), zf.infolist())))
+        files = dict(a for a in zip(zf.namelist(), zf.infolist())
+                     if not a[0].endswith('/'))
         if path_pairs is not None:
             for inpath, outpath in path_pairs:
                 _extract(files[inpath], outpath)
@@ -66,7 +66,7 @@ def extract_df():
 def extract_files():
     """Extract the miscelaneous files in components.yml"""
     for comp in component.FILES:
-        if comp.name == 'DFHack':
+        if comp.name in ('Dwarf Fortress', 'DFHack'):
             continue
         if comp.needs_dfhack and DFHACK_VER is None:
             print(comp.name, 'not installed - requires DFHack')
