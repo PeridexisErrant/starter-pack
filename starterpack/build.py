@@ -8,7 +8,6 @@ I've tried to keep it flexible enough not to break on alternative
 configurations - though it might not be much use.
 """
 
-import glob
 import json
 import os
 import shutil
@@ -100,7 +99,7 @@ def create_utilities():
         with open(man_path, 'w') as f:
             json.dump(manifest, f)
 
-    if component.ALL.get('PyLNP', '').version > 'PyLNP_0.10d':
+    if component.ALL.get('PyLNP', '').version > 'PyLNP_0.10f':
         raise DeprecationWarning('Time to remove utilities.txt code?')
         # https://bitbucket.org/Pidgeot/python-lnp/pull-requests/61
     with open(paths.utilities('utilities.txt'), 'w') as f:
@@ -164,14 +163,6 @@ def create_graphics():
                 "tooltip": "Default graphics for DF, exactly as they come."}
     with open(paths.graphics('ASCII', 'manifest.json'), 'w') as f:
         json.dump(manifest, f, indent=4)
-
-    # Only keep the 24px edition of Gemset (see note in extracy.py)
-    gemset = glob.glob(paths.graphics('Gemset', '*_24px'))
-    if gemset:
-        shutil.move(gemset[0], paths.graphics('_temp'))
-        shutil.rmtree(paths.graphics('Gemset'))
-        shutil.move(paths.graphics('_temp'), paths.graphics('Gemset'))
-
     for pack in os.listdir(paths.graphics()):
         _check_a_graphics_pack(pack)
 
@@ -211,11 +202,7 @@ def build_lnp_dirs():
     # Reduce filesize of baseline
     rough_simplify(paths.curr_baseline())
 
-    # Clean up and create new PyLNP files
-    # Implement note in extract.py to avoid needing cleanup
-    os.rename(paths.build('PyLNP.exe'),
-              paths.build('Starter Pack Launcher (PyLNP).exe'))
-    os.remove(paths.build('PyLNP.json'))
+    # Create new PyLNP.json
     with open(paths.base('PyLNP-json.yml')) as f:
         pylnp_conf = yaml.load(f)
     pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION

@@ -20,6 +20,9 @@ def df(*paths):
     """Return the path to the DF directory in the built pack."""
     return build('Dwarf Fortress ' + DF_VERSION, *paths)
 
+def plugins(*paths):
+    return df('hack', 'plugins', *paths)
+
 def lnp(*paths):
     return build('LNP', *paths)
 

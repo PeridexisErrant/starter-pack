@@ -3,7 +3,7 @@
 #     MUST have "host" set to one of "dffd", "github", or "manual"
 #     MUST have "ident" set if host is not "manual"
 #     MUST otherwise set "dl_link", "updated", and "version"
-#     MUST set "extract_to" for files; 
+#     MUST set "extract_to" for files (see extract.py for details)
 #     SHOULD provide a tooltip string if the component is a utility
 #     MAY set "needs_dfhack" to True to avoid useless install
 files:
@@ -21,7 +21,8 @@ files:
         bay12: 140808
         host: bitbucket
         ident: Pidgeot/python-lnp
-        extract_to: build
+        extract_to: |
+            PyLNP.exe:build/Starter Pack Launcher (PyLNP).exe
     Quickfort Blueprints:
         host: dffd
         ident: 8185
@@ -36,7 +37,11 @@ files:
         bay12: 138754
         host: github
         ident: mifki/df-twbt
-        # has custom extraction logic in extract.py
+        extract_to: |
+            {DFHACK_VER}/automaterial.plug.dll:plugins/automaterial.plug.dll
+            {DFHACK_VER}/mousequery.plug.dll:plugins/mousequery.plug.dll
+            {DFHACK_VER}/resume.plug.dll:plugins/resume.plug.dll
+            {DFHACK_VER}/twbt.plug.dll:plugins/twbt.plug.dll
         needs_dfhack: True
 utilities:
     Announcement Window:

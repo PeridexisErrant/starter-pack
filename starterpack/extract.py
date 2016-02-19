@@ -14,32 +14,36 @@ from . import paths
 DFHACK_VER = None
 
 
-def unzip_to(filename, target_dir):
+def unzip_to(filename, target_dir=None, path_pairs=None):
     """Extract the contents of the given archive to the target directory.
 
-    - If the filename is not a zip file, copy '.exe's to target_dir.
-        For other file types, print a warning (everyone uses .zip for now)
-    - If the zip is all in a single compressed folder, traverse it.
-        We want the target_dir to hold files, not a single subdir.
+    In 'target_dir' mode, extracts the least-nested contents to the target
+    directory.  This makes a zip-of-one-dir equivalent to zip-of-several-files.
+
+    In 'path_pairs' mode, the argument should be a sequence of paths.
+    The file at the first path within the zip is written at the second path.
     """
-    # TODO:  abstraction of get-particular-file-from-archive
-    # See PyLNP, DFFD-edition Gemset, TwbT, etc.
+    assert bool(target_dir) + bool(path_pairs) == 1, 'Choose one unzip mode!'
     if not (filename.endswith('.zip') and zipfile.is_zipfile(filename)):
         raise IOError(filename + ' is not a valid .zip file.')
-    print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], target_dir))
+    out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
+    print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], out))
+
+    def _extract(in_obj, outpath):
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        with open(outpath, 'wb') as out:
+            shutil.copyfileobj(zf.open(in_obj), out)
+
     with zipfile.ZipFile(filename) as zf:
-        contents = [a for a in zip(zf.infolist(), zf.namelist())
-                    if not a[1].endswith('/')]
-        while len(set(n.partition('/')[0] for o, n in contents)) == 1:
-            if len(contents) == 1:
-                break
-            contents = [(o, n.partition('/')[-1]) for o, n in contents]
-        for obj, name in contents:
-            outfile = os.path.join(target_dir, name)
-            if not os.path.isdir(os.path.dirname(outfile)):
-                os.makedirs(os.path.dirname(outfile))
-            with open(outfile, 'wb') as out:
-                shutil.copyfileobj(zf.open(obj), out)
+        if path_pairs is not None:
+            zipped = dict(zip(zf.namelist(), zf.infolist()))
+            for inpath, outpath in path_pairs:
+                _extract(zipped[inpath], outpath)
+        else:
+            prefix = os.path.commonpath(zf.namelist())
+            namelist = [os.path.relpath(p, prefix) for p in zf.namelist()]
+            for obj, name in zip(zf.infolist(), namelist):
+                _extract(obj, os.path.join(target_dir, name))
 
 
 def extract_df():
@@ -58,25 +62,6 @@ def extract_df():
         return hack.version.replace('v', '')
 
 
-def _extract_twbt():
-    """TwbT extraction is a bit of a pain."""
-    plugins = ['{}/{}.plug.dll'.format(DFHACK_VER, plug)
-               for plug in ('automaterial', 'mousequery', 'resume', 'twbt')]
-    done = False
-    with zipfile.ZipFile(component.ALL['TwbT'].path) as zf:
-        for obj, name in zip(zf.infolist(), zf.namelist()):
-            if name in plugins:
-                done = True
-                outpath = paths.df('hack', 'plugins', os.path.basename(name))
-                with open(outpath, 'wb') as out:
-                    shutil.copyfileobj(zf.open(obj), out)
-    if done:
-        print('{:20}  ->  {}'.format(os.path.basename(
-            component.ALL['TwbT'].path)[:20], os.path.dirname(outpath)))
-    else:
-        print('WARNING:  TwbT not installed; not compatible with DFHack.')
-
-
 def extract_files():
     """Extract the miscelaneous files in components.yml"""
     for comp in component.FILES:
@@ -85,15 +70,20 @@ def extract_files():
         if comp.needs_dfhack and DFHACK_VER is None:
             print(comp.name, 'not installed - requires DFHack')
             continue
-        if comp.name == 'TwbT':
-            _extract_twbt()
-            continue
-        dest, *details = comp.extract_to.split('/')
-        if not dest:
-            print('No destination configured for file:', comp.name)
-            continue
-        # first part of extract_to is paths method, remainder is args
-        unzip_to(comp.path, getattr(paths, dest)(*details))
+        if ':' not in comp.extract_to:
+            # first part of extract_to is paths method, remainder is args
+            dest, *details = comp.extract_to.split('/')
+            unzip_to(comp.path, getattr(paths, dest)(*details))
+        else:
+            # using the path_pairs option; extract pairs from string (hashable)
+            pairs = []
+            for pair in comp.extract_to.strip().split('\n'):
+                src, to = pair.split(':')
+                dest, *details = to.split('/')
+                # Note: can add format variables here as needed
+                src = src.format(DFHACK_VER=DFHACK_VER)
+                pairs.append([src, getattr(paths, dest)(*details)])
+            unzip_to(comp.path, path_pairs=pairs)
 
 
 def extract_utilities():
