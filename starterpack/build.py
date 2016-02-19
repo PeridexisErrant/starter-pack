@@ -122,6 +122,8 @@ def create_utilities():
 
 def _twbt_settings(pack):
     """Set TwbT-specific options for a graphics pack."""
+    if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
+        return
     init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
     with open(init_file) as f:
         init = f.readlines()
@@ -138,22 +140,26 @@ def _twbt_settings(pack):
 
 def _check_a_graphics_pack(pack):
     """Fix up the given graphics pack."""
-    if not os.path.isfile(paths.graphics(pack, 'manifest.json')):
-        print('WARNING:  not manifest for {} graphics!'.format(pack))
-    # Reduce filesize of graphics packs
-    rough_simplify(paths.graphics(pack))
-    for file in os.listdir(paths.graphics(pack, 'data', 'art')):
-        if file in os.listdir(paths.lnp('tilesets')) or file.endswith('.bmp'):
-            os.remove(paths.graphics(pack, 'data', 'art', file))
     # Check that all is well...
     files = os.listdir(paths.graphics(pack))
     if not ('data' in files and 'raw' in files):
         print(pack + ' graphics pack malformed!')
-    elif len(files) > 3:
-        print(pack + ' graphics pack not simplified!')
-    if os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
-        if pack not in {'ASCII', 'Gemset'}:
-            _twbt_settings(pack)
+    # Check that manifest is present and not obviously incompatible
+    if not os.path.isfile(paths.graphics(pack, 'manifest.json')):
+        print('WARNING:  no manifest for {} graphics!'.format(pack))
+    else:
+        with open(paths.graphics(pack, 'manifest.json')) as f:
+            manifest = json.load(f)
+        if manifest.get('df_max_version', '1') < paths.DF_VERSION:
+            print('WARNING {} graphics hidden by df_max_version!'.format(pack))
+    # Reduce filesize
+    rough_simplify(paths.graphics(pack))
+    for file in os.listdir(paths.graphics(pack, 'data', 'art')):
+        if file in os.listdir(paths.lnp('tilesets')) or file.endswith('.bmp'):
+            os.remove(paths.graphics(pack, 'data', 'art', file))
+    # Use TwbT settings, except for ASCII and native TwbT graphics packs
+    if not (pack == 'ASCII' or component.ALL[pack].needs_dfhack):
+        _twbt_settings(pack)
 
 
 def create_graphics():
@@ -227,7 +233,7 @@ def build_df():
             print('DFHack is a prerelease version; disabling...')
             shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
             shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
-
+    # Install Phoebus graphics by default
     pack = 'Phoebus'
     if pack in os.listdir(paths.graphics()):
         shutil.rmtree(paths.df('raw', 'graphics'))
