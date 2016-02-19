@@ -84,8 +84,25 @@ def create_utilities():
     """Confgure utilities metadata and check config files."""
     _soundsense_xml()
     _therapist_ini()
-    # TODO:  use forthcoming PyLNP utilities manifest feature instead
-    # generate utilities.txt
+    for util in component.UTILITIES:
+        if util.needs_dfhack and extract.DFHACK_VER is None:
+            continue
+        man_path = paths.utilities(util.name, 'manifest.json')
+        exe = []
+        for _, _, files in os.walk(paths.utilities(util.name)):
+            exe.extend(f for f in files if f.endswith('.exe'))
+        manifest = {'title': util.name, 'tooltip': util.tooltip,
+                    'needs_dfhack': util.needs_dfhack,
+                    'win_exe': sorted(exe)[0]}
+        if os.path.isfile(man_path):
+            with open(man_path) as f:
+                manifest.update(json.load(f))
+        with open(man_path, 'w') as f:
+            json.dump(manifest, f)
+
+    if component.ALL.get('PyLNP', '').version > 'PyLNP_0.10d':
+        raise DeprecationWarning('Time to remove utilities.txt code?')
+        # https://bitbucket.org/Pidgeot/python-lnp/pull-requests/61
     with open(paths.utilities('utilities.txt'), 'w') as f:
         for util in component.UTILITIES:
             if util.needs_dfhack and extract.DFHACK_VER is None:
@@ -98,11 +115,8 @@ def create_utilities():
                     elif fname.endswith('.jar'):
                         jars.append(fname)
             f.write(''.join('[{}:EXCLUDE]\n'.format(j) for j in jars))
-            if exe:
-                f.write('[{}:{}:{}]\n\n'.format(
-                    sorted(exe)[0], util.name, util.tooltip))
-            else:
-                print('WARNING: no executable for {}'.format(util.name))
+            f.write('[{}:{}:{}]\n\n'.format(
+                sorted(exe)[0], util.name, util.tooltip))
 
 
 # Configure graphics packs
