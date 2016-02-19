@@ -35,15 +35,16 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
             shutil.copyfileobj(zf.open(in_obj), out)
 
     with zipfile.ZipFile(filename) as zf:
+        files = dict(filter(lambda a: not a[0].endswith('/'),
+                            zip(zf.namelist(), zf.infolist())))
         if path_pairs is not None:
-            zipped = dict(zip(zf.namelist(), zf.infolist()))
             for inpath, outpath in path_pairs:
-                _extract(zipped[inpath], outpath)
+                _extract(files[inpath], outpath)
         else:
-            prefix = os.path.commonpath(zf.namelist())
-            namelist = [os.path.relpath(p, prefix) for p in zf.namelist()]
-            for obj, name in zip(zf.infolist(), namelist):
-                _extract(obj, os.path.join(target_dir, name))
+            prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
+            for name in files:
+                out = os.path.join(target_dir, os.path.relpath(name, prefix))
+                _extract(files[name], out)
 
 
 def extract_df():
