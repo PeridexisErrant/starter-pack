@@ -8,7 +8,38 @@ import zipfile
 
 import yaml
 
+from . import component
 from . import paths
+
+
+def create_about():
+    """Create the LNP/About folder contents."""
+    # Create the folder, copy over forum description and changelog
+    if not os.path.isdir(paths.lnp('about')):
+        os.mkdir(paths.lnp('about'))
+    shutil.copy(paths.base('about.txt'), paths.lnp('about'))
+    # TODO:  require changelog to be up to date / complete?
+    shutil.copy(paths.base('changelog.txt'),
+                paths.lnp('about', 'changelog.txt'))
+
+    def link(comp, ver=True, dash=' - '):
+        """Return BBCode format link to the component."""
+        vstr = ' ' + comp.version if ver else ''
+        return dash + '[url={}]{}[/url]'.format(comp.page, comp.name + vstr)
+
+    # Create the table of contents
+    kwargs = {c.name: link(c, dash='') for c in component.FILES}
+    kwargs['graphics'] = '\n'.join(link(c, False) for c in component.GRAPHICS)
+    kwargs['utilities'] = '\n'.join(link(c) for c in component.UTILITIES)
+    with open(paths.base('changelog.txt')) as f:
+        kwargs['changelogs'] = '\n\n'.join(f.read().split('\n\n')[:5])
+    with open(paths.base('contents.txt')) as f:
+        template = f.read()
+    for item in kwargs:
+        if '{' + item + '}' not in template:
+            print('WARNING: ' + item + ' not listed in base/docs/contents.txt')
+    with open(paths.lnp('about', 'contents.txt'), 'w') as f:
+        f.write(template.format(**kwargs))
 
 
 def zip_pack():
@@ -43,8 +74,9 @@ def release_docs():
         f.write(s)
 
 
-def make():
+def main():
     """Make the dist folder."""
+    create_about()
     print('\nCompressing pack...')
     zip_pack()
     release_docs()
