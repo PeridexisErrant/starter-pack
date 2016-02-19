@@ -214,7 +214,9 @@ def _get_df_meta(null, ident):
 _template = collections.namedtuple('Component', [
     'category', 'name', 'path',
     'filename', 'dl_link', 'version',
-    'days_since_update', 'tooltip', 'page'])
+    'days_since_update', 'tooltip', 'page',
+    'needs_dfhack', 'extract_to',
+    ])
 
 
 def _component(data):
@@ -227,7 +229,7 @@ def _component(data):
         return _template(
             'files', 'Dwarf Fortress', os.path.join('components', filename),
             filename, link + filename, df_version,
-            (datetime.datetime.today() - updated).days, '', link)
+            (datetime.datetime.today() - updated).days, '', link, False, 'df')
 
     category, item, config = data
     ident = item if config['host'] == 'manual' else config['ident']
@@ -240,7 +242,10 @@ def _component(data):
         meta.days_since_update(ident),
         config.get('tooltip', '').replace('\n', ' '),
         'http://www.bay12forums.com/smf/index.php?topic={}'.format(
-            config.get('bay12', 126076)))
+            config.get('bay12', 126076)),
+        config.get('needs_dfhack', False),
+        config.get('extract_to', ''),
+        )
 
 
 def get_globals():
@@ -249,7 +254,9 @@ def get_globals():
     with open('components.yml') as ymlf:
         config = yaml.safe_load(ymlf)
     items = ['Dwarf Fortress']
-    items.extend((c, i, config[c][i]) for c, v in config.items() for i in v)
+    items.extend((c, i, config[c][i])
+                 for c, v in config.items() for i in v
+                 if c in {'files', 'graphics', 'utilities'})
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
     all_comps = {r.name: r for r in results}
@@ -257,6 +264,11 @@ def get_globals():
     yield from [sorted({c for c in all_comps.values() if c.category == t},
                        key=lambda c: c.name)
                 for t in ('files', 'graphics', 'utilities')]
+
+
+def main():
+    report()
+    download_files()
 
 if __name__ != '__main__':
     ALL, FILES, GRAPHICS, UTILITIES = get_globals()

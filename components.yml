@@ -1,32 +1,43 @@
 # Each component, under files/utilities/graphics:
 #     SHOULD have a "bay12" key set to the forum thread number
 #     MUST have "host" set to one of "dffd", "github", or "manual"
-#     MUST have "ident" set if host is not "manual"; otherwise "dl_link", "updated", and "version"
+#     MUST have "ident" set if host is not "manual"
+#     MUST otherwise set "dl_link", "updated", and "version"
+#     MUST set "extract_to" for files; 
 #     SHOULD provide a tooltip string if the component is a utility
+#     MAY set "needs_dfhack" to True to avoid useless install
 files:
     DFHack:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
+        extract_to: df
     PerfectWorld XML:
         bay12: 57428
         host: dffd
         ident: 9672
+        extract_to: utilities/PerfectWorld
     PyLNP:
         bay12: 140808
         host: bitbucket
         ident: Pidgeot/python-lnp
+        extract_to: build
     Quickfort Blueprints:
         host: dffd
         ident: 8185
+        extract_to: utilities/Quickfort/blueprints
     Stocksettings:
         bay12: 146213
         host: dffd
         ident: 10170
+        extract_to: df/stocksettings
+        needs_dfhack: True
     TwbT:
         bay12: 138754
         host: github
         ident: mifki/df-twbt
+        # has custom extraction logic in extract.py
+        needs_dfhack: True
 utilities:
     Announcement Window:
         bay12: 153777
@@ -40,6 +51,7 @@ utilities:
         host: github
         ident: JapaMala/armok-vision
         tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
+        needs_dfhack: True
     DF Story Maker:
         bay12: 128570
         host: dffd
@@ -113,6 +125,7 @@ graphics:
         bay12: 150753
         host: github
         ident: fricy/GemSet
+        needs_dfhack: True
     Ironhand:
         bay12: 53180
         host: github
