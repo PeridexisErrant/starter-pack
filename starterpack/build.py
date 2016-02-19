@@ -191,6 +191,8 @@ def build_lnp_dirs():
     for f in {'init.txt', 'd_init.txt'}:
         shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
     overwrite_dir(default_dir, paths.df('data', 'init'))
+    os.rename(paths.df('data', 'init', 'default_profiles.txt'),
+              paths.df('data', 'init', 'embark_profiles.txt'))
 
     # Reduce filesize of baseline
     rough_simplify(paths.curr_baseline())

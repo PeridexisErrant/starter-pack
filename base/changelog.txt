@@ -1,3 +1,7 @@
+0.42.06-r01
+ - updated DF
+ - updated PyLNP
+
 0.42.05-r01
  - updated DF
  - updated all graphics packs
@@ -6,6 +10,9 @@
  - updated Legends Browser
  - updated Legends Viewer
  - added Nadigal's tileset and colors
+ - updated DFHack
+ - updated TwbT
+ - default embark profiles are installed by default again (oops)
 
 0.42.04-r03
  - updated TwbT
