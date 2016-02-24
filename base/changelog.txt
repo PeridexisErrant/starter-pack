@@ -1,6 +1,7 @@
 0.42.06-r01
  - updated DF
  - updated PyLNP
+ - updated Dwarf Therapist
 
 0.42.05-r01
  - updated DF
