@@ -43,7 +43,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
                     _extract(files[inpath], outpath)
                 else:
                     print('WARNING:  {} not in {}'.format(
-                          inpath, os.path.basename(filename)))
+                        inpath, os.path.basename(filename)))
         else:
             prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
             for name in files:

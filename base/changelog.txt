@@ -2,6 +2,11 @@
  - updated DF
  - updated PyLNP
  - updated Dwarf Therapist
+ - updated DFHack
+ - updated TwbT
+ - updated Armok Vision (and Wow, it looks great)
+ - improved pack assembler; mostly nice for me
+ - now includes manifest.json for all utilities
 
 0.42.05-r01
  - updated DF
