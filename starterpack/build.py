@@ -43,6 +43,35 @@ def rough_simplify(df_dir):
             shutil.rmtree(path)
 
 
+def fixup_manifest(filename, comp, **kwargs):
+    """Update manifest.json at `filename` with metadata for `comp`."""
+    if not os.path.isfile(filename):
+        if comp.category != 'utilities':
+            print('WARNING:  no manifest for {}!'.format(comp.name))
+        elif component.ALL.get('PyLNP', '').version > 'PyLNP_0.10f':
+            raise DeprecationWarning('Require upstream utility manifests?')
+
+    # Set title and other metadata from in components.yml
+    manifest = {'title': comp.name,
+                'needs_dfhack': comp.needs_dfhack,
+                'content_version': comp.version}
+    manifest.update(comp.manifest)
+    # Set keyword arguments (used for utilities executable autodetection)
+    manifest.update(kwargs)
+    # Override autodetection with prexisting manifest fields, if any
+    if os.path.isfile(filename):
+        with open(filename) as f:
+            manifest.update(json.load(f))
+    # Warn about and discard incompatibility flag
+    if manifest.get('df_max_version', '1') < paths.DF_VERSION:
+        print('WARNING: overriding df_max_version {} for {}'.format(
+            manifest.get('df_max_version'), comp.name))
+        manifest.pop('df_max_version', None)
+    # Finally, save the complete manifest
+    with open(filename, 'w') as f:
+        json.dump(manifest, f, indent=4)
+
+
 # Configure utilities
 
 def _soundsense_xml():
@@ -86,18 +115,11 @@ def create_utilities():
     for util in component.UTILITIES:
         if util.needs_dfhack and extract.DFHACK_VER is None:
             continue
-        man_path = paths.utilities(util.name, 'manifest.json')
         exe = []
         for _, _, files in os.walk(paths.utilities(util.name)):
             exe.extend(f for f in files if f.endswith('.exe'))
-        manifest = {'title': util.name, 'tooltip': util.tooltip,
-                    'needs_dfhack': util.needs_dfhack,
-                    'win_exe': sorted(exe)[0]}
-        if os.path.isfile(man_path):
-            with open(man_path) as f:
-                manifest.update(json.load(f))
-        with open(man_path, 'w') as f:
-            json.dump(manifest, f)
+        fixup_manifest(paths.utilities(util.name, 'manifest.json'),
+                       util, win_exe=sorted(exe)[0])
 
     if component.ALL.get('PyLNP', '').version > 'PyLNP_0.10f':
         raise DeprecationWarning('Time to remove utilities.txt code?')
@@ -115,7 +137,7 @@ def create_utilities():
                         jars.append(fname)
             f.write(''.join('[{}:EXCLUDE]\n'.format(j) for j in jars))
             f.write('[{}:{}:{}]\n\n'.format(
-                sorted(exe)[0], util.name, util.tooltip))
+                sorted(exe)[0], util.name, util.manifest.get('tooltip', '')))
 
 
 # Configure graphics packs
@@ -144,22 +166,16 @@ def _check_a_graphics_pack(pack):
     files = os.listdir(paths.graphics(pack))
     if not ('data' in files and 'raw' in files):
         print(pack + ' graphics pack malformed!')
-    # Check that manifest is present and not obviously incompatible
-    if not os.path.isfile(paths.graphics(pack, 'manifest.json')):
-        print('WARNING:  no manifest for {} graphics!'.format(pack))
-    else:
-        with open(paths.graphics(pack, 'manifest.json')) as f:
-            manifest = json.load(f)
-        if manifest.get('df_max_version', '1') < paths.DF_VERSION:
-            print('WARNING {} graphics hidden by df_max_version!'.format(pack))
     # Reduce filesize
     rough_simplify(paths.graphics(pack))
     for file in os.listdir(paths.graphics(pack, 'data', 'art')):
         if file in os.listdir(paths.lnp('tilesets')) or file.endswith('.bmp'):
             os.remove(paths.graphics(pack, 'data', 'art', file))
-    # Use TwbT settings, except for ASCII and native TwbT graphics packs
-    if not (pack == 'ASCII' or component.ALL[pack].needs_dfhack):
-        _twbt_settings(pack)
+    if pack != 'ASCII':
+        fixup_manifest(paths.graphics(pack, 'manifest.json'),
+                       component.ALL[pack])
+        if not component.ALL[pack].needs_dfhack:  # native TwbT support assumed
+            _twbt_settings(pack)
 
 
 def create_graphics():

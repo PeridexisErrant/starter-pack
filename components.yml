@@ -50,77 +50,91 @@ utilities:
         dl_link: https://github.com/NuAoA/AnnouncementWindow/releases/download/1.1b/AnnouncementWindow-1.1b-win32.zip
         version: 1.1b
         updated: 2015-11-10
-        tooltip: A window for announcements, with customisable colours and filters.
+        manifest:
+            tooltip: A window for announcements, with customisable colours and filters.
     Armok Vision:
         bay12: 146473
         host: github
         ident: JapaMala/armok-vision
-        tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
         needs_dfhack: True
+        manifest:
+            tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
     DF Story Maker:
         bay12: 128570
         host: dffd
         ident: 7832
-        tooltip: Story Maker:Creates a filtered version of the gamelog, great for... making stories.
+        manifest:
+            tooltip: Story Maker:Creates a filtered version of the gamelog, great for... making stories.
     Dorven Realms:
         bay12: 138366
         host: dffd
         ident: 8553
-        tooltip: Creates a Minecraft level from exported world maps (dfhack "exportlegends maps" in legends mode).
+        manifest:
+            tooltip: Creates a Minecraft level from exported world maps (dfhack "exportlegends maps" in legends mode).
     Dwarf Mockup:
         bay12: 143546
         host: dffd
         ident: 9654
-        tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
+        manifest:
+            tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
     Dwarf Therapist:
         bay12: 122968
         host: github
         ident: splintermind/Dwarf-Therapist
-        tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
+        manifest:
+            tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         bay12: 70700
         host: dffd
         ident: 3418
-        tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
+        manifest:
+            tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
     Legends Browser:
         bay12: 155307
         host: dffd
         ident: 11619
-        tooltip: An in-browser legends utility, available for all operating systems.
+        manifest:
+            tooltip: An in-browser legends utility, available for all operating systems.
     Legends Viewer:
         bay12: 154617
         host: dffd
         ident: 11455
-        tooltip: You've always wished legends mode was this good.  Sorting, searching, hyperlinks, mapped locations...
+        manifest:
+            tooltip: You've always wished legends mode was this good.  Sorting, searching, hyperlinks, mapped locations...
     PerfectWorld:
         bay12: 57428
         host: dffd
         ident: 2354
-        tooltip: Advanced, precise, custom world generation tool - this is how people generate maps of real places.
+        manifest:
+            tooltip: Advanced, precise, custom world generation tool - this is how people generate maps of real places.
     Picturefort:
         bay12: 138590
         host: dffd
         ident: 8564
-        tooltip: Makes Quickfort blueprints from images, which can be much easier.
+        manifest:
+            tooltip: Makes Quickfort blueprints from images, which can be much easier.
     Quickfort:
         bay12: 35931
         host: manual
         dl_link: https://github.com/downloads/joelpt/quickfort/Quickfort_2.04.zip
         version: "2.04"
         updated: 2012-05-30
-        tooltip: Savable super-macros, with a library of pre-made blueprints.  (breaks keybindings with 'alt' though)
+        manifest:
+            tooltip: Savable super-macros, with a library of pre-made blueprints.  (breaks keybindings with 'alt' though)
     Soundsense:
         bay12: 60287
         host: manual
         dl_link: http://df.zweistein.cz/soundsense/soundSense_2015-1_194.zip
         version: "2015-1"
         updated: 2015-02-07
-        tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
+        manifest:
+            tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
     World Viewer:
         bay12: 128932
         host: dffd
         ident: 11454
-        tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
+        manifest:
+            tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
 graphics:
     CLA:
         bay12: 105376

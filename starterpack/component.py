@@ -62,11 +62,16 @@ _template = collections.namedtuple('Component', [
     'dl_link',
     'version',
     'days_since_update',
-    'tooltip',
     'page',
     'needs_dfhack',
     'extract_to',
+    'manifest',
     ])
+
+
+class Hashabledict(dict):
+    def __hash__(self):
+        return hash(frozenset(self))
 
 
 def _component(data):
@@ -83,10 +88,10 @@ def _component(data):
         meta.dl_link(ident),
         meta.version(ident),
         meta.days_since_update(ident),
-        config.get('tooltip', '').replace('\n', ' '),
         forum_url.format(config['bay12']),
         config.get('needs_dfhack', False),
         config.get('extract_to', ''),
+        Hashabledict(config.get('manifest', {})),
         )
 
 
