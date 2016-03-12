@@ -1,3 +1,8 @@
+0.42.06-r02
+ - updated DFHack
+ - updated TwbT
+ - updated Legends Browser
+
 0.42.06-r01
  - updated DF
  - updated PyLNP
