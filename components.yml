@@ -22,11 +22,6 @@ files:
         ident: Pidgeot/python-lnp
         extract_to: |
             PyLNP.exe:build/Starter Pack Launcher (PyLNP).exe
-    Quickfort Blueprints:
-        bay12: 126076
-        host: dffd
-        ident: 8185
-        extract_to: utilities/Quickfort/blueprints
     Stocksettings:
         bay12: 146213
         host: dffd
@@ -115,18 +110,12 @@ utilities:
             tooltip: Makes Quickfort blueprints from images, which can be much easier.
     Quickfort:
         bay12: 35931
-        host: manual
-        dl_link: https://github.com/downloads/joelpt/quickfort/Quickfort_2.04.zip
-        version: "2.04"
-        updated: 2012-05-30
-        manifest:
-            tooltip: Savable super-macros, with a library of pre-made blueprints.  (breaks keybindings with 'alt' though)
+        host: dffd
+        ident: 11853
     Soundsense:
         bay12: 60287
-        host: manual
-        dl_link: http://df.zweistein.cz/soundsense/soundSense_2015-1_194.zip
-        version: "2015-1"
-        updated: 2015-02-07
+        host: dffd
+        ident: 11849
         manifest:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
     World Viewer:

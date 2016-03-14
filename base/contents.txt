@@ -18,7 +18,6 @@
 
 [b]Other Content:[/b]
  - {PerfectWorld XML}
- - {Quickfort Blueprints}
 
 
 [size=14pt][b]Recent changelogs:[/b][/size]
