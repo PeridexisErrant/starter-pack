@@ -45,31 +45,31 @@ def rough_simplify(df_dir):
 
 def fixup_manifest(filename, comp, **kwargs):
     """Update manifest.json at `filename` with metadata for `comp`."""
-    if not os.path.isfile(filename):
-        if comp.category != 'utilities':
-            print('WARNING:  no manifest for {}!'.format(comp.name))
-        elif component.ALL.get('PyLNP', '').version > 'PyLNP_0.10f':
-            raise DeprecationWarning('Require upstream utility manifests?')
-
-    # Set title and other metadata from in components.yml
-    manifest = {'title': comp.name,
-                'needs_dfhack': comp.needs_dfhack,
-                'content_version': comp.version}
-    manifest.update(comp.manifest)
-    # Set keyword arguments (used for utilities executable autodetection)
-    manifest.update(kwargs)
-    # Override autodetection with prexisting manifest fields, if any
+    file_man = {}
     if os.path.isfile(filename):
         with open(filename) as f:
-            manifest.update(json.load(f))
+            file_man = json.load(f)
+    # overwrite metadata in order: detected, configured, in-code, upstream
+    manifest = {'title': comp.name, 'needs_dfhack': comp.needs_dfhack,
+                'content_version': comp.version,
+                **kwargs, **comp.manifest, **file_man}
+    # Report if manifest in components.yml is overriding
+    for k in comp.manifest:
+        if k in file_man:
+            print('WARNING:  {}: {} is provided upstream'.format(filename, k))
     # Warn about and discard incompatibility flag
     if manifest.get('df_max_version', '1') < paths.DF_VERSION:
         print('WARNING: overriding df_max_version {} for {}'.format(
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
-    # Finally, save the complete manifest
-    with open(filename, 'w') as f:
-        json.dump(manifest, f, indent=4)
+    # Warn for missing fields
+    for k in ['tooltip']:
+        if k not in manifest:
+            print('WARNING:  {} not in {}'.format(k, filename))
+    # Save if manifest is not same as on disk
+    if manifest != file_man:
+        with open(filename, 'w') as f:
+            json.dump(manifest, f, indent=4)
 
 
 # Configure utilities
@@ -120,24 +120,6 @@ def create_utilities():
             exe.extend(f for f in files if f.endswith('.exe'))
         fixup_manifest(paths.utilities(util.name, 'manifest.json'),
                        util, win_exe=sorted(exe)[0])
-
-    if component.ALL.get('PyLNP', '').version > 'PyLNP_0.10f':
-        raise DeprecationWarning('Time to remove utilities.txt code?')
-        # https://bitbucket.org/Pidgeot/python-lnp/pull-requests/61
-    with open(paths.utilities('utilities.txt'), 'w') as f:
-        for util in component.UTILITIES:
-            if util.needs_dfhack and extract.DFHACK_VER is None:
-                continue
-            exe, jars = [], []
-            for _, _, files in os.walk(paths.utilities(util.name)):
-                for fname in files:
-                    if fname.endswith('.exe'):
-                        exe.append(fname)
-                    elif fname.endswith('.jar'):
-                        jars.append(fname)
-            f.write(''.join('[{}:EXCLUDE]\n'.format(j) for j in jars))
-            f.write('[{}:{}:{}]\n\n'.format(
-                sorted(exe)[0], util.name, util.manifest.get('tooltip', '')))
 
 
 # Configure graphics packs
