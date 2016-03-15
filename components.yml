@@ -77,12 +77,14 @@ utilities:
         host: github
         ident: splintermind/Dwarf-Therapist
         manifest:
+            readme: doc/Dwarf Therapist.pdf
             tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         bay12: 70700
         host: dffd
         ident: 3418
         manifest:
+            readme: isoworld/Readme.txt
             tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
     Legends Browser:
         bay12: 155307
@@ -101,6 +103,7 @@ utilities:
         host: dffd
         ident: 2354
         manifest:
+            readme: PerfectWorldDF_Manual.html
             tooltip: Advanced, precise, custom world generation tool - this is how people generate maps of real places.
     Picturefort:
         bay12: 138590
@@ -112,6 +115,8 @@ utilities:
         bay12: 35931
         host: dffd
         ident: 11853
+        manifest:
+            readme: Readme_Quickfort.txt
     Soundsense:
         bay12: 60287
         host: dffd

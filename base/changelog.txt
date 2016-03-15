@@ -1,7 +1,10 @@
 0.42.06-r02
- - updated DFHack
+ - updated DFHack; historical figure bugfix
  - updated TwbT
  - updated Legends Browser
+ - updated Soundsense
+ - updated Quickfort; now bundles stone-colour aliases
+ - updated PyLNP; utility manifests (open READMEs!), H-DPI bugfix
 
 0.42.06-r01
  - updated DF

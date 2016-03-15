@@ -110,6 +110,10 @@ def _therapist_ini():
 
 def create_utilities():
     """Confgure utilities metadata and check config files."""
+    if os.path.isfile(paths.utilities('Dwarf Mockup', 'README')):
+        # Need file extension for association for readme-opener
+        os.rename(paths.utilities('Dwarf Mockup', 'README'),
+                  paths.utilities('Dwarf Mockup', 'README.txt'))
     _soundsense_xml()
     _therapist_ini()
     for util in component.UTILITIES:
@@ -193,7 +197,7 @@ def build_lnp_dirs():
                 paths.lnp('colors', 'ASCII Default.txt'))
 
     # Make defaults dir, pull in contents, and copy over DF folder
-    # TODO:  upgrade for https://bitbucket.org/Pidgeot/python-lnp/issues/87
+    # TODO:  defaults per https://bitbucket.org/Pidgeot/python-lnp/issues/87
     default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
@@ -231,6 +235,12 @@ def build_df():
             print('DFHack is a prerelease version; disabling...')
             shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
             shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
+        # Check docs exist, and minimise size
+        if os.path.isfile(paths.df('hack', 'docs', 'index.html')):
+            shutil.rmtree(paths.df('hack', 'docs', '.doctrees'),
+                          ignore_errors=True)
+        else:
+            print('WARNING: DFHack distributed without html docs.')
     # Install Phoebus graphics by default
     pack = 'Phoebus'
     if pack in os.listdir(paths.graphics()):
