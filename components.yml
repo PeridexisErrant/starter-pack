@@ -134,7 +134,7 @@ graphics:
         bay12: 105376
         host: github/tag
         ident: fricy/CLA
-    Gemset:
+    GemSet:
         bay12: 150753
         host: github/tag
         ident: fricy/GemSet
