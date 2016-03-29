@@ -141,6 +141,10 @@ graphics:
         bay12: 53180
         host: dffd
         ident: 11348
+        manifest:
+            tooltip: |
+                Less stylised than other packs and a little gritty,
+                Ironhand has an enduring popularity.
     Mayday:
         bay12: 137370
         host: github/tag
