@@ -3,13 +3,34 @@
 
 import datetime
 import os
+import sys
 import time
 
 import requests
 import yaml
 
 
-def cache(method, *, saved={}, dump=False):
+_os = {'linux': 'linux', 'win32': 'win', 'cygwin': 'win', 'darwin': 'osx'
+      }[sys.platform]  # duplicate of paths.HOST_OS to avoid import loop
+
+
+def get_ok(*args, **kwargs):
+    """requests.get plus raise_for_status"""
+    r = requests.get(*args, **kwargs)
+    r.raise_for_status()
+    return r
+
+
+def get_auth():
+    """Return user auth to increase GitHub API rate limit."""
+    # TODO:  support OAuth?  (see issue #2)
+    if os.path.isfile('_CRED'):
+        with open('_CRED') as f:
+            return tuple(f.read().split())
+    return None
+
+
+def cache(method=lambda *_: None, *, saved={}, dump=False):
     """A local cache is faster, and avoids GitHub API ratelimit."""
     if not saved:
         saved['notified'] = True
@@ -62,7 +83,7 @@ class AbstractMetadata(object):
 class DFFDMetadata(AbstractMetadata):
     @cache
     def json(self, ID):
-        return requests.get(
+        return get_ok(
             'http://dffd.bay12games.com/file_data/{}.json'.format(ID)).json()
 
     def filename(self, ID):
@@ -81,22 +102,18 @@ class GitHubMetadata(AbstractMetadata):
     @cache
     def json(self, repo):
         url = 'https://api.github.com/repos/{}/releases'.format(repo)
-        auth = None
-        if os.path.isfile('_CRED'):
-            with open('_CRED') as f:
-                auth = tuple(f.read().split())
-        release = requests.get(url, auth=auth).json()[0]
-        # Keep cache file readable by leaving assets list out
-        assets = sorted(release['assets'], key=lambda a: len(a['name']))
-        win = [a for a in assets if 'win' in a['name'].lower()]
-        win64 = [a for a in win if '64' in a['name']]
-        lst = win64 if win64 else (win if win else assets)
-        release['dl_link'] = lst[0]['browser_download_url']
-        return {k: v for k, v in release.items() if k in
-                ('dl_link', 'published_at', 'tag_name')}
+        release = get_ok(url, auth=get_auth()).json()[0]
+        return {
+            'version': release['tag_name'].strip(),
+            'published_at': release['published_at'],
+            'assets': [r['browser_download_url'] for r in release['assets']],
+            }
 
-    def version(self, repo):
-        return self.json(repo)['tag_name'].strip()
+    def dl_link(self, identifier):
+        assets = sorted(self.json(identifier)['assets'], key=len)
+        os_files = [a for a in assets if _os in a.lower()]
+        os64_files = [a for a in os_files if '64' in a]
+        return (os64_files or os_files or assets)[0]
 
     @days_ago
     def days_since_update(self, repo):
@@ -108,14 +125,10 @@ class GitHubTagMetadata(GitHubMetadata):
     @cache
     def json(self, repo):
         url = 'https://api.github.com/repos/{}/tags'.format(repo)
-        auth = None
-        if os.path.isfile('_CRED'):
-            with open('_CRED') as f:
-                auth = tuple(f.read().split())
-        tag = requests.get(url, auth=auth).json()[0]
+        tag = get_ok(url, auth=get_auth()).json()[0]
         # Tag date is a separate API call to get date of the tagged commit
-        tag['published_at'] = requests.get(
-            tag['commit']['url'], auth=auth).json()['commit']['author']['date']
+        tag['published_at'] = get_ok(
+            tag['commit']['url'], auth=get_auth()).json()['commit']['author']['date']
         return {k: v for k, v in tag.items() if k in
                 ('name', 'published_at', 'zipball_url')}
 
@@ -136,7 +149,7 @@ class BitbucketMetadata(AbstractMetadata):
     def json(self, repo):
         # Only works for repos with releases, but that's fine
         url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'
-        release = requests.get(url.format(repo)).json().get('values', [])
+        release = get_ok(url.format(repo)).json().get('values', [])
         if not release:
             raise IOError('No releases for ' + repo + ' on bitbucket!')
         win_only = [r for r in release if 'win' in r.get('name', '')]
@@ -164,20 +177,22 @@ class ManualMetadata(AbstractMetadata):
 
     @days_ago
     def days_since_update(self, ID):
-        return datetime.datetime(*self.json(ID)['updated'].timetuple()[:3])
+        return self.json(ID)['updated'].date()
 
 
 class DFMetadata(AbstractMetadata):
     @cache
     def json(self, df):
         url = 'http://bay12games.com/dwarves/dev_release.rss'
-        for line in requests.get(url).text.split('\n'):
+        for line in get_ok(url).text.split('\n'):
             if '<title>' in line and df not in line:
                 return line[13:35].split(': DF ')
 
     def dl_link(self, df):
-        url = 'http://bay12games.com/dwarves/df_{0[1]}_{0[2]}_win.zip'
-        return url.format(self.version(df).split('.'))
+        url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
+        tail = {'win': 'zip'}.get(_os, 'tar.bz2')
+        _, vmaj, vmin = self.version(df).split('.')
+        return url.format(vmaj, vmin, _os, tail)
 
     def version(self, df):
         return self.json(df)[1].strip()

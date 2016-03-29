@@ -25,7 +25,7 @@ def report():
         print(' {:22}{:4}   {:15}{:30}'.format(
             comp.name[:19], comp.days_since_update,
             comp.version, comp.filename[:30]))
-    metadata_api.cache(lambda s, x: None, dump=True)
+    metadata_api.cache(dump=True)
 
 
 def raw_dl(url, path):
