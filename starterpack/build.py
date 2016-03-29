@@ -97,18 +97,23 @@ def _soundsense_xml():
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
-    fname = 'v{}_graphics.ini'.format(paths.DF_VERSION)
-    comp_path = os.path.join('components', fname)
-    util_path = paths.utilities('Dwarf Therapist', 'share', 'memory_layouts',
-                                'windows', fname)
-    url = ('https://raw.githubusercontent.com/splintermind/Dwarf-Therapist'
-           '/DF2016/share/memory_layouts/windows/' + fname)
+    dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
+    fname = {
+        'win': 'v{}_graphics.ini'.format(paths.DF_VERSION),
+        'osx': 'v{}_osx.ini'.format(paths.DF_VERSION),
+        'linux': 'v{}.ini'.format(paths.DF_VERSION).replace('.', '', 1),
+        }[paths.HOST_OS]
+    util_path = paths.utilities(
+        'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
+        url = ('https://raw.githubusercontent.com/splintermind/'
+               'Dwarf-Therapist/DF2016/share/memory_layouts/{}/{}')
+        comp_path = os.path.join('components', fname)
         try:
             if not os.path.isfile(comp_path):
-                component.raw_dl(url, comp_path)
+                component.raw_dl(url.format(dirname, fname), comp_path)
             shutil.copy(comp_path, util_path)
-        except IOError:
+        except Exception:  # pylint:disable=broad-except
             print('WARNING:  Therapist memory layout unavailable!')
 
 
@@ -201,7 +206,6 @@ def build_lnp_dirs():
                 paths.lnp('colors', 'ASCII Default.txt'))
 
     # Make defaults dir, pull in contents, and copy over DF folder
-    # TODO:  defaults per https://bitbucket.org/Pidgeot/python-lnp/issues/87
     default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
