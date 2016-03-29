@@ -90,6 +90,10 @@ def _soundsense_xml():
     with open(xmlfile, 'w') as f:
         f.writelines(config)
 
+    if extract.DFHACK_VER > '0.42.06-alpha2' \
+            or 'alpha' not in extract.DFHACK_VER:
+        raise DeprecationWarning('Time to fix and test Soundsense log config')
+
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""

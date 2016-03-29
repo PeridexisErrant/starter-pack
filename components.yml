@@ -41,10 +41,8 @@ files:
 utilities:
     Announcement Window:
         bay12: 153777
-        host: manual
-        dl_link: https://github.com/NuAoA/AnnouncementWindow/releases/download/1.1b/AnnouncementWindow-1.1b-win32.zip
-        version: 1.1b
-        updated: 2015-11-10
+        host: github
+        ident: NuAoA/AnnouncementWindow
         manifest:
             tooltip: A window for announcements, with customisable colours and filters.
     Armok Vision:
@@ -141,8 +139,8 @@ graphics:
         needs_dfhack: True
     Ironhand:
         bay12: 53180
-        host: github/tag
-        ident: fricy/Ironhand
+        host: dffd
+        ident: 11348
     Mayday:
         bay12: 137370
         host: github/tag
