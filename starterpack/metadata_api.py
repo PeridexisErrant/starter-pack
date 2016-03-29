@@ -10,8 +10,9 @@ import requests
 import yaml
 
 
-_os = {'linux': 'linux', 'win32': 'win', 'cygwin': 'win', 'darwin': 'osx'
-      }[sys.platform]  # duplicate of paths.HOST_OS to avoid import loop
+# duplicate of paths.HOST_OS to avoid import loop
+_os = {'win32': 'win', 'cygwin': 'win',
+       'darwin': 'osx', 'linux': 'linux'}[sys.platform]
 
 
 def get_ok(*args, **kwargs):

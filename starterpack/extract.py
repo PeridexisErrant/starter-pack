@@ -6,6 +6,7 @@ cases back into build.py
 
 import os
 import shutil
+import tarfile
 import zipfile
 
 from . import component
@@ -23,24 +24,36 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     In 'path_pairs' mode, the argument should be a sequence of paths.
     The file at the first path within the zip is written at the second path.
     """
-    assert bool(target_dir) + bool(path_pairs) == 1, 'Choose one unzip mode!'
-    if not (filename.endswith('.zip') and zipfile.is_zipfile(filename)):
-        raise IOError(filename + ' is not a valid .zip file.')
+    assert bool(target_dir) != bool(path_pairs), 'Choose one unzip mode!'
+    iszip = filename.endswith('.zip') and zipfile.is_zipfile(filename)
+    istar = filename.endswith('.tar.bz2') and tarfile.is_tarfile(filename)
+    if iszip is istar is False:
+        raise IOError(filename + ' is not a valid archive file.')
+
+    if istar:
+        raise NotImplementedError('.tar.* support coming soon!  (ie not yet)')
+
     out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
     print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], out))
 
-    def _extract(in_obj, outpath):
+    def _extract(in_obj, outpath, af):
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
-        with open(outpath, 'wb') as out:
-            shutil.copyfileobj(zf.open(in_obj), out)
+        if isinstance(af, zipfile.ZipFile):
+            with open(outpath, 'wb') as out:
+                shutil.copyfileobj(af.open(in_obj), out)
+        else:
+            af.extractall(os.path.dirname(outpath), members=[in_obj])
 
-    with zipfile.ZipFile(filename) as zf:
-        files = dict(a for a in zip(zf.namelist(), zf.infolist())
-                     if not a[0].endswith('/'))
+    Archive = zipfile.ZipFile if iszip else tarfile.TarFile
+    with Archive(filename, mode=('r' if iszip else 'r:bz2')) as af:
+        names, members = (af.namelist, af.infolist) if iszip \
+            else (af.getnames, af.getmembers)
+        files = {name: obj for name, obj in zip(names(), members())
+                 if not name.endswith('/')}
         if path_pairs is not None:
             for inpath, outpath in path_pairs:
                 if inpath in files:
-                    _extract(files[inpath], outpath)
+                    _extract(files[inpath], outpath, af)
                 else:
                     print('WARNING:  {} not in {}'.format(
                         inpath, os.path.basename(filename)))
@@ -48,7 +61,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
             prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
             for name in files:
                 out = os.path.join(target_dir, os.path.relpath(name, prefix))
-                _extract(files[name], out)
+                _extract(files[name], out, af)
 
 
 def extract_df():
