@@ -33,6 +33,7 @@ def get_auth():
 
 def cache(method=lambda *_: None, *, saved={}, dump=False):
     """A local cache is faster, and avoids GitHub API ratelimit."""
+    # TODO:  split cache by '_os' key
     if not saved:
         saved['notified'] = True
         try:
@@ -61,6 +62,14 @@ def days_ago(func):
     def _inner(*args):
         return (datetime.datetime.today() - func(*args)).days
     return _inner
+
+
+def best_asset(fname_list):
+    """Picks the preferred asset from the list."""
+    # Support non-64bit preference at some point?
+    os_files = [a for a in fname_list if _os in os.path.basename(a).lower()]
+    os64_files = [a for a in os_files if '64' in os.path.basename(a).lower()]
+    return (os64_files or os_files or fname_list)[0]
 
 
 class AbstractMetadata(object):
@@ -104,17 +113,10 @@ class GitHubMetadata(AbstractMetadata):
     def json(self, repo):
         url = 'https://api.github.com/repos/{}/releases'.format(repo)
         release = get_ok(url, auth=get_auth()).json()[0]
-        return {
-            'version': release['tag_name'].strip(),
-            'published_at': release['published_at'],
-            'assets': [r['browser_download_url'] for r in release['assets']],
-            }
-
-    def dl_link(self, identifier):
-        assets = sorted(self.json(identifier)['assets'], key=len)
-        os_files = [a for a in assets if _os in a.lower()]
-        os64_files = [a for a in os_files if '64' in a]
-        return (os64_files or os_files or assets)[0]
+        assets = [r['browser_download_url'] for r in release['assets']]
+        return {'version': release['tag_name'].strip(),
+                'published_at': release['published_at'],
+                'dl_link': best_asset(assets)}
 
     @days_ago
     def days_since_update(self, repo):
@@ -127,22 +129,13 @@ class GitHubTagMetadata(GitHubMetadata):
     def json(self, repo):
         url = 'https://api.github.com/repos/{}/tags'.format(repo)
         tag = get_ok(url, auth=get_auth()).json()[0]
-        # Tag date is a separate API call to get date of the tagged commit
-        tag['published_at'] = get_ok(
-            tag['commit']['url'], auth=get_auth()).json()['commit']['author']['date']
-        return {k: v for k, v in tag.items() if k in
-                ('name', 'published_at', 'zipball_url')}
+        pubdate = get_ok(tag['commit']['url'], auth=get_auth())
+        return {'version': tag['name'], 'dl_link': tag['zipball_url'],
+                'published_at': pubdate.json()['commit']['author']['date']}
 
     def filename(self, repo):
         return '{}_{}.zip'.format(
-            repo.replace('/', '_'),
-            os.path.basename(self.json(repo)['zipball_url']))
-
-    def dl_link(self, repo):
-        return self.json(repo)['zipball_url']
-
-    def version(self, repo):
-        return self.json(repo)['name']
+            repo.replace('/', '_'), os.path.basename(self.dl_link(repo)))
 
 
 class BitbucketMetadata(AbstractMetadata):
@@ -150,18 +143,14 @@ class BitbucketMetadata(AbstractMetadata):
     def json(self, repo):
         # Only works for repos with releases, but that's fine
         url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'
-        release = get_ok(url.format(repo)).json().get('values', [])
-        if not release:
-            raise IOError('No releases for ' + repo + ' on bitbucket!')
-        win_only = [r for r in release if 'win' in r.get('name', '')]
-        return win_only[0] if win_only else release[0]
-
-    def dl_link(self, repo):
-        return self.json(repo)['links']['self']['href']
+        dls = get_ok(url.format(repo)).json().get('values', [])
+        assets = [(v['links']['self']['href'], v['created_on']) for v in dls]
+        best = best_asset([a for a, _ in assets])
+        return {'dl_link': best, 'created_on': dict(assets)[best]}
 
     def version(self, repo):
-        base = os.path.splitext(self.filename(repo))[0]
-        return base.replace('-win32', '').replace('PyLNP_', '')
+        base = self.filename(repo).replace('PyLNP_', '')
+        return base.split('.')[0].split('-')[0]  # from first '-' to first '.'
 
     @days_ago
     def days_since_update(self, repo):
