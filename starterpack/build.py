@@ -8,6 +8,7 @@ I've tried to keep it flexible enough not to break on alternative
 configurations - though it might not be much use.
 """
 
+import glob
 import json
 import os
 import shutil
@@ -66,6 +67,10 @@ def fixup_manifest(filename, comp, **kwargs):
     for k in ['tooltip']:
         if k not in manifest:
             print('WARNING:  {} not in {}'.format(k, filename))
+    if comp in component.UTILITIES:
+        for _os in ('win', 'osx', 'linux'):
+            if paths.HOST_OS == _os and not manifest[_os + '_exe']:
+                print('WARNING: {}_exe for {} not set!'.format(_os, comp.name))
     # Save if manifest is not same as on disk
     if manifest != file_man:
         with open(filename, 'w') as f:
@@ -117,22 +122,44 @@ def _therapist_ini():
             print('WARNING:  Therapist memory layout unavailable!')
 
 
+def _exes_for(util):
+    """Find the best available match for Windows and OSX utilities."""
+    win_exe, osx_exe = '', ''
+    for _, dirs, files in os.walk(paths.utilities(util.name)):
+        for f in files:  # Windows: first .exe found, first .bat otherwise
+            if f.endswith('.exe'):
+                win_exe = f
+                break
+            elif not win_exe and f.endswith('.bat'):
+                win_exe = f
+        for f in files:  # OSX: first .jar found, otherwise .sh
+            if f.endswith('.jar'):
+                osx_exe = f
+                break
+            elif not osx_exe and f.endswith('.sh'):
+                osx_exe = f
+        for dname in dirs:   # But on OSX we prefer .app dirs above any file
+            if dname.endswith('.app'):
+                osx_exe = dname
+                break
+    return {'win_exe': win_exe, 'osx_exe': osx_exe, 'linux_exe': ''}
+
+
 def create_utilities():
     """Confgure utilities metadata and check config files."""
-    if os.path.isfile(paths.utilities('Dwarf Mockup', 'README')):
-        # Need file extension for association for readme-opener
-        os.rename(paths.utilities('Dwarf Mockup', 'README'),
-                  paths.utilities('Dwarf Mockup', 'README.txt'))
-    _soundsense_xml()
-    _therapist_ini()
+    # Detailed checks for complicated config
+    if 'Soundsense' in component.UTILITIES:
+        _soundsense_xml()
+    if 'Dwarf Therapist' in component.UTILITIES:
+        _therapist_ini()
+    # Need file extension for association for readme-opener
+    for readme in glob.glob(paths.utilities('*', 'README')):
+        os.rename(readme, readme + '.txt')
+    # Set up manifests for all utilities
     for util in component.UTILITIES:
-        if util.needs_dfhack and extract.DFHACK_VER is None:
-            continue
-        exe = []
-        for _, _, files in os.walk(paths.utilities(util.name)):
-            exe.extend(f for f in files if f.endswith('.exe'))
-        fixup_manifest(paths.utilities(util.name, 'manifest.json'),
-                       util, win_exe=sorted(exe)[0])
+        if not (util.needs_dfhack and extract.DFHACK_VER is None):
+            fixup_manifest(paths.utilities(util.name, 'manifest.json'),
+                           util, **_exes_for(util))
 
 
 # Configure graphics packs
