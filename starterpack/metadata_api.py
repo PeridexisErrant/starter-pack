@@ -29,21 +29,21 @@ def get_auth():
 
 def cache(method=lambda *_: None, *, saved={}, dump=False):
     """A local cache is faster, and avoids GitHub API ratelimit."""
-    # TODO:  split cache by paths.HOST_OS
+    cache_file = '_cached-{}.yml'.format(paths.HOST_OS)
     if not saved:
         saved['notified'] = True
         try:
-            if time.time() - os.path.getmtime('_cached.yml') < 60*60:
-                with open('_cached.yml') as f:
+            if time.time() - os.path.getmtime(cache_file) < 60*60:
+                with open(cache_file) as f:
                     saved.update(yaml.load(f))
-                print('Loaded metadata from "_cached.yml".\n')
+                print('Loaded metadata from "{}".\n'.format(cache_file))
             else:
                 print('Cache expired, downloading latest metadata.\n')
-                os.remove('_cached.yml')
+                os.remove(cache_file)
         except IOError:
             print('No metadata cache; will download from APIs.\n')
-    elif dump and not os.path.isfile('_cached.yml'):
-        with open('_cached.yml', 'w') as f:
+    elif dump and not os.path.isfile(cache_file):
+        with open(cache_file, 'w') as f:
             yaml.dump(saved, f, indent=4)
 
     def wrapper(self, ident):
@@ -146,8 +146,8 @@ class BitbucketMetadata(AbstractMetadata):
         return {'dl_link': best, 'created_on': dict(assets)[best]}
 
     def version(self, repo):
-        base = self.filename(repo).replace('PyLNP_', '')
-        return base.split('.')[0].split('-')[0]  # from first '-' to first '.'
+        base = self.filename(repo).replace('PyLNP_', '').replace('tar.', '')
+        return os.path.splitext(base)[0].split('-')[0]
 
     @days_ago
     def days_since_update(self, repo):
