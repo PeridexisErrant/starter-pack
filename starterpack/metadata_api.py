@@ -3,16 +3,12 @@
 
 import datetime
 import os
-import sys
 import time
 
 import requests
 import yaml
 
-
-# duplicate of paths.HOST_OS to avoid import loop
-_os = {'win32': 'win', 'cygwin': 'win',
-       'darwin': 'osx', 'linux': 'linux'}[sys.platform]
+from . import paths
 
 
 def get_ok(*args, **kwargs):
@@ -33,7 +29,7 @@ def get_auth():
 
 def cache(method=lambda *_: None, *, saved={}, dump=False):
     """A local cache is faster, and avoids GitHub API ratelimit."""
-    # TODO:  split cache by '_os' key
+    # TODO:  split cache by paths.HOST_OS
     if not saved:
         saved['notified'] = True
         try:
@@ -67,8 +63,9 @@ def days_ago(func):
 def best_asset(fname_list):
     """Picks the preferred asset from the list."""
     # Support non-64bit preference at some point?
-    os_files = [a for a in fname_list if _os in os.path.basename(a).lower()]
-    os64_files = [a for a in os_files if '64' in os.path.basename(a).lower()]
+    os_files = [
+        a for a in fname_list if paths.HOST_OS in os.path.basename(a).lower()]
+    os64_files = [a for a in os_files if '64' in os.path.basename(a)]
     return (os64_files or os_files or fname_list)[0]
 
 
@@ -180,9 +177,9 @@ class DFMetadata(AbstractMetadata):
 
     def dl_link(self, df):
         url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
-        tail = {'win': 'zip'}.get(_os, 'tar.bz2')
+        tail = {'win': 'zip'}.get(paths.HOST_OS, 'tar.bz2')
         _, vmaj, vmin = self.version(df).split('.')
-        return url.format(vmaj, vmin, _os, tail)
+        return url.format(vmaj, vmin, paths.HOST_OS, tail)
 
     def version(self, df):
         return self.json(df)[1].strip()

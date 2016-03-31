@@ -73,7 +73,7 @@ def extract_df():
     hack = component.ALL.get('DFHack')
     if not hack:
         print('WARNING:  DFHack not in config, will not be installed.')
-    elif paths.DF_VERSION not in hack.version:
+    elif paths.df_ver() not in hack.version:
         print('Incompatible DF, DFHack versions!  Aborting DFHack install...')
     else:
         unzip_to(hack.path, paths.df())

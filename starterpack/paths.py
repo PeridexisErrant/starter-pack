@@ -1,10 +1,9 @@
 """Utility methods to get various paths.  Acts as a single source of truth."""
-# pylint:disable=missing-docstring
+# pylint:disable=missing-docstring,cyclic-import
 
 import os
 import sys
 
-from . import component
 
 # TODO:  allow setting by config file to `cross-compile'
 HOST_OS = {
@@ -15,11 +14,20 @@ HOST_OS = {
     }[sys.platform]
 
 
-DF_VERSION = component.ALL['Dwarf Fortress'].version
-with open('base/changelog.txt') as f:
-    PACK_VERSION = f.readline().strip()
-if not PACK_VERSION.startswith(DF_VERSION):
-    raise ValueError('Error:  pack version must start with DF version.')
+def df_ver(as_string=True):
+    """Return the current version string of Dwarf Fortress."""
+    from . import component
+    ver = component.ALL['Dwarf Fortress'].version
+    return ver if as_string else tuple(ver.split('.')[1:])
+
+
+def pack_ver():
+    """Return the current version string of the created pack."""
+    with open('base/changelog.txt') as f:
+        ver = f.readline().strip()
+    if not ver.startswith(df_ver()):
+        print('ERROR:  pack version must start with DF version.')
+    return ver
 
 
 def build(*paths):
@@ -29,7 +37,7 @@ def build(*paths):
 
 def df(*paths):
     """Return the path to the DF directory in the built pack."""
-    return build('Dwarf Fortress ' + DF_VERSION, *paths)
+    return build('Dwarf Fortress ' + df_ver(), *paths)
 
 
 def plugins(*paths):
@@ -49,7 +57,7 @@ def graphics(*paths):
 
 
 def curr_baseline(*paths):
-    dname = 'df_{0[1]}_{0[2]}'.format(DF_VERSION.split('.'))
+    dname = 'df_{0[1]}_{0[2]}'.format(df_ver().split('.'))
     return lnp('baselines', dname, *paths)
 
 
@@ -61,7 +69,7 @@ def dist(*paths):
 def zipped():
     """Return the path to the zipped pack to upload."""
     # TODO:  support naming output from config file
-    return dist("PeridexisErrant's Starter Pack {}.zip".format(PACK_VERSION))
+    return dist("PeridexisErrant's Starter Pack {}.zip".format(pack_ver()))
 
 
 def base(*paths):

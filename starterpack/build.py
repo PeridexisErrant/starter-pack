@@ -59,7 +59,7 @@ def fixup_manifest(filename, comp, **kwargs):
         if k in file_man:
             print('WARNING:  {}: {} is provided upstream'.format(filename, k))
     # Warn about and discard incompatibility flag
-    if manifest.get('df_max_version', '1') < paths.DF_VERSION:
+    if manifest.get('df_max_version', '1') < paths.df_ver():
         print('WARNING: overriding df_max_version {} for {}'.format(
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
@@ -104,10 +104,10 @@ def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     fname = {
-        'win': 'v{}_graphics.ini'.format(paths.DF_VERSION),
-        'osx': 'v{}_osx.ini'.format(paths.DF_VERSION),
-        'linux': 'v{}.ini'.format(paths.DF_VERSION).replace('.', '', 1),
-        }[paths.HOST_OS]
+        'win': 'v0.{}.{}_graphics.ini',
+        'osx': 'v0.{}.{}_osx.ini',
+        'linux': 'v0{}.{}.ini'
+        }[paths.HOST_OS].format(*paths.df_ver(as_string=False))
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
@@ -203,7 +203,7 @@ def _check_a_graphics_pack(pack):
 def create_graphics():
     """Extract all graphics packs to the build/LNP/Graphics dir."""
     # Add manifest to ASCII graphics
-    manifest = {"author": "ToadyOne", "content_version": paths.DF_VERSION,
+    manifest = {"author": "ToadyOne", "content_version": paths.df_ver(),
                 "tooltip": "Default graphics for DF, exactly as they come."}
     with open(paths.graphics('ASCII', 'manifest.json'), 'w') as f:
         json.dump(manifest, f, indent=4)
@@ -248,7 +248,7 @@ def build_lnp_dirs():
     # Create new PyLNP.json
     with open(paths.base('PyLNP-json.yml')) as f:
         pylnp_conf = yaml.load(f)
-    pylnp_conf['updates']['packVersion'] = paths.PACK_VERSION
+    pylnp_conf['updates']['packVersion'] = paths.pack_ver()
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
 

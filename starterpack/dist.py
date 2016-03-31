@@ -69,7 +69,7 @@ def release_docs():
     s = ('The Starter Pack has updated to {}!  As usual, [url=http://dffd'
          '.bay12games.com/file.php?id={}]you can get it here.[/url]\n\n'
          '\n\n{}\n\nSHA256:  {}').format(
-             paths.PACK_VERSION, dffd_id, changes, checksum)
+             paths.pack_ver(), dffd_id, changes, checksum)
     with open(paths.dist('forum_post.txt'), 'w') as f:
         f.write(s)
 
