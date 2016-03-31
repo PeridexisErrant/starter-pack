@@ -257,7 +257,7 @@ def build_df():
     """Set up DF dir with DFHack config, install graphics, etc."""
     # 0.42.03 bug - can't save macros without this dir; breaks Quickfort
     # http://www.bay12games.com/dwarves/mantisbt/view.php?id=9398
-    os.makedirs(paths.df('data', 'init', 'macros'))
+    os.makedirs(paths.df('data', 'init', 'macros'), exist_ok=True)
     # Several utilities assume gamelog.txt exists and misbehave otherwise
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')

@@ -4,15 +4,27 @@ This module is about as generic as it can usefully be, pushing the special
 cases back into build.py
 """
 
+from distutils.dir_util import copy_tree
 import os
 import shutil
 import tarfile
+import tempfile
 import zipfile
 
 from . import component
 from . import paths
 
 DFHACK_VER = None
+
+
+def _copyfile(src, dest):
+    """Copy the source file path or object to the dest path, creating dirs."""
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    if isinstance(src, str):
+        shutil.copy2(src, dest)
+    else:
+        with open(dest, 'wb') as out:
+            shutil.copyfileobj(src, out)
 
 
 def unzip_to(filename, target_dir=None, path_pairs=None):
@@ -25,35 +37,19 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     The file at the first path within the zip is written at the second path.
     """
     assert bool(target_dir) != bool(path_pairs), 'Choose one unzip mode!'
-    iszip = filename.endswith('.zip') and zipfile.is_zipfile(filename)
-    istar = filename.endswith('.tar.bz2') and tarfile.is_tarfile(filename)
-    if iszip is istar is False:
-        raise IOError(filename + ' is not a valid archive file.')
-
-    if istar:
-        raise NotImplementedError('.tar.* support coming soon!  (ie not yet)')
-
     out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
     print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], out))
 
-    def _extract(in_obj, outpath, af):
-        os.makedirs(os.path.dirname(outpath), exist_ok=True)
-        if isinstance(af, zipfile.ZipFile):
-            with open(outpath, 'wb') as out:
-                shutil.copyfileobj(af.open(in_obj), out)
-        else:
-            af.extractall(os.path.dirname(outpath), members=[in_obj])
-
-    Archive = zipfile.ZipFile if iszip else tarfile.TarFile
-    with Archive(filename, mode=('r' if iszip else 'r:bz2')) as af:
-        names, members = (af.namelist, af.infolist) if iszip \
-            else (af.getnames, af.getmembers)
-        files = {name: obj for name, obj in zip(names(), members())
-                 if not name.endswith('/')}
+    if not zipfile.is_zipfile(filename):
+        return nonzip_extract(filename, target_dir, path_pairs)
+    # More complex, but faster for zips to do it this way
+    with zipfile.ZipFile(filename) as zf:
+        files = dict(a for a in zip(zf.namelist(), zf.infolist())
+                     if not a[0].endswith('/'))
         if path_pairs is not None:
             for inpath, outpath in path_pairs:
                 if inpath in files:
-                    _extract(files[inpath], outpath, af)
+                    _copyfile(zf.open(files[inpath]), outpath)
                 else:
                     print('WARNING:  {} not in {}'.format(
                         inpath, os.path.basename(filename)))
@@ -61,7 +57,52 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
             prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
             for name in files:
                 out = os.path.join(target_dir, os.path.relpath(name, prefix))
-                _extract(files[name], out, af)
+                _copyfile(zf.open(files[name]), out)
+
+
+def nonzip_extract(filename, target_dir=None, path_pairs=None):
+    """An alternative to `unzip_to`, for non-zip archives.
+
+    Extract to tempdir, copy files to destination/path_pairs, remove tempdir.
+
+    Involves a lot of shelling out, as Python's `tarfile` cannot open
+    the .tar.bz2 archived DF releases (complicated header issue).
+    OSX disk images (.dmg) are also unsupported by Python.
+    """
+    if filename.endswith('.exe') and paths.HOST_OS == 'win':
+        return _copyfile(
+            filename, os.path.join(target_dir, os.path.basename(filename)))
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Extract archive to tempdir
+        if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
+            # TODO:  support .dmg extraction via shell on OSX
+            raise NotImplementedError(
+                'TODO: mount .dmg, copy contents to tmpdir, unmount')
+        elif zipfile.is_zipfile(filename):
+            zipfile.ZipFile(filename).extractall(tmpdir)
+        elif tarfile.is_tarfile(filename):
+            try:
+                tarfile.TarFile(filename).extractall(tmpdir)
+            except tarfile.ReadError:
+                # TODO:  support .tar extraction via shell
+                NotImplementedError('TODO:  shell-out if Python fails')
+        else:
+            print('Error: skipping unsupported archive format ' + filename)
+            return
+
+        # Copy from tempdir to destination
+        if target_dir:
+            files = [os.path.join(root, f)
+                     for root, _, files in os.walk(tmpdir) for f in files]
+            prefix = os.path.commonpath(files) if len(files) > 1 else ''
+            copy_tree(os.path.join(tmpdir, prefix), target_dir)
+        else:
+            for inpath, outpath in path_pairs:
+                if os.path.isfile(os.path.join(tmpdir, inpath)):
+                    _copyfile(os.path.join(tmpdir, inpath), outpath)
+                else:
+                    print('WARNING:  {} not in {}'.format(inpath, filename))
 
 
 def extract_df():
