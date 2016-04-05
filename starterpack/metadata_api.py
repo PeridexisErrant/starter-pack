@@ -69,6 +69,7 @@ def days_ago(func):
 def best_asset(fname_list):
     """Picks the preferred asset from the list."""
     # Support non-64bit preference at some point?
+    # TODO:  BB/GH callers should cache top asset for each OS and decide later
     os_files = [
         a for a in fname_list if paths.HOST_OS in os.path.basename(a).lower()]
     os64_files = [a for a in os_files if '64' in os.path.basename(a)]
