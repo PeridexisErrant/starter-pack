@@ -1,6 +1,6 @@
 ###   Various configurable bits  ###
 # Build a pack for the current OS (one of "win", "osx", "linux")
-os: ""
+os: win
 # Packname, will format with first line of base/changelog.txt
 packname: "PeridexisErrant's Starter Pack {}"
 # Forum post, formatted with pack version and DFFD no. (set in base/PyLNP-json.yml)
