@@ -74,24 +74,8 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
             filename, os.path.join(target_dir, os.path.basename(filename)))
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Extract archive to tempdir
-        if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
-            # TODO:  support .dmg extraction via shell on OSX
-            raise NotImplementedError(
-                'TODO: mount .dmg, copy contents to tmpdir, unmount')
-        elif zipfile.is_zipfile(filename):
-            # Uses fast version above; handled here for completeness
-            zipfile.ZipFile(filename).extractall(tmpdir)
-        elif tarfile.is_tarfile(filename):
-            try:
-                tarfile.TarFile(filename).extractall(tmpdir)
-            except tarfile.ReadError:
-                # TODO:  support .tar extraction via shell
-                raise NotImplementedError('TODO:  shell-out if Python fails')
-        else:
-            print('Error: skipping unsupported archive format ' + filename)
+        if not unpack_anything(filename, tmpdir):
             return
-
         # Copy from tempdir to destination
         if target_dir:
             files = [os.path.join(root, f)
@@ -104,6 +88,32 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
                     _copyfile(os.path.join(tmpdir, inpath), outpath)
                 else:
                     print('WARNING:  {} not in {}'.format(inpath, filename))
+
+
+def unpack_anything(filename, tmpdir):
+    """Extract practically any archive format from src file to dest dir."""
+    if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
+        # TODO:  support .dmg extraction via shell on OSX
+        raise NotImplementedError(
+            'TODO: mount .dmg, copy contents to tmpdir, unmount')
+    elif zipfile.is_zipfile(filename):
+        # Uses fast version above; handled here for completeness
+        zipfile.ZipFile(filename).extractall(tmpdir)
+    elif tarfile.is_tarfile(filename):
+        try:
+            tarfile.TarFile(filename).extractall(tmpdir)
+        except tarfile.ReadError:
+            # TODO:  support .tar extraction via shell
+            raise NotImplementedError('TODO:  shell-out if Python fails')
+    elif filename.endswith('.rar'):
+        # TODO: support .rar archives
+        raise NotImplementedError('TODO:  support .rar archives')
+    elif filename.endswith('.exe'):
+        shutil.copy2(filename, tmpdir)
+    else:
+        print('Error: skipping unsupported archive format ' + filename)
+        return False
+    return True
 
 
 def extract_df():
@@ -122,58 +132,36 @@ def extract_df():
         return hack.version.replace('v', '')
 
 
-def extract_files():
+def extract_files_utilities_and_graphics():
     """Extract the miscelaneous files in components.yml"""
-    for comp in component.FILES:
+    for comp in component.ALL.values():
         if comp.name in ('Dwarf Fortress', 'DFHack'):
             continue
         if comp.needs_dfhack and DFHACK_VER is None:
             print(comp.name, 'not installed - requires DFHack')
             continue
-        if ':' not in comp.extract_to:
-            # first part of extract_to is paths method, remainder is args
-            dest, *details = comp.extract_to.split('/')
-            unzip_to(comp.path, getattr(paths, dest)(*details))
+        if comp.extract_to == '':
+            unzip_to(comp.path, paths.lnp(comp.category, comp.name))
         else:
-            # using the path_pairs option; extract pairs from string (hashable)
-            pairs = []
-            for pair in comp.extract_to.strip().split('\n'):
-                src, to = pair.split(':')
-                dest, *details = to.split('/')
-                # Note: can add format variables here as needed
-                src = src.format(DFHACK_VER=DFHACK_VER)
-                pairs.append([src, getattr(paths, dest)(*details)])
-            unzip_to(comp.path, path_pairs=pairs)
-
-
-def extract_utilities():
-    """Extract the utilties in components.yml"""
-    for comp in component.UTILITIES:
-        if comp.needs_dfhack and DFHACK_VER is None:
-            print(comp.name, 'not installed - requires DFHack')
-            continue
-        targetdir = paths.lnp(comp.category, comp.name)
-        try:
-            unzip_to(comp.path, targetdir)
-        except IOError:
-            if not os.path.isdir(targetdir):
-                os.makedirs(targetdir)
-            shutil.copy(comp.path, targetdir)
-
-
-def extract_graphics():
-    """Extract the graphics in components.yml"""
-    for comp in component.GRAPHICS:
-        if comp.needs_dfhack and DFHACK_VER is None:
-            print(comp.name, 'not installed - requires DFHack')
-            continue
-        unzip_to(comp.path, paths.lnp(comp.category, comp.name))
+            if ':' not in comp.extract_to:
+                # first part of extract_to is paths method, remainder is args
+                dest, *details = comp.extract_to.split('/')
+                unzip_to(comp.path, getattr(paths, dest)(*details))
+            else:
+                # using the path_pairs option; extract pairs from string
+                pairs = []
+                for pair in comp.extract_to.strip().split('\n'):
+                    src, to = pair.split(':')
+                    dest, *details = to.split('/')
+                    # Note: can add format variables here as needed
+                    src = src.format(DFHACK_VER=DFHACK_VER)
+                    pairs.append([src, getattr(paths, dest)(*details)])
+                unzip_to(comp.path, path_pairs=pairs)
 
 
 def add_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
-    # Add content from the 'base' collection
-    # TODO:  use subset of https://github.com/Lazy-Newb-Pack/LNP-shared-core
+    # Should use https://github.com/Lazy-Newb-Pack/LNP-shared-core someday...
     for d in ('colors', 'embarks', 'extras', 'keybinds', 'tilesets'):
         shutil.copytree(paths.base(d), paths.lnp(d))
 
@@ -185,7 +173,5 @@ def main():
         shutil.rmtree('build')
     global DFHACK_VER  # pylint:disable=global-statement
     DFHACK_VER = extract_df()
-    extract_utilities()
-    extract_graphics()
-    extract_files()
+    extract_files_utilities_and_graphics()
     add_lnp_dirs()
