@@ -66,7 +66,7 @@ def release_docs():
         for chunk in iter(lambda: f.read(8192), b''):
             sha256.update(chunk)
     checksum = sha256.hexdigest()
-    s = paths.config.get('forum_post', '').format(paths.pack_ver(), dffd_id) +\
+    s = paths.CONFIG.get('forum_post', '').format(paths.pack_ver(), dffd_id) +\
         '\n\n\n\n{}\n\nSHA256:  {}'.format(changes, checksum)
     with open(paths.dist('forum_post.txt'), 'w') as f:
         f.write(s)

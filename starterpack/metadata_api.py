@@ -20,7 +20,6 @@ def get_ok(*args, **kwargs):
 
 def get_auth():
     """Return user auth to increase GitHub API rate limit."""
-    # TODO:  support OAuth?  (see issue #2)
     if os.path.isfile('_CRED'):
         with open('_CRED') as f:
             return tuple(f.read().split())
@@ -28,28 +27,35 @@ def get_auth():
 
 
 def cache(method=lambda *_: None, *, saved={}, dump=False):
-    """A local cache is faster, and avoids GitHub API ratelimit."""
+    """A caching decorator.
+
+    Reads cache from local file if cache is empty.
+    Keeps record of when items were last refreshed, and expires at interval.
+    Supports conditional requests for GitHub.
+    """
     cache_file = '_cached-{}.yml'.format(paths.HOST_OS)
     if not saved:
-        saved['notified'] = True
         try:
-            if time.time() - os.path.getmtime(cache_file) < 60*60:
-                with open(cache_file) as f:
-                    saved.update(yaml.load(f))
-                print('Loaded metadata from "{}".\n'.format(cache_file))
-            else:
-                print('Cache expired, downloading latest metadata.\n')
-                os.remove(cache_file)
+            with open(cache_file) as f:
+                saved.update(yaml.load(f))
+            print('Loaded metadata from "{}".\n'.format(cache_file))
         except IOError:
-            print('No metadata cache; will download from APIs.\n')
-    elif dump and not os.path.isfile(cache_file):
+            print('Downloading metadata for components...\n')
+            saved.update({'metadata': {}, 'timestamps': {}})
+    elif dump:
         with open(cache_file, 'w') as f:
             yaml.dump(saved, f, indent=4)
 
     def wrapper(self, ident):
-        if ident not in saved:
-            saved[ident] = method(self, ident)
-        return saved[ident]
+        last_tstamp = saved.get('timestamps', {}).get(ident, 0)
+        if (time.time() - last_tstamp) > 60*60:
+            if not isinstance(self, GitHubMetadata):
+                saved['metadata'][ident] = method(self, ident)
+            else:
+                saved['metadata'][ident] = method(
+                    self, ident, last_tstamp, saved['metadata'].get(ident))
+            saved['timestamps'][ident] = time.time()
+        return saved['metadata'][ident]
     return wrapper
 
 
@@ -105,14 +111,26 @@ class DFFDMetadata(AbstractMetadata):
             float(self.json(ID)['updated_timestamp']))
 
 
+def hit_gh_api(slug, timestamp, endpoint='releases'):
+    """Return JSON payload, or None if not modified since timestamp."""
+    url = 'https://api.github.com/repos/{}/{}'.format(slug, endpoint)
+    utc = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc)
+    gmt_str = utc.strftime('%a, %d %b %Y %H:%M:%S') + ' GMT'
+    req = get_ok(url, auth=get_auth(), headers={'If-Modified-Since': gmt_str})
+    return req.json() if req.status_code != 304 else None
+
+
 class GitHubMetadata(AbstractMetadata):
+    # pylint:disable=arguments-differ
     @cache
-    def json(self, repo):
-        url = 'https://api.github.com/repos/{}/releases'.format(repo)
-        release = get_ok(url, auth=get_auth()).json()[0]
-        assets = [r['browser_download_url'] for r in release['assets']]
-        return {'version': release['tag_name'].strip(),
-                'published_at': release['published_at'],
+    def json(self, repo, last_timestamp, last_json):
+        resp = hit_gh_api(repo, last_timestamp)
+        if resp is None:
+            # fixme:  /releases endpoint does not support last-modified header
+            return last_json
+        assets = [r['browser_download_url'] for r in resp[0]['assets']]
+        return {'version': resp[0]['tag_name'].strip(),
+                'published_at': resp[0]['published_at'],
                 'dl_link': best_asset(assets)}
 
     @days_ago
@@ -123,11 +141,12 @@ class GitHubMetadata(AbstractMetadata):
 
 class GitHubTagMetadata(GitHubMetadata):
     @cache
-    def json(self, repo):
-        url = 'https://api.github.com/repos/{}/tags'.format(repo)
-        tag = get_ok(url, auth=get_auth()).json()[0]
-        pubdate = get_ok(tag['commit']['url'], auth=get_auth())
-        return {'version': tag['name'], 'dl_link': tag['zipball_url'],
+    def json(self, repo, last_timestamp=None, last_json=None):
+        tag = hit_gh_api(repo, last_timestamp, endpoint='tags')
+        if tag is None:
+            return last_json
+        pubdate = get_ok(tag[0]['commit']['url'], auth=get_auth())
+        return {'version': tag[0]['name'], 'dl_link': tag[0]['zipball_url'],
                 'published_at': pubdate.json()['commit']['author']['date']}
 
     def filename(self, repo):
