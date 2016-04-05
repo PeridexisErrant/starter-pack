@@ -1,12 +1,19 @@
 """Utility methods to get various paths.  Acts as a single source of truth."""
 # pylint:disable=missing-docstring,cyclic-import
 
+from contextlib import suppress
 import os
 import sys
 
+import yaml
 
-# TODO:  allow setting by config file to `cross-compile'
-HOST_OS = {
+
+CONFIG = {}
+with suppress(IOError):
+    with open('config.yml') as ymlf:
+        CONFIG = yaml.safe_load(ymlf)
+
+HOST_OS = CONFIG.get('os') or {
     'linux': 'linux',
     'win32': 'win',
     'cygwin': 'win',
@@ -68,8 +75,8 @@ def dist(*paths):
 
 def zipped():
     """Return the path to the zipped pack to upload."""
-    # TODO:  support naming output from config file
-    return dist("PeridexisErrant's Starter Pack {}.zip".format(pack_ver()))
+    name = CONFIG.get('packname') or "Unknown Pack {}"
+    return dist(name.format(pack_ver()) + '.zip')
 
 
 def base(*paths):
