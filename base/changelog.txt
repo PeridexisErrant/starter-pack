@@ -1,5 +1,7 @@
 0.42.06-r03
  - changed "Gemset" to "GemSet" graphics; fixes display
+ - updated Ironhand graphics
+ - updated TwbT
 
 0.42.06-r02
  - updated DFHack; historical figure bugfix

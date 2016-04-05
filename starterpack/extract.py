@@ -80,13 +80,14 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
             raise NotImplementedError(
                 'TODO: mount .dmg, copy contents to tmpdir, unmount')
         elif zipfile.is_zipfile(filename):
+            # Uses fast version above; handled here for completeness
             zipfile.ZipFile(filename).extractall(tmpdir)
         elif tarfile.is_tarfile(filename):
             try:
                 tarfile.TarFile(filename).extractall(tmpdir)
             except tarfile.ReadError:
                 # TODO:  support .tar extraction via shell
-                NotImplementedError('TODO:  shell-out if Python fails')
+                raise NotImplementedError('TODO:  shell-out if Python fails')
         else:
             print('Error: skipping unsupported archive format ' + filename)
             return
