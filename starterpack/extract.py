@@ -7,6 +7,7 @@ cases back into build.py
 from distutils.dir_util import copy_tree
 import os
 import shutil
+import subprocess
 import tarfile
 import tempfile
 import zipfile
@@ -99,15 +100,25 @@ def unpack_anything(filename, tmpdir):
     elif zipfile.is_zipfile(filename):
         # Uses fast version above; handled here for completeness
         zipfile.ZipFile(filename).extractall(tmpdir)
-    elif tarfile.is_tarfile(filename):
+    elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
+            or tarfile.is_tarfile(filename):
         try:
             tarfile.TarFile(filename).extractall(tmpdir)
         except tarfile.ReadError:
-            # TODO:  support .tar extraction via shell
-            raise NotImplementedError('TODO:  shell-out if Python fails')
+            try:
+                subprocess.run(['tar', '-xf', filename, '-C', tmpdir],
+                               check=True)
+            except Exception:
+                print('ERROR: could not extract ' + filename +
+                      ' by tarfile lib or `tar` in shell')
+                return False
     elif filename.endswith('.rar'):
-        # TODO: support .rar archives
-        raise NotImplementedError('TODO:  support .rar archives')
+        try:
+            import rarfile
+        except ImportError:
+            print('ERROR: .rar not supported; `pip install rarfile` and retry')
+            return False
+        rarfile.RarFile(filename).extractall(tmpdir)
     elif filename.endswith('.exe'):
         shutil.copy2(filename, tmpdir)
     else:
