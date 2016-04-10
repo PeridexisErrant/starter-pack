@@ -41,7 +41,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
     print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], out))
 
-    if not zipfile.is_zipfile(filename):
+    if not zipfile.is_zipfile(filename) or filename.endswith('.exe'):
         return nonzip_extract(filename, target_dir, path_pairs)
     # More complex, but faster for zips to do it this way
     with zipfile.ZipFile(filename) as zf:
@@ -119,8 +119,6 @@ def unpack_anything(filename, tmpdir):
             print('ERROR: .rar not supported; `pip install rarfile` and retry')
             return False
         rarfile.RarFile(filename).extractall(tmpdir)
-    elif filename.endswith('.exe'):
-        shutil.copy2(filename, tmpdir)
     else:
         print('Error: skipping unsupported archive format ' + filename)
         return False

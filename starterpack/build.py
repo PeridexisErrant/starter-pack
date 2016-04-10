@@ -266,7 +266,7 @@ def build_df():
         os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
         # Rename the example init file; disable prerelease builds
         hack = component.ALL.get('DFHack')
-        if '-r' not in hack.version:
+        if paths.HOST_OS == 'win' and '-r' not in hack.version:
             print('DFHack is a prerelease version; disabling...')
             shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
             shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))

@@ -8,8 +8,11 @@ This code is highly specific to my pack - it's released under the GPL3,
 but don't expect it to be particularly reusable.
 """
 
+import datetime
+
 from starterpack import build, component, dist, extract
 
 if __name__ == '__main__':
+    print('The time is {}\n'.format(datetime.datetime.utcnow()))
     for stage in (component, extract, build, dist):
         stage.main()
