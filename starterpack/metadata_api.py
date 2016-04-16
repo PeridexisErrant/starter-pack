@@ -33,17 +33,16 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
     Keeps record of when items were last refreshed, and expires at interval.
     Supports conditional requests for GitHub.
     """
-    cache_file = '_cached-{}.yml'.format(paths.HOST_OS)
     if not saved:
         try:
-            with open(cache_file) as f:
+            with open('_cached.yml') as f:
                 saved.update(yaml.load(f))
-            print('Loaded metadata from "{}".\n'.format(cache_file))
+            print('Loaded metadata from cache.\n')
         except IOError:
             print('Downloading metadata for components...\n')
             saved.update({'metadata': {}, 'timestamps': {}})
     elif dump:
-        with open(cache_file, 'w') as f:
+        with open('_cached.yml', 'w') as f:
             yaml.dump(saved, f, indent=4)
 
     def wrapper(self, ident):
@@ -66,14 +65,16 @@ def days_ago(func):
     return _inner
 
 
-def best_asset(fname_list):
-    """Picks the preferred asset from the list."""
-    # Support non-64bit preference at some point?
-    # TODO:  BB/GH callers should cache top asset for each OS and decide later
-    os_files = [
-        a for a in fname_list if paths.HOST_OS in os.path.basename(a).lower()]
-    os64_files = [a for a in os_files if '64' in os.path.basename(a)]
-    return (os64_files or os_files or fname_list)[0]
+def best_asset(fname_list, bitted_64=True):
+    """Return a dict of the best asset from the list for each OS."""
+    asst = {'win': None, 'osx': None, 'linux': None}
+    for k in asst:
+        def fname(a): return os.path.basename(a).lower()
+        os_files = [a for a in fname_list
+                    if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
+        os64_files = [a for a in os_files if bitted_64 and '64' in fname(a)]
+        asst[k] = (os64_files or os_files or fname_list)[0]
+    return asst
 
 
 class AbstractMetadata(object):
@@ -132,7 +133,10 @@ class GitHubMetadata(AbstractMetadata):
         assets = [r['browser_download_url'] for r in resp[0]['assets']]
         return {'version': resp[0]['tag_name'].strip(),
                 'published_at': resp[0]['published_at'],
-                'dl_link': best_asset(assets)}
+                'assets': best_asset(assets)}
+
+    def dl_link(self, repo):
+        return self.json(repo)['assets'][paths.HOST_OS]
 
     @days_ago
     def days_since_update(self, repo):
@@ -150,6 +154,8 @@ class GitHubTagMetadata(GitHubMetadata):
         return {'version': tag[0]['name'], 'dl_link': tag[0]['zipball_url'],
                 'published_at': pubdate.json()['commit']['author']['date']}
 
+    dl_link = AbstractMetadata.dl_link
+
     def filename(self, repo):
         return '{}_{}.zip'.format(
             repo.replace('/', '_'), os.path.basename(self.dl_link(repo)))
@@ -161,18 +167,22 @@ class BitbucketMetadata(AbstractMetadata):
         # Only works for repos with releases, but that's fine
         url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'
         dls = get_ok(url.format(repo)).json().get('values', [])
-        assets = [(v['links']['self']['href'], v['created_on']) for v in dls]
-        best = best_asset([a for a, _ in assets])
-        return {'dl_link': best, 'created_on': dict(assets)[best]}
+        assets = {v['links']['self']['href']: v['created_on'] for v in dls}
+        best = best_asset(assets)
+        times = {k: assets[v] for k, v in best.items()}
+        return {'assets': best, 'times': times}
 
     def version(self, repo):
         base = self.filename(repo).replace('PyLNP_', '').replace('tar.', '')
         return os.path.splitext(base)[0].split('-')[0]
 
+    dl_link = GitHubMetadata.dl_link
+
     @days_ago
     def days_since_update(self, repo):
         return datetime.datetime.strptime(
-            self.json(repo)['created_on'].split('.')[0], '%Y-%m-%dT%H:%M:%S')
+            self.json(repo)['times'][paths.HOST_OS]
+                .split('.')[0], '%Y-%m-%dT%H:%M:%S')
 
 
 class ManualMetadata(AbstractMetadata):
