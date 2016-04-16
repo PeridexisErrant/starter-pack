@@ -131,11 +131,11 @@ graphics:
     CLA:
         bay12: 105376
         host: github/tag
-        ident: fricy/CLA
+        ident: DFgraphics/CLA
     GemSet:
         bay12: 150753
         host: github/tag
-        ident: fricy/GemSet
+        ident: DFgraphics/GemSet
         needs_dfhack: True
     Ironhand:
         bay12: 53180
@@ -148,16 +148,16 @@ graphics:
     Mayday:
         bay12: 137370
         host: github/tag
-        ident: fricy/Mayday
+        ident: DFgraphics/Mayday
     Obsidian:
         bay12: 126934
         host: github/tag
-        ident: fricy/Obsidian
+        ident: DFgraphics/Obsidian
     Phoebus:
         bay12: 152698
         host: github/tag
-        ident: fricy/Phoebus
+        ident: DFgraphics/Phoebus
     Spacefox:
         bay12: 129219
         host: github/tag
-        ident: fricy/Spacefox
+        ident: DFgraphics/Spacefox
