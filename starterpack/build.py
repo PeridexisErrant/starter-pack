@@ -74,7 +74,7 @@ def fixup_manifest(filename, comp, **kwargs):
     # Save if manifest is not same as on disk
     if manifest != file_man:
         with open(filename, 'w') as f:
-            json.dump(manifest, f, indent=4)
+            json.dump({k: v for k, v in manifest.items() if v}, f, indent=4)
 
 
 # Configure utilities
