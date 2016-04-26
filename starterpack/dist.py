@@ -65,11 +65,14 @@ def release_docs():
     with open(paths.zipped(), 'rb') as f:
         for chunk in iter(lambda: f.read(8192), b''):
             sha256.update(chunk)
-    checksum = sha256.hexdigest()
-    s = paths.CONFIG.get('forum_post', '').format(paths.pack_ver(), dffd_id) +\
-        '\n\n\n\n{}\n\nSHA256:  {}'.format(changes, checksum)
+    post_kwargs = {
+        'PACK_VERSION': paths.pack_ver(),
+        'LINK': 'http://dffd.bay12games.com/file.php?id=' + dffd_id,
+        'CHANGELOG': changes,
+        'CHECKSUM': sha256.hexdigest(),
+        }
     with open(paths.dist('forum_post.txt'), 'w') as f:
-        f.write(s)
+        f.write(paths.CONFIG.get('forum_post', '').format(**post_kwargs))
 
 
 def main():

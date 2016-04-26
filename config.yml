@@ -3,7 +3,13 @@
 os: win
 # Packname, will format with first line of base/changelog.txt
 packname: "PeridexisErrant's Starter Pack {}"
-# Forum post, formatted with pack version and DFFD no. (set in base/PyLNP-json.yml)
-forum_post: >
-    The Starter Pack has updated to {}!
-    As usual, [url=http://dffd.bay12games.com/file.php?id={}]you can get it here.[/url]
+# Forum post, see dist.py and save with whitespace!
+forum_post: |
+    The Starter Pack has updated to {PACK_VERSION}!
+    As usual, [url={LINK}]you can get it here.[/url]
+    
+    {CHANGELOG}
+    
+    SHA256:  {CHECKSUM}
+    
+    [i]If you want to say thanks, check out [url=https://www.patreon.com/bay12games]Toady's Patreon[/url], or even [url=https://www.patreon.com/PeridexisErrant]mine![/url][/i]  ;D
