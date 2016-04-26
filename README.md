@@ -3,7 +3,7 @@
 This project is NOT an actual pack, or intended for public use.
 [See here](http://www.bay12forums.com/smf/index.php?topic=126076) for that.
 
-See the [daily build log here](http://peridexiserrant.neocities.org/starter-pack.log.txt).
+See the [hourly build log here](http://peridexiserrant.neocities.org/starter-pack.log.txt).
 
 There is *no support* for using this tool.  Do not ask questions or ask for features.
 (bug reports are welcome though!)  This tool is designed to help me keep
@@ -24,12 +24,12 @@ For anyone using these tools to assemble their own pack:
 
 - Note that the license ([Affero GPL 3+](https://www.gnu.org/licenses/agpl))
   applies to all the code, and to the code *only*.
-  
+
   Some files in `./base/` are mine; some are by other people in
   the Dwarf Fortress community.  Treat this files as if they are
   under an informal version of the [CC-BY-SA license]
   (https://creativecommons.org/licenses/by-sa/4.0).
-  
+
   Any outputs you produce with this software are entirely your
   own, subject to licenses of the componentes you downloaded.
   The pack I publish is shared under the informal system above.
@@ -40,7 +40,7 @@ For anyone using these tools to assemble their own pack:
 - You will need Python 3.5+, as I make extensive use of several
   new features.  You will also need the `requests` and `pyaml`
   libraries (both can be installed with `pip`).
-  
+
   Optional dependencies to unpack exotic archive types may be
   added in future, but will not be required.
 
