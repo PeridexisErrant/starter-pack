@@ -3,6 +3,7 @@ hideUtilityPath: true
 updates:
     updateMethod: dffd
     dffdID: "7622"
+    defaultInterval: 0
 dfhack:
     Workflow - production targets:
         command: enable workflow
