@@ -70,6 +70,12 @@ utilities:
         ident: 9654
         manifest:
             tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
+    Dwarf Portrait:
+        bay12: 158930
+        host: github
+        ident: JapaMala/Dwarf-Portrait
+        manifest:
+            tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
         bay12: 122968
         host: github
@@ -132,6 +138,10 @@ graphics:
         bay12: 105376
         host: github/tag
         ident: DFgraphics/CLA
+    Dungeon Set:
+        bay12: 152766
+        host: dffd
+        ident: 11637
     GemSet:
         bay12: 150753
         host: github/tag

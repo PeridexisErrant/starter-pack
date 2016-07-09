@@ -80,19 +80,22 @@ def _component(data):
     ident = item if config['host'] == 'manual' else config['ident']
     meta = metadata_api.METADATA_TYPES[config['host']]()
     forum_url = 'http://www.bay12forums.com/smf/index.php?topic={}'
-    return _template(
-        category,
-        item,
-        os.path.join('components', meta.filename(ident)),
-        meta.filename(ident),
-        meta.dl_link(ident),
-        meta.version(ident),
-        meta.days_since_update(ident),
-        forum_url.format(config['bay12']),
-        config.get('needs_dfhack', False),
-        config.get('extract_to', ''),
-        Hashabledict(config.get('manifest', {})),
-        )
+    try:
+        return _template(
+            category,
+            item,
+            os.path.join('components', meta.filename(ident)),
+            meta.filename(ident),
+            meta.dl_link(ident),
+            meta.version(ident),
+            meta.days_since_update(ident),
+            forum_url.format(config['bay12']),
+            config.get('needs_dfhack', False),
+            config.get('extract_to', ''),
+            Hashabledict(config.get('manifest', {})),
+            )
+    except Exception:
+        print('ERROR: in {}, check release exists'.format(ident))
 
 
 def get_globals():
@@ -105,7 +108,7 @@ def get_globals():
     items = [(c, i, config[c][i]) for c, v in config.items() for i in v]
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
-    all_comps = {r.name: r for r in results}
+    all_comps = {r.name: r for r in results if r}
     yield all_comps
     for t in ('files', 'graphics', 'utilities'):
         yield sorted({c for c in all_comps.values() if c.category == t},

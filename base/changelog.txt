@@ -1,3 +1,19 @@
+0.43.03-r02
+ - added DungeonSet graphics
+ - added Dwarf Portrait, a creature appearance visualiser
+ - updated DFHack (stable)
+ - updated TwbT
+ - fixed config issue in 'automatic job assignments' dfhack option (now runs on map load)
+
+0.43.03-r01
+ - updated Legends Viewer
+ - updated Armok Vision
+ - updated Dwarf Fortress
+ - updated DFHack
+ - updated World Viewer
+ - updated TwbT
+ - updated graphics (CLA, Ironhand, Obsidian)
+
 0.42.06-r04
  - updated DFHack to stable version
  - updated TwbT

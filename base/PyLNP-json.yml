@@ -39,6 +39,7 @@ dfhack:
     Automatic Job Assignments:
         command: enable autolabor
         enabled: false
+        file: onMapLoad
         tooltip: The autolabor plugin automates job assignments, replacing tools such as Dwarf Therapist
 folders:
     - [Main folder, ""]
