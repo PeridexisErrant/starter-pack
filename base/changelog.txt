@@ -1,9 +1,16 @@
+0.43.03-r03
+ - DungeonSet: can select in launcher, change on saves correctly, better text tileset
+ - updated Armok Vision (bugfix)
+ - added Therapist config (absent due to subtle old bug)
+ - fixed SoundSense log config
+ - removed Workflow option in launcher (replaced by vanilla manager upgrade)
+
 0.43.03-r02
  - added DungeonSet graphics
  - added Dwarf Portrait, a creature appearance visualiser
  - updated DFHack (stable)
  - updated TwbT
- - fixed config issue in 'automatic job assignments' dfhack option (now runs on map load)
+ - fixed broken dfhack config for 'automatic job assignments'
 
 0.43.03-r01
  - updated Legends Viewer

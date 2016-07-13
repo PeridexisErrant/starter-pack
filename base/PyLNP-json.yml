@@ -5,14 +5,6 @@ updates:
     dffdID: "7622"
     defaultInterval: 0
 dfhack:
-    Workflow - production targets:
-        command: enable workflow
-        enabled: false
-        file: onMapLoad
-        tooltip: |
-            The 'workflow' plugin disables cancelling repeat jobs.
-            Use 'alt-W' to set targets (eg 'if less than 100 drinks, unsuspend drink production until 200 drinks').
-            Great for automating complicated industries.
     Other Automation plugins:
         command: multicmd autonestbox start; repeat -time 7 -timeUnits days -command [ burial ] -name burial
         enabled: false

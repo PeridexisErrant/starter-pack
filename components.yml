@@ -138,7 +138,7 @@ graphics:
         bay12: 105376
         host: github/tag
         ident: DFgraphics/CLA
-    Dungeon Set:
+    DungeonSet:
         bay12: 152766
         host: dffd
         ident: 11637

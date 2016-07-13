@@ -59,7 +59,8 @@ def fixup_manifest(filename, comp, **kwargs):
         if k in file_man:
             print('WARNING:  {}: {} is provided upstream'.format(filename, k))
     # Warn about and discard incompatibility flag
-    if manifest.get('df_max_version', '1') < paths.df_ver():
+    maxver = manifest.get('df_max_version', '1')
+    if maxver and maxver < paths.df_ver():
         print('WARNING: overriding df_max_version {} for {}'.format(
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
@@ -82,22 +83,17 @@ def fixup_manifest(filename, comp, **kwargs):
 def _soundsense_xml():
     """Check and update version strings in xml path config"""
     xmlfile = paths.utilities('Soundsense', 'configuration.xml')
-    relpath = os.path.relpath(paths.df(), paths.utilities('Soundsense'))
+    log = os.path.join(os.path.relpath(
+        paths.df(), paths.utilities('Soundsense')), 'gamelog.txt')
     with open(xmlfile) as f:
         config = f.readlines()
     for n, line in enumerate(config):
         if 'gamelog.txt' in line:
-            config[n] = '\t<gamelog encoding="Cp850" path="{}"/>\n'.format(
-                os.path.join(relpath, 'gamelog.txt'))
+            config[n] = '\t<gamelog encoding="Cp850" path="{}"/>\n'.format(log)
         elif 'ss_fix.log' in line:
-            config[n] = '\t\t<item path="{}"/>\n'.format(
-                os.path.join(relpath, 'ss_fix.log'))
+            config[n] = '\t\t<item encoding="Cp850" path="{}"/>\n'.format(log)
     with open(xmlfile, 'w') as f:
         f.writelines(config)
-
-    if extract.DFHACK_VER > '0.42.06-alpha2' \
-            or 'alpha' not in extract.DFHACK_VER:
-        raise DeprecationWarning('Time to fix and test Soundsense log config')
 
 
 def _therapist_ini():
@@ -148,10 +144,13 @@ def _exes_for(util):
 def create_utilities():
     """Confgure utilities metadata and check config files."""
     # Detailed checks for complicated config
-    if 'Soundsense' in component.UTILITIES:
+    util_names = [c.name for c in component.UTILITIES]
+    if 'Soundsense' in util_names:
         _soundsense_xml()
-    if 'Dwarf Therapist' in component.UTILITIES:
+    if 'Dwarf Therapist' in util_names:
         _therapist_ini()
+    else:
+        print('WARNING: pack does not contain Dwarf Therapist')
     # Need file extension for association for readme-opener
     for readme in glob.glob(paths.utilities('*', 'README')):
         os.rename(readme, readme + '.txt')
@@ -166,15 +165,16 @@ def create_utilities():
 
 def _twbt_settings(pack):
     """Set TwbT-specific options for a graphics pack."""
+    leave_text_tiles = ('CLA', 'DungeonSet')
     if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
         return
     init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
     with open(init_file) as f:
         init = f.readlines()
     for n, _ in enumerate(init):
-        if init[n].startswith('[FONT:') and pack != 'CLA':
+        if init[n].startswith('[FONT:') and pack not in leave_text_tiles:
             init[n] = '[FONT:curses_640x300.png]\n'
-        elif init[n].startswith('[FULLFONT:') and pack != 'CLA':
+        elif init[n].startswith('[FULLFONT:') and pack not in leave_text_tiles:
             init[n] = '[FULLFONT:curses_640x300.png]\n'
         elif init[n].startswith('[PRINT_MODE:'):
             init[n] = '[PRINT_MODE:TWBT]\n'

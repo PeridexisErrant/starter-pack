@@ -14,3 +14,7 @@ keybinding add Alt-S@title settings-manager
 keybinding add Alt-S@dwarfmode/Default settings-manager
 embark-tools enable sticky
 gui/extended-status enable
+
+# worth keeping Workflow keybindings for a while longer, IMO
+keybinding add Alt-W@dwarfmode/QueryBuilding/Some/Workshop/Job gui/workflow
+keybinding add Alt-W@overallstatus "gui/workflow status"
