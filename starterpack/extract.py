@@ -4,6 +4,7 @@ This module is about as generic as it can usefully be, pushing the special
 cases back into build.py
 """
 
+import concurrent.futures
 from distutils.dir_util import copy_tree
 import os
 import shutil
@@ -128,8 +129,9 @@ def unpack_anything(filename, tmpdir):
 def extract_df():
     """Extract Dwarf Fortress, and DFHack if available and compatible."""
     # A DF dir for the main install, for baselines, and for ASCII graphics
-    for p in (paths.df(), paths.curr_baseline(), paths.graphics('ASCII')):
-        unzip_to(component.ALL['Dwarf Fortress'].path, p)
+    with concurrent.futures.ProcessPoolExecutor() as ex:
+        for p in (paths.df(), paths.curr_baseline(), paths.graphics('ASCII')):
+            ex.submit(unzip_to, component.ALL['Dwarf Fortress'].path, p)
 
     hack = component.ALL.get('DFHack')
     if not hack:
@@ -143,6 +145,7 @@ def extract_df():
 
 def extract_files_utilities_and_graphics():
     """Extract the miscelaneous files in components.yml"""
+    ex = concurrent.futures.ProcessPoolExecutor(8)
     for comp in component.ALL.values():
         if comp.name in ('Dwarf Fortress', 'DFHack'):
             continue
@@ -150,12 +153,12 @@ def extract_files_utilities_and_graphics():
             print(comp.name, 'not installed - requires DFHack')
             continue
         if comp.extract_to == '':
-            unzip_to(comp.path, paths.lnp(comp.category, comp.name))
+            ex.submit(unzip_to, comp.path, paths.lnp(comp.category, comp.name))
         else:
             if ':' not in comp.extract_to:
                 # first part of extract_to is paths method, remainder is args
                 dest, *details = comp.extract_to.split('/')
-                unzip_to(comp.path, getattr(paths, dest)(*details))
+                ex.submit(unzip_to, comp.path, getattr(paths, dest)(*details))
             else:
                 # using the path_pairs option; extract pairs from string
                 pairs = []
@@ -165,7 +168,8 @@ def extract_files_utilities_and_graphics():
                     # Note: can add format variables here as needed
                     src = src.format(DFHACK_VER=DFHACK_VER)
                     pairs.append([src, getattr(paths, dest)(*details)])
-                unzip_to(comp.path, path_pairs=pairs)
+                ex.submit(unzip_to, comp.path, path_pairs=pairs)
+    ex.shutdown()
 
 
 def add_lnp_dirs():
