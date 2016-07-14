@@ -1,5 +1,6 @@
 0.43.03-r04
  - Updated default embark profiles (thanks /u/Gorny1)
+ - fixed duplicate sounds in soundsense
 
 0.43.03-r03
  - DungeonSet: can select in launcher, change on saves correctly, better text tileset

@@ -83,17 +83,20 @@ def fixup_manifest(filename, comp, **kwargs):
 def _soundsense_xml():
     """Check and update version strings in xml path config"""
     xmlfile = paths.utilities('Soundsense', 'configuration.xml')
-    log = os.path.join(os.path.relpath(
-        paths.df(), paths.utilities('Soundsense')), 'gamelog.txt')
+    relpath = os.path.relpath(paths.df(), paths.utilities('Soundsense'))
     with open(xmlfile) as f:
         config = f.readlines()
-    for n, line in enumerate(config):
-        if 'gamelog.txt' in line:
-            config[n] = '\t<gamelog encoding="Cp850" path="{}"/>\n'.format(log)
-        elif 'ss_fix.log' in line:
-            config[n] = '\t\t<item encoding="Cp850" path="{}"/>\n'.format(log)
     with open(xmlfile, 'w') as f:
-        f.writelines(config)
+        for line in config:
+            if 'gamelog.txt' in line:
+                f.write(line.replace('..', relpath))
+            else:
+                f.write(line)
+
+    with open(os.path.join(paths.df(), 'ss_fix.log'), 'w') as f:
+        f.write('\n')
+    if component.ALL['Soundsense'].version != '2016-1':
+        raise DeprecationWarning('Do you still need the empty "ss_fix.log" ?')
 
 
 def _therapist_ini():
