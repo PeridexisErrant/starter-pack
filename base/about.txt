@@ -13,7 +13,7 @@ Besides the official download page on DFFD[/url], /u/Hecknar maintains [url]df.w
     [i]It's a bundle of portable apps; there's no further installation procedure.[/i]
     [i]The pack must be able to read/write files though - so don't put it in a "Program Files" folder.[/i]
 2. [Optional]:  Use [url=https://md5file.com/calculator]this tool[/url] and the checksum on DFFD to confirm you got an uncorrupted file.
-3. [Optional]:  Upgrade from an earlier release by running the 'copy my data' script with both versions next to each other in a folder.
+3. [Optional]:  Upgrade from an earlier release by copying your old 'Dwarf Fortress 0.xx.yy/data/save/' folder to the new pack.
                 DO NOT try to upgrade by extracting or copying over an earlier pack.
 4. [Optional]:  Visit [url=http://dwarffortresswiki.org/Quickstart_guide]the DF wiki[/url] or [url=https://df-walkthrough.readthedocs.org]my tutorials[/url] for help learning to play.
 
