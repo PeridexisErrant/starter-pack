@@ -227,6 +227,8 @@ def build_lnp_dirs():
         f.write('\n')
 
     # Add vanilla tilesets to LNP/Tilesets
+    if component.ALL['PyLNP'].version != '0.11':
+        raise DeprecationWarning("mouse.png covered by PyLNP pull #66?")
     for img in {'curses_640x300', 'curses_800x600',
                 'curses_square_16x16', 'mouse'}:
         shutil.copy(paths.curr_baseline('data', 'art', img + '.png'),

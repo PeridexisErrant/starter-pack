@@ -67,8 +67,9 @@ def days_ago(func):
 def best_asset(fname_list, bitted_64=True):
     """Return a dict of the best asset from the list for each OS."""
     asst = {'win': None, 'osx': None, 'linux': None}
+    def fname(a):
+        return os.path.basename(a).lower()
     for k in asst:
-        def fname(a): return os.path.basename(a).lower()
         os_files = [a for a in fname_list
                     if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
         os64_files = [a for a in os_files if bitted_64 and '64' in fname(a)]
@@ -164,11 +165,12 @@ class BitbucketMetadata(AbstractMetadata):
     @cache
     def json(self, repo):
         # Only works for repos with releases, but that's fine
-        url = 'https://api.bitbucket.org/2.0/repositories/{}/downloads'
-        dls = get_ok(url.format(repo)).json().get('values', [])
-        assets = {v['links']['self']['href']: v['created_on'] for v in dls}
+        dls = get_ok('https://api.bitbucket.org/2.0/repositories/' + repo +
+                     '/downloads?pagelen=100').json().get('values', [])
+        assets = [v['links']['self']['href'] for v in dls]
         best = best_asset(assets)
-        times = {k: assets[v] for k, v in best.items()}
+        times = dict(zip(assets, [v['created_on'] for v in dls]))
+        times = {k: times[v] for k, v in best.items()}
         return {'assets': best, 'times': times}
 
     def version(self, repo):
@@ -206,7 +208,7 @@ class DFMetadata(AbstractMetadata):
 
     def dl_link(self, df):
         url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
-        tail = {'win': 'zip'}.get(paths.HOST_OS, 'tar.bz2')
+        tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
         _, vmaj, vmin = self.version(df).split('.')
         return url.format(vmaj, vmin, paths.HOST_OS, tail)
 

@@ -1,6 +1,8 @@
 0.43.03-r04
- - Updated default embark profiles (thanks /u/Gorny1)
+ - updated default embark profiles (thanks /u/Gorny1)
  - fixed duplicate sounds in soundsense
+ - improved Taffer's colorscheme (thanks Taffer)
+ - now using latest PyLNP version (my own tooling error...)
 
 0.43.03-r03
  - DungeonSet: can select in launcher, change on saves correctly, better text tileset
