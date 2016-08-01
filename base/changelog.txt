@@ -3,6 +3,8 @@
  - fixed duplicate sounds in soundsense
  - improved Taffer's colorscheme (thanks Taffer)
  - now using latest PyLNP version (my own tooling error...)
+ - new option in DFHack tab: 'Enhanced Gameplay' adds merchants, diplomats
+ - more DFHack bugfixes run automatically
 
 0.43.03-r03
  - DungeonSet: can select in launcher, change on saves correctly, better text tileset

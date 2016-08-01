@@ -1,20 +1,24 @@
-# This file adds various things I think should be in the standard dfhack.init
+## Enhanced init things
 
 # TwbT multilevel view
 multilevel 5
 
-# add fertility indicator to nestboxes
-tweak eggs-fertile
-
-# log extra stuff for Soundsense
-#soundsense
-
-# Lethosor's scripts are part of DFHack, but not activated due to submodule issues
-keybinding add Alt-S@title settings-manager
-keybinding add Alt-S@dwarfmode/Default settings-manager
-embark-tools enable sticky
-gui/extended-status enable
-
 # worth keeping Workflow keybindings for a while longer, IMO
 keybinding add Alt-W@dwarfmode/QueryBuilding/Some/Workshop/Job gui/workflow
 keybinding add Alt-W@overallstatus "gui/workflow status"
+
+
+## Should-be-default init things
+
+# add fertility indicator to nestboxes
+tweak eggs-fertile
+
+# Lethosor's scripts are part of DFHack, but not activated
+keybinding add Alt-S@title settings-manager
+keybinding add Alt-S@dwarfmode/Default settings-manager
+
+# UI improvement for embark screen; 'sand mouse' are done in default dfhack.init
+embark-tools enable sticky
+
+# extended status screen (bedrooms page)
+enable gui/extended-status

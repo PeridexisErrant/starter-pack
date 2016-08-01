@@ -5,6 +5,11 @@ updates:
     dffdID: "7622"
     defaultInterval: 0
 dfhack:
+    Enhanced Gameplay:
+        command: multicmd fix/merchants; fix/diplomats
+        enabled: false
+        file: onMapLoad
+        tooltip: Adds Human merchants (more trade deals) and Elvish diplomats (logging quotas)
     Other Automation plugins:
         command: multicmd autonestbox start; repeat -time 7 -timeUnits days -command [ burial ] -name burial
         enabled: false
