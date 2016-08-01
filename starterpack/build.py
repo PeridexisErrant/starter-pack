@@ -281,8 +281,10 @@ def build_df():
                           ignore_errors=True)
         else:
             print('WARNING: DFHack distributed without html docs.')
+        if hack.version != '0.43.03-r1':
+            raise DeprecationWarning('Have init changes been merged?')
     # Install Phoebus graphics by default
-    pack = 'Phoebus'
+    pack = paths.CONFIG.get('default_graphics')
     if pack in os.listdir(paths.graphics()):
         shutil.rmtree(paths.df('raw', 'graphics'))
         overwrite_dir(paths.graphics(pack), paths.df())

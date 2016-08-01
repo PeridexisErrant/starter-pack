@@ -3,6 +3,8 @@
 os: win
 # Packname, will format with first line of base/changelog.txt
 packname: "PeridexisErrant's Starter Pack {}"
+# Which graphics pack should be installed by default
+default_graphics: Phoebus
 # Forum post, see dist.py and save with whitespace!
 forum_post: |
     The Starter Pack has updated to {PACK_VERSION}!
