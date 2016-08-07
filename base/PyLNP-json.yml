@@ -5,6 +5,14 @@ updates:
     dffdID: "7622"
     defaultInterval: 0
 dfhack:
+    Multilevel View:
+        command: multilevel 5
+        enabled: true
+        file: onMapLoad
+        tooltip: |
+            View multiple (5) Z-levels at a time.
+            Requires PRINT_MODE:TWBT (see graphics tab).
+            May cause crashes for some users.
     Enhanced Gameplay:
         command: multicmd fix/merchants; fix/diplomats
         enabled: false

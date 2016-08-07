@@ -4,6 +4,7 @@
  - improved Taffer's colorscheme (thanks Taffer)
  - now using latest PyLNP version (my own tooling error...)
  - new option in DFHack tab: 'Enhanced Gameplay' adds merchants, diplomats
+ - TwbT multilevel now optional (DFHack tab) due to reported instability
  - more DFHack bugfixes run automatically
 
 0.43.03-r03
