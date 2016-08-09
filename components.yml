@@ -11,11 +11,6 @@ files:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
-    PerfectWorld XML:
-        bay12: 57428
-        host: dffd
-        ident: 9672
-        extract_to: utilities/PerfectWorld
     PyLNP:
         bay12: 140808
         host: bitbucket

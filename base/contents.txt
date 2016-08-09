@@ -16,9 +16,6 @@
  - ASCII
 {graphics}
 
-[b]Other Content:[/b]
- - {PerfectWorld XML}
-
 
 [size=14pt][b]Recent changelogs:[/b][/size]
 
