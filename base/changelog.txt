@@ -6,6 +6,7 @@
  - new option in DFHack tab: 'Enhanced Gameplay' adds merchants, diplomats
  - TwbT multilevel now optional (DFHack tab) due to reported instability
  - more DFHack bugfixes run automatically
+ - updated PyLNP: bugfixes, user content importer, etc
 
 0.43.03-r03
  - DungeonSet: can select in launcher, change on saves correctly, better text tileset
