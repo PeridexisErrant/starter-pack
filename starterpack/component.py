@@ -38,12 +38,15 @@ def raw_dl(url, path):
 
 def download(c):
     """Download a component if the file does not exist; warn if too old."""
+    if os.path.isfile(c.path):
+        file_age = (time.time() - os.stat(c.path).st_mtime) // (60 * 60 * 24)
+        if file_age > c.days_since_update:
+            print('file for {} may be for old version'.format(c.name))
+            os.remove(c.path)
     if not os.path.isfile(c.path):
         print('downloading {}...'.format(c.name))
         raw_dl(c.dl_link, c.path)
         print('{:25} -> downloaded -> {:30}'.format(c.name, c.filename[:25]))
-    if time.time() - os.stat(c.path).st_mtime > 86400*(c.days_since_update+1):
-        print('WARNING: {0.name} file older than update!'.format(c))
 
 
 def download_files():
