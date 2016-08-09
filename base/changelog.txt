@@ -1,3 +1,5 @@
+0.43.03-r05
+
 0.43.03-r04
  - updated default embark profiles (thanks /u/Gorny1)
  - fixed duplicate sounds in soundsense

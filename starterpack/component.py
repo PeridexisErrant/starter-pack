@@ -11,12 +11,13 @@ Any modules that use this data should just access the dict ALL (bottom).
 import collections
 import concurrent.futures
 import os
+import re
 import time
 
 import requests
 import yaml
 
-from . import metadata_api
+from . import metadata_api, paths
 
 
 def report():
@@ -112,6 +113,18 @@ def get_globals():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
     all_comps = {r.name: r for r in results if r}
+    # optionally force DFHack-compatible DF version
+    if paths.CONFIG.get('force_dfhack_compatible') and 'DFHack' in all_comps:
+        target_ver = all_comps['DFHack'].version.replace('v', '').split('-')[0]
+        df_ver = all_comps['Dwarf Fortress'].version
+        if target_ver != df_ver:
+            if re.match(r'0\.\d\d\.\d\d', target_ver):
+                if df_ver.split('.')[1] != target_ver.split('.')[1]:
+                    print('WARNING: forcing major version for DFHack compat.')
+                all_comps['Dwarf Fortress'] = \
+                    all_comps['Dwarf Fortress']._replace(version=target_ver)
+            else:
+                print('Cannot force invalid DF version ' + target_ver)
     yield all_comps
     for t in ('files', 'graphics', 'utilities'):
         yield sorted({c for c in all_comps.values() if c.category == t},
