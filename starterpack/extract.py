@@ -149,10 +149,9 @@ def extract_everything():
                    for c in component.ALL.values()), os.path.getsize(comp.path)
 
     queue = list(component.ALL.values()) + [
-        component.ALL['Dwarf Fortress']._replace(extract_to=path)
+        component.ALL['Dwarf Fortress']._replace(name=path, extract_to=path)
         for path in ('curr_baseline', 'graphics/ASCII')]
     queue.sort(key=q_key, reverse=True)
-    print('\n'.join(c.name for c in queue))
     with concurrent.futures.ProcessPoolExecutor(8) as pool:
         futures = dict()
         while queue:
