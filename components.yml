@@ -4,13 +4,16 @@
 #     MUST have "ident" set if host is not "manual"
 #     MUST otherwise set "dl_link", "updated", and "version"
 #     MUST set "extract_to" for files (see extract.py for details)
-#     SHOULD provide a tooltip string if the component is a utility
+#     SHOULD add missing keys to "manifest"[.json] for graphics or utilities
 #     MAY set "needs_dfhack" to True to avoid useless install
+#     MUST set "install-after" if install order matters (eg DF>DFHack>TwbT)
 files:
     DFHack:
         bay12: 139553
         host: github
         ident: DFHack/dfhack
+        extract_to: df
+        install_after: Dwarf Fortress
     PyLNP:
         bay12: 140808
         host: bitbucket
@@ -23,6 +26,7 @@ files:
         ident: 10170
         extract_to: df/stocksettings
         needs_dfhack: True
+        install_after: Dwarf Fortress
     TwbT:
         bay12: 138754
         host: github
@@ -33,6 +37,7 @@ files:
             {DFHACK_VER}/resume.plug.dll:plugins/resume.plug.dll
             {DFHACK_VER}/twbt.plug.dll:plugins/twbt.plug.dll
         needs_dfhack: True
+        install_after: DFHack
 utilities:
     Announcement Window:
         bay12: 153777

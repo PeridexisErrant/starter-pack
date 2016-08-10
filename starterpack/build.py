@@ -159,9 +159,8 @@ def create_utilities():
         os.rename(readme, readme + '.txt')
     # Set up manifests for all utilities
     for util in component.UTILITIES:
-        if not (util.needs_dfhack and extract.DFHACK_VER is None):
-            fixup_manifest(paths.utilities(util.name, 'manifest.json'),
-                           util, **_exes_for(util))
+        fixup_manifest(paths.utilities(util.name, 'manifest.json'),
+                       util, **_exes_for(util))
 
 
 # Configure graphics packs
@@ -265,7 +264,7 @@ def build_df():
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')
 
-    if extract.DFHACK_VER is not None:
+    if 'DFHack' in component.ALL:
         os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
         # Rename the example init file; disable prerelease builds
         hack = component.ALL.get('DFHack')

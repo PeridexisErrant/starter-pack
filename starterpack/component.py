@@ -70,6 +70,7 @@ _template = collections.namedtuple('Component', [
     'needs_dfhack',
     'extract_to',
     'manifest',
+    'install_after',
     ])
 
 
@@ -84,6 +85,8 @@ def _component(data):
     ident = item if config['host'] == 'manual' else config['ident']
     meta = metadata_api.METADATA_TYPES[config['host']]()
     forum_url = 'http://www.bay12forums.com/smf/index.php?topic={}'
+    if config.get('extract_to') is None and category == 'files':
+        print('ERROR - files/{} must set extract_to'.format(item))
     try:
         return _template(
             category,
@@ -95,8 +98,9 @@ def _component(data):
             meta.days_since_update(ident),
             forum_url.format(config['bay12']),
             config.get('needs_dfhack', False),
-            config.get('extract_to', ''),
+            config.get('extract_to', category + '/' + item),
             Hashabledict(config.get('manifest', {})),
+            config.get('install_after', ''),
             )
     except Exception:
         print('ERROR: in {}, check release exists'.format(ident))
@@ -105,10 +109,14 @@ def _component(data):
 def get_globals():
     """Returns the dict and lists for the module variables
     ALL, FILES, GRAPHICS, and UTILITIES."""
+    # get config objects for components
     with open('components.yml') as ymlf:
         config = yaml.safe_load(ymlf)
         config['files']['Dwarf Fortress'] = {
-            'ident': 'Dwarf Fortress', 'host': 'special', 'bay12': '&board=10'}
+            'ident': 'Dwarf Fortress',
+            'host': 'special',
+            'bay12': '&board=10',
+            'extract_to': 'df'}
     items = [(c, i, config[c][i]) for c, v in config.items() for i in v]
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(_component, items, timeout=20)
@@ -125,6 +133,13 @@ def get_globals():
                     all_comps['Dwarf Fortress']._replace(version=target_ver)
             else:
                 print('Cannot force invalid DF version ' + target_ver)
+    # Skip over DFHack-requiring entries if DFHack is not configured
+    if all_comps['Dwarf Fortress'].version not in all_comps['DFHack'].version:
+        print('DFHack version not compatible with this DF')
+        all_comps.pop('DFHack', None)
+    if 'DFHack' not in all_comps:
+        all_comps = {k: v for k, v in all_comps.items() if not v.needs_dfhack}
+    # yield the globals
     yield all_comps
     for t in ('files', 'graphics', 'utilities'):
         yield sorted({c for c in all_comps.values() if c.category == t},

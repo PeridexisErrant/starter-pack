@@ -16,8 +16,6 @@ import zipfile
 from . import component
 from . import paths
 
-DFHACK_VER = None
-
 
 def _copyfile(src, dest):
     """Copy the source file path or object to the dest path, creating dirs."""
@@ -126,50 +124,48 @@ def unpack_anything(filename, tmpdir):
     return True
 
 
-def extract_df():
-    """Extract Dwarf Fortress, and DFHack if available and compatible."""
-    # A DF dir for the main install, for baselines, and for ASCII graphics
-    with concurrent.futures.ProcessPoolExecutor() as ex:
-        for p in (paths.df(), paths.curr_baseline(), paths.graphics('ASCII')):
-            ex.submit(unzip_to, component.ALL['Dwarf Fortress'].path, p)
+def extract_comp(comp):
+    """Return args with which comp can be sent to the executor."""
+    if ':' not in comp.extract_to:
+        # first part of extract_to is paths method, remainder is args
+        dest, *details = comp.extract_to.split('/')
+        return unzip_to, comp.path, getattr(paths, dest)(*details)
+    # else using the path_pairs option; extract pairs from string
+    pairs = []
+    for pair in comp.extract_to.strip().split('\n'):
+        src, to = pair.split(':')
+        dest, *details = to.split('/')
+        # Note: can add format variables here as needed
+        src = src.format(DFHACK_VER=component.ALL['DFHack'].version)
+        pairs.append([src, getattr(paths, dest)(*details)])
+    return unzip_to, comp.path, None, pairs
 
-    hack = component.ALL.get('DFHack')
-    if not hack:
-        print('WARNING:  DFHack not in config, will not be installed.')
-    elif paths.df_ver() not in hack.version:
-        print('Incompatible DF, DFHack versions!  Aborting DFHack install...')
-    else:
-        unzip_to(hack.path, paths.df())
-        return hack.version.replace('v', '')
 
+def extract_everything():
+    """Extract everything in components.yml, respecting order requirements."""
+    # TODO: issue #9;  execute install-after config
 
-def extract_files_utilities_and_graphics():
-    """Extract the miscelaneous files in components.yml"""
-    ex = concurrent.futures.ProcessPoolExecutor(8)
-    for comp in component.ALL.values():
-        if comp.name in ('Dwarf Fortress', 'DFHack'):
-            continue
-        if comp.needs_dfhack and DFHACK_VER is None:
-            print(comp.name, 'not installed - requires DFHack')
-            continue
-        if comp.extract_to == '':
-            ex.submit(unzip_to, comp.path, paths.lnp(comp.category, comp.name))
-        else:
-            if ':' not in comp.extract_to:
-                # first part of extract_to is paths method, remainder is args
-                dest, *details = comp.extract_to.split('/')
-                ex.submit(unzip_to, comp.path, getattr(paths, dest)(*details))
-            else:
-                # using the path_pairs option; extract pairs from string
-                pairs = []
-                for pair in comp.extract_to.strip().split('\n'):
-                    src, to = pair.split(':')
-                    dest, *details = to.split('/')
-                    # Note: can add format variables here as needed
-                    src = src.format(DFHACK_VER=DFHACK_VER)
-                    pairs.append([src, getattr(paths, dest)(*details)])
-                ex.submit(unzip_to, comp.path, path_pairs=pairs)
-    ex.shutdown()
+    def ex_callback(name, *requires):
+        if any(n not in component.ALL for n in [name] + list(requires)):
+            return lambda _: None
+        func, *args = extract_comp(component.ALL[name])
+        return lambda _: func(*args)
+
+    with concurrent.futures.ProcessPoolExecutor(8) as pool:
+        # extract DF, DFHack, and other df-dir files
+        df_fut = pool.submit(*extract_comp(component.ALL['Dwarf Fortress']))
+        df_fut.add_done_callback(ex_callback('DFHack'))
+        df_fut.add_done_callback(ex_callback('Stocksettings', 'DFHack'))
+        df_fut.add_done_callback(ex_callback('TwbT', 'DFHack'))
+        # Extract everything else
+        for comp in component.ALL.values():
+            if comp.name in (
+                    'Dwarf Fortress', 'DFHack', 'Stocksettings', 'TwbT'):
+                continue
+            pool.submit(*extract_comp(comp))
+        # Safe extract jobs not triggered by any component
+        for p in (paths.curr_baseline(), paths.graphics('ASCII')):
+            pool.submit(unzip_to, component.ALL['Dwarf Fortress'].path, p)
 
 
 def add_lnp_dirs():
@@ -184,7 +180,5 @@ def main():
     print('\nExtracting components...')
     if os.path.isdir('build'):
         shutil.rmtree('build')
-    global DFHACK_VER  # pylint:disable=global-statement
-    DFHACK_VER = extract_df()
-    extract_files_utilities_and_graphics()
+    extract_everything()
     add_lnp_dirs()
