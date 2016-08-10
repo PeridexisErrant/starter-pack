@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
+import time
 import zipfile
 
 from . import component
@@ -124,12 +125,12 @@ def unpack_anything(filename, tmpdir):
     return True
 
 
-def extract_comp(comp):
+def extract_comp(pool, comp):
     """Return args with which comp can be sent to the executor."""
     if ':' not in comp.extract_to:
         # first part of extract_to is paths method, remainder is args
         dest, *details = comp.extract_to.split('/')
-        return unzip_to, comp.path, getattr(paths, dest)(*details)
+        return pool.submit(unzip_to, comp.path, getattr(paths, dest)(*details))
     # else using the path_pairs option; extract pairs from string
     pairs = []
     for pair in comp.extract_to.strip().split('\n'):
@@ -138,34 +139,29 @@ def extract_comp(comp):
         # Note: can add format variables here as needed
         src = src.format(DFHACK_VER=component.ALL['DFHack'].version)
         pairs.append([src, getattr(paths, dest)(*details)])
-    return unzip_to, comp.path, None, pairs
+    return pool.submit(unzip_to, comp.path, None, pairs)
 
 
 def extract_everything():
     """Extract everything in components.yml, respecting order requirements."""
-    # TODO: issue #9;  execute install-after config
+    def q_key(comp):
+        return sum(c.install_after == comp.name
+                   for c in component.ALL.values()), os.path.getsize(comp.path)
 
-    def ex_callback(name, *requires):
-        if any(n not in component.ALL for n in [name] + list(requires)):
-            return lambda _: None
-        func, *args = extract_comp(component.ALL[name])
-        return lambda _: func(*args)
-
+    queue = list(component.ALL.values()) + [
+        component.ALL['Dwarf Fortress']._replace(extract_to=path)
+        for path in ('curr_baseline', 'graphics/ASCII')]
+    queue.sort(key=q_key, reverse=True)
+    print('\n'.join(c.name for c in queue))
     with concurrent.futures.ProcessPoolExecutor(8) as pool:
-        # extract DF, DFHack, and other df-dir files
-        df_fut = pool.submit(*extract_comp(component.ALL['Dwarf Fortress']))
-        df_fut.add_done_callback(ex_callback('DFHack'))
-        df_fut.add_done_callback(ex_callback('Stocksettings', 'DFHack'))
-        df_fut.add_done_callback(ex_callback('TwbT', 'DFHack'))
-        # Extract everything else
-        for comp in component.ALL.values():
-            if comp.name in (
-                    'Dwarf Fortress', 'DFHack', 'Stocksettings', 'TwbT'):
-                continue
-            pool.submit(*extract_comp(comp))
-        # Safe extract jobs not triggered by any component
-        for p in (paths.curr_baseline(), paths.graphics('ASCII')):
-            pool.submit(unzip_to, component.ALL['Dwarf Fortress'].path, p)
+        futures = dict()
+        while queue:
+            while queue and sum(f.running() for f in futures.values()) < 8:
+                for idx, comp in enumerate(queue):
+                    aft = comp.install_after
+                    if not aft or (aft in futures and futures[aft].done()):
+                        futures[comp.name] = extract_comp(pool, queue.pop(idx))
+            time.sleep(0.01)
 
 
 def add_lnp_dirs():
