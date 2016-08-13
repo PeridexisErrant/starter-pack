@@ -39,7 +39,8 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     """
     assert bool(target_dir) != bool(path_pairs), 'Choose one unzip mode!'
     out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
-    print('{:20}  ->  {}'.format(os.path.basename(filename)[:20], out))
+    print('{:28}  ->  {}'.format(os.path.basename(filename)[:28],
+                                 os.path.relpath(out, paths.build())))
 
     if not zipfile.is_zipfile(filename) or filename.endswith('.exe'):
         return nonzip_extract(filename, target_dir, path_pairs)

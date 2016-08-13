@@ -13,6 +13,7 @@ import datetime
 from starterpack import build, component, dist, extract
 
 if __name__ == '__main__':
-    print('The time is {}\n'.format(datetime.datetime.utcnow()))
+    print('The time is {} UTC\n'.format(
+        str(datetime.datetime.utcnow()).split('.')[0]))
     for stage in (component, extract, build, dist):
         stage.main()
