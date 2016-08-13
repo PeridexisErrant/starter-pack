@@ -20,7 +20,7 @@ def get_contents(kwargs):
         name = re.findall(r'{(.*?)}', line)
         return not name or name[0] in kwargs
     with open(paths.base('contents.txt')) as f:
-        template = '\n'.join(l for l in f.readlines() if no_missing_comp(l))
+        template = ''.join(l for l in f.readlines() if no_missing_comp(l))
     template = template.replace('\n\n\n\n', '\n\n')
     for item in set(re.findall(r'{(.*?)}', template)) - set(kwargs):
         print('WARNING: ' + item + ' not listed in base/docs/contents.txt')
@@ -76,7 +76,7 @@ def release_docs():
         for chunk in iter(lambda: f.read(8192), b''):
             sha256.update(chunk)
     post_kwargs = {
-        'PACK_VERSION': paths.pack_ver(),
+        'PACK_VERSION': paths.pack_ver(warn=False),
         'LINK': 'http://dffd.bay12games.com/file.php?id=' + dffd_id,
         'CHANGELOG': changes,
         'CHECKSUM': sha256.hexdigest(),

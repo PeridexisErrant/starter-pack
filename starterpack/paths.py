@@ -28,11 +28,11 @@ def df_ver(as_string=True):
     return ver if as_string else tuple(ver.split('.')[1:])
 
 
-def pack_ver():
+def pack_ver(*, warn=True):
     """Return the current version string of the created pack."""
     with open('base/changelog.txt') as f:
         ver = f.readline().strip()
-    if not ver.startswith(df_ver()):
+    if warn and not ver.startswith(df_ver()):
         print('ERROR:  pack version must start with DF version.')
     return ver
 
@@ -76,7 +76,7 @@ def dist(*paths):
 def zipped():
     """Return the path to the zipped pack to upload."""
     name = CONFIG.get('packname') or "Unknown Pack {}"
-    return dist(name.format(pack_ver()) + '.zip')
+    return dist(name.format(pack_ver(warn=False)) + '.zip')
 
 
 def base(*paths):

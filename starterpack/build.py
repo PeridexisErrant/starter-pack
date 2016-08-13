@@ -118,7 +118,10 @@ def _therapist_ini():
                 component.raw_dl(url.format(dirname, fname), comp_path)
             shutil.copy(comp_path, util_path)
         except Exception:  # pylint:disable=broad-except
-            print('WARNING:  Therapist memory layout unavailable!')
+            print('WARNING:  no Therapist memory layout, removing DT...')
+            therapist = component.ALL.pop('Dwarf Therapist')
+            component.UTILITIES.remove(therapist)
+            shutil.rmtree(paths.utilities('Dwarf Therapist'))
 
 
 def _exes_for(util):
