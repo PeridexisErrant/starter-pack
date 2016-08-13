@@ -137,7 +137,8 @@ def extract_comp(pool, comp):
         src, to = pair.split(':')
         dest, *details = to.split('/')
         # Note: can add format variables here as needed
-        src = src.format(DFHACK_VER=component.ALL['DFHack'].version)
+        if '{DFHACK_VER}' in src:
+            src = src.format(DFHACK_VER=component.ALL['DFHack'].version)
         pairs.append([src, getattr(paths, dest)(*details)])
     return pool.submit(unzip_to, comp.path, None, pairs)
 

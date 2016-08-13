@@ -140,7 +140,6 @@ def get_globals():
     # Skip over DFHack-requiring entries if DFHack is not configured
     if 'DFHack' in all_comps and (all_comps['Dwarf Fortress'].version not in
                                   all_comps['DFHack'].version):
-        print('DFHack version not compatible with this DF')
         all_comps.pop('DFHack', None)
     if 'DFHack' not in all_comps:
         all_comps = {k: v for k, v in all_comps.items() if not v.needs_dfhack}

@@ -3,6 +3,7 @@
 
 import hashlib
 import os
+import re
 import shutil
 import zipfile
 
@@ -10,6 +11,20 @@ import yaml
 
 from . import component
 from . import paths
+
+
+def get_contents(kwargs):
+    """Read, edit, and format the contents template.  Removes lines for
+    missing components and warns if existing components are not listed."""
+    def no_missing_comp(line):
+        name = re.findall(r'{(.*?)}', line)
+        return not name or name[0] in kwargs
+    with open(paths.base('contents.txt')) as f:
+        template = '\n'.join(l for l in f.readlines() if no_missing_comp(l))
+    template = template.replace('\n\n\n\n', '\n\n')
+    for item in set(re.findall(r'{(.*?)}', template)) - set(kwargs):
+        print('WARNING: ' + item + ' not listed in base/docs/contents.txt')
+    return template.format(**kwargs)
 
 
 def create_about():
@@ -33,13 +48,8 @@ def create_about():
     kwargs['utilities'] = '\n'.join(link(c) for c in component.UTILITIES)
     with open(paths.base('changelog.txt')) as f:
         kwargs['changelogs'] = '\n\n'.join(f.read().split('\n\n')[:5])
-    with open(paths.base('contents.txt')) as f:
-        template = f.read()
-    for item in kwargs:
-        if '{' + item + '}' not in template:
-            print('WARNING: ' + item + ' not listed in base/docs/contents.txt')
     with open(paths.lnp('about', 'contents.txt'), 'w') as f:
-        f.write(template.format(**kwargs))
+        f.write(get_contents(kwargs))
 
 
 def zip_pack():
