@@ -121,6 +121,12 @@ utilities:
         ident: 11853
         manifest:
             readme: Readme_Quickfort.txt
+    SoundCenSe:
+        bay12: 159567
+        host: github
+        ident: Algorithman/SoundCenSe
+        manifest:
+            tooltip: An alternative to Soundsense, written in C#
     Soundsense:
         bay12: 60287
         host: dffd

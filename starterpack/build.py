@@ -16,7 +16,6 @@ import shutil
 import yaml
 
 from . import component
-from . import extract
 from . import paths
 
 
@@ -83,6 +82,8 @@ def fixup_manifest(filename, comp, **kwargs):
 def _soundsense_xml():
     """Check and update version strings in xml path config"""
     xmlfile = paths.utilities('Soundsense', 'configuration.xml')
+    if not os.path.isfile(xmlfile):
+        return
     relpath = os.path.relpath(paths.df(), paths.utilities('Soundsense'))
     with open(xmlfile) as f:
         config = f.readlines()
@@ -99,8 +100,25 @@ def _soundsense_xml():
         raise DeprecationWarning('Do you still need the empty "ss_fix.log" ?')
 
 
+def _soundCenSe_config():
+    """Check and update version strings in xml path config"""
+    jsonpath = paths.utilities('SoundCenSe', 'Configuration.json')
+    if not os.path.isfile(jsonpath):
+        return
+    with open(jsonpath) as f:
+        config = json.load(f)
+    config['gamelogPath'] = os.path.relpath(
+        paths.df(), paths.utilities('SoundCenSe'))
+    if os.path.isdir(paths.utilities('Soundsense', 'packs')):
+        config['soundpacksPath'] = '../Soundsense/packs/'
+    with open(jsonpath, 'w') as f:
+        json.dump(config, f, indent=4)
+
+
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
+    if not os.path.isfile(paths.utilities('Dwarf Therapist')):
+        return
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     fname = {
         'win': 'v0.{}.{}_graphics.ini',
@@ -150,13 +168,9 @@ def _exes_for(util):
 def create_utilities():
     """Confgure utilities metadata and check config files."""
     # Detailed checks for complicated config
-    util_names = [c.name for c in component.UTILITIES]
-    if 'Soundsense' in util_names:
-        _soundsense_xml()
-    if 'Dwarf Therapist' in util_names:
-        _therapist_ini()
-    else:
-        print('WARNING: pack does not contain Dwarf Therapist')
+    _soundsense_xml()
+    _soundCenSe_config()
+    _therapist_ini()
     # Need file extension for association for readme-opener
     for readme in glob.glob(paths.utilities('*', 'README')):
         os.rename(readme, readme + '.txt')
