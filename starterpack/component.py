@@ -129,12 +129,17 @@ def get_globals():
             if re.match(r'0\.\d\d\.\d\d', target_ver):
                 if df_ver.split('.')[1] != target_ver.split('.')[1]:
                     print('WARNING: forcing major version for DFHack compat.')
+                link = metadata_api.df_dl_from_ver(target_ver)
+                fname = os.path.basename(link)
                 all_comps['Dwarf Fortress'] = \
-                    all_comps['Dwarf Fortress']._replace(version=target_ver)
+                    all_comps['Dwarf Fortress']._replace(
+                        version=target_ver, dl_link=link, filename=fname,
+                        path=os.path.join('components', fname))
             else:
                 print('Cannot force invalid DF version ' + target_ver)
     # Skip over DFHack-requiring entries if DFHack is not configured
-    if all_comps['Dwarf Fortress'].version not in all_comps['DFHack'].version:
+    if 'DFHack' in all_comps and (all_comps['Dwarf Fortress'].version not in
+                                  all_comps['DFHack'].version):
         print('DFHack version not compatible with this DF')
         all_comps.pop('DFHack', None)
     if 'DFHack' not in all_comps:

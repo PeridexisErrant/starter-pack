@@ -198,6 +198,13 @@ class ManualMetadata(AbstractMetadata):
         return self.json(ID)['updated'].date()
 
 
+def df_dl_from_ver(ver):
+    url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
+    tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
+    _, vmaj, vmin = ver.split('.')
+    return url.format(vmaj, vmin, paths.HOST_OS, tail)
+
+
 class DFMetadata(AbstractMetadata):
     @cache
     def json(self, df):
@@ -207,10 +214,7 @@ class DFMetadata(AbstractMetadata):
                 return line[13:35].split(': DF ')
 
     def dl_link(self, df):
-        url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
-        tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
-        _, vmaj, vmin = self.version(df).split('.')
-        return url.format(vmaj, vmin, paths.HOST_OS, tail)
+        return df_dl_from_ver(self.version(df))
 
     def version(self, df):
         return self.json(df)[1].strip()
