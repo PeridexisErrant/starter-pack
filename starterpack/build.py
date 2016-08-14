@@ -48,7 +48,9 @@ def fixup_manifest(filename, comp, **kwargs):
     file_man = {}
     if os.path.isfile(filename):
         with open(filename) as f:
-            file_man = json.load(f)
+            txt = f.read()
+            # ignore characters before the leading {
+            file_man.update(json.loads(txt[txt.find('{'):]))
     # overwrite metadata in order: detected, configured, in-code, upstream
     manifest = {'title': comp.name, 'needs_dfhack': comp.needs_dfhack,
                 'content_version': comp.version,
