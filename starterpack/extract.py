@@ -147,8 +147,11 @@ def extract_comp(pool, comp):
 def extract_everything():
     """Extract everything in components.yml, respecting order requirements."""
     def q_key(comp):
-        return sum(c.install_after == comp.name
-                   for c in component.ALL.values()), os.path.getsize(comp.path)
+        after = {c.install_after: c.name for c in component.ALL.values()}
+        name, score = comp.name, 0
+        while name in after:
+            name, score = after.get(name), score + 1
+        return score, os.path.getsize(comp.path)
 
     queue = list(component.ALL.values()) + [
         component.ALL['Dwarf Fortress']._replace(name=path, extract_to=path)
