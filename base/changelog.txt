@@ -1,6 +1,7 @@
 0.43.03-r05
  - added SoundCenSe
  - added Lee's Color Scheme v2
+ - fixed keybinding for gui/settings-manager
 
 0.43.03-r04
  - updated default embark profiles (thanks /u/Gorny1)

@@ -14,8 +14,8 @@ keybinding add Alt-W@overallstatus "gui/workflow status"
 tweak eggs-fertile
 
 # Lethosor's scripts are part of DFHack, but not activated
-keybinding add Alt-S@title settings-manager
-keybinding add Alt-S@dwarfmode/Default settings-manager
+keybinding add Alt-S@title gui/settings-manager
+keybinding add Alt-S@dwarfmode/Default gui/settings-manager
 
 # UI improvement for embark screen; 'sand mouse' are done in default dfhack.init
 embark-tools enable sticky
