@@ -109,7 +109,7 @@ def unpack_anything(filename, tmpdir):
             try:
                 subprocess.run(['tar', '-xf', filename, '-C', tmpdir],
                                check=True)
-            except Exception:
+            except Exception:  # pylint:disable=broad-except
                 print('ERROR: could not extract ' + filename +
                       ' by tarfile lib or `tar` in shell')
                 return False
@@ -147,6 +147,7 @@ def extract_comp(pool, comp):
 def extract_everything():
     """Extract everything in components.yml, respecting order requirements."""
     def q_key(comp):
+        """Decide extract priority by pointer-chase depth, filesize in ties."""
         after = {c.install_after: c.name for c in component.ALL.values()}
         name, score = comp.name, 0
         while name in after:

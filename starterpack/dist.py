@@ -16,11 +16,9 @@ from . import paths
 def get_contents(kwargs):
     """Read, edit, and format the contents template.  Removes lines for
     missing components and warns if existing components are not listed."""
-    def no_missing_comp(line):
-        name = re.findall(r'{(.*?)}', line)
-        return not name or name[0] in kwargs
     with open(paths.base('contents.txt')) as f:
-        template = ''.join(l for l in f.readlines() if no_missing_comp(l))
+        template = ''.join(l for l in f.readlines() if '{' not in l or
+                           re.findall(r'{(.*?)}', l)[0] in kwargs)
     template = template.replace('\n\n\n\n', '\n\n')
     for item in set(re.findall(r'{(.*?)}', template)) - set(kwargs):
         print('WARNING: ' + item + ' not listed in base/docs/contents.txt')

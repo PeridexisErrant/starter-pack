@@ -102,7 +102,7 @@ def _component(data):
             Hashabledict(config.get('manifest', {})),
             config.get('install_after', ''),
             )
-    except Exception:
+    except Exception:  # pylint:disable=broad-except
         print('ERROR: in {}, check release exists'.format(ident))
 
 

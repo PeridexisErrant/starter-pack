@@ -183,7 +183,7 @@ class BitbucketMetadata(AbstractMetadata):
     def days_since_update(self, repo):
         return datetime.datetime.strptime(
             self.json(repo)['times'][paths.HOST_OS]
-                .split('.')[0], '%Y-%m-%dT%H:%M:%S')
+            .split('.')[0], '%Y-%m-%dT%H:%M:%S')
 
 
 class ManualMetadata(AbstractMetadata):
