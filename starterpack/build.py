@@ -43,14 +43,18 @@ def rough_simplify(df_dir):
             shutil.rmtree(path)
 
 
+def dodgy_json(filename):
+    """Read json from a file, even if it's slightly invalid..."""
+    with open(filename) as f:
+        txt = f.read()
+        return json.loads(txt[txt.find('{'):])
+
+
 def fixup_manifest(filename, comp, **kwargs):
     """Update manifest.json at `filename` with metadata for `comp`."""
     file_man = {}
     if os.path.isfile(filename):
-        with open(filename) as f:
-            txt = f.read()
-            # ignore characters before the leading {
-            file_man.update(json.loads(txt[txt.find('{'):]))
+        file_man.update(dodgy_json(filename))
     # overwrite metadata in order: detected, configured, in-code, upstream
     manifest = {'title': comp.name, 'needs_dfhack': comp.needs_dfhack,
                 'content_version': comp.version,
@@ -66,9 +70,10 @@ def fixup_manifest(filename, comp, **kwargs):
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
     # Warn for missing fields
-    for k in ['tooltip']:
-        if k not in manifest:
-            print('WARNING:  {} not in {}'.format(k, filename))
+    if 'tooltip' not in manifest:
+        print('WARNING:  {} not in {}'.format(k, filename))
+    else:
+        manifest['tooltip'] = manifest['tooltip'].strip()
     if comp in component.UTILITIES:
         for _os in ('win', 'osx', 'linux'):
             if paths.HOST_OS == _os and not manifest[_os + '_exe']:
@@ -107,8 +112,7 @@ def _soundCenSe_config():
     jsonpath = paths.utilities('SoundCenSe', 'Configuration.json')
     if not os.path.isfile(jsonpath):
         return
-    with open(jsonpath) as f:
-        config = json.load(f)
+    config = dodgy_json(jsonpath)
     config['gamelogPath'] = os.path.relpath(
         paths.df(), paths.utilities('SoundCenSe'))
     if os.path.isdir(paths.utilities('Soundsense', 'packs')):
@@ -270,8 +274,18 @@ def build_lnp_dirs():
     with open(paths.base('PyLNP-json.yml')) as f:
         pylnp_conf = yaml.load(f)
     pylnp_conf['updates']['packVersion'] = paths.pack_ver()
+    for hack in pylnp_conf['dfhack'].values():
+        # remove trailing newline from multiline tooltips
+        hack['tooltip'] = hack['tooltip'].strip()
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
+    # Create init files with any DFHack options with enabled=True
+    for init_file in ('dfhack', 'onLoad', 'onMapLoad'):
+        lines = [h['command'] for h in pylnp_conf['dfhack'].values()
+                 if h.get('enabled') and h.get('file', 'dfhack') == init_file]
+        if lines:
+            with open(paths.df(init_file + '_PyLNP.init'), 'w') as f:
+                f.write('\n'.join(lines))
 
 
 def build_df():
@@ -298,7 +312,12 @@ def build_df():
         else:
             print('WARNING: DFHack distributed without html docs.')
         if hack.version != '0.43.03-r1':
+            # if https://github.com/DFHack/dfhack/pull/970 is merged, much
+            # of ../base/extras/dfhack_PeridexisErrant.init can be removed.
             raise DeprecationWarning('Have init changes been merged?')
+            # No good way to check, so it just goes here...
+            # See https://github.com/DFHack/dfhack/issues/981
+            raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')
     if pack in os.listdir(paths.graphics()):

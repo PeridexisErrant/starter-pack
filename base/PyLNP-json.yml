@@ -18,32 +18,30 @@ dfhack:
         enabled: false
         file: onMapLoad
         tooltip: Adds Human merchants (more trade deals) and Elvish diplomats (logging quotas)
+    Hide DFHack Console:
+        command: hide
+        tooltip: Hides the DFHack console window.  Ctrl-Shift-P and "show" to reverse.
     Other Automation plugins:
         command: multicmd autonestbox start; repeat -time 7 -timeUnits days -command [ burial ] -name burial
-        enabled: false
         file: onMapLoad
         tooltip: more automation plugins - autonestbox, burial
     Stonesense Isometric view:
         command: ssense
-        enabled: false
         file: onMapLoad
         tooltip: |
             Opens an isometric visualiser in a separate window.
             Run in-game with 'ssense overlay', but ONLY in PRINT_MODE:2D (crashes otherwise)
     Mouse Controls:
         command: mousequery edge enable
-        enabled: false
         tooltip: allows scrolling by hovering near edge of map - pair with 'laptop with mouse' keybindings
     Performance Tweaks:
         command: multicmd tweak fast-heat 100; repeat -time 1 -timeUnits months -command [ multicmd cleanowned X ; clean all ]
-        enabled: false
         file: onMapLoad
         tooltip: |
             DFHack fixes to run regularly, changes the game a little but helps a lot on old or slow hardware.
             (fast-heat, dump worn items, remove all contaminants)
     Automatic Job Assignments:
         command: enable autolabor
-        enabled: false
         file: onMapLoad
         tooltip: The autolabor plugin automates job assignments, replacing tools such as Dwarf Therapist
 folders:

@@ -2,6 +2,9 @@
  - added SoundCenSe
  - added Lee's Color Scheme v2
  - fixed keybinding for gui/settings-manager
+ - re-enabled TwbT by default (in DFHack tab)
+ - misc minor tweaks (eg no blank line in tooltips)
+ - added option to hide DFHack console window
 
 0.43.03-r04
  - updated default embark profiles (thanks /u/Gorny1)
