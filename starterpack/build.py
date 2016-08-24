@@ -274,8 +274,11 @@ def build_lnp_dirs():
     default_dir = paths.lnp('defaults')
     os.makedirs(default_dir)
     shutil.copy(paths.lnp('embarks', 'default_profiles.txt'), default_dir)
-    for f in {'init.txt', 'd_init.txt'}:
-        shutil.copy(paths.graphics('Phoebus', 'data', 'init', f), default_dir)
+    pack = paths.CONFIG.get('default_graphics')
+    if pack:
+        for f in {'init.txt', 'd_init.txt'}:
+            shutil.copy(paths.graphics(pack, 'data', 'init', f), default_dir)
+    # TODO:  only change graphics settings... via PyLNP??
     overwrite_dir(default_dir, paths.df('data', 'init'))
     os.rename(paths.df('data', 'init', 'default_profiles.txt'),
               paths.df('data', 'init', 'embark_profiles.txt'))
@@ -327,7 +330,7 @@ def build_df():
         if hack.version != '0.43.03-r1':
             # if https://github.com/DFHack/dfhack/pull/970 is merged, much
             # of ../base/extras/dfhack_PeridexisErrant.init can be removed.
-            raise DeprecationWarning('Have init changes been merged?')
+            raise DeprecationWarning('Init changes been merged')
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
             raise DeprecationWarning('Does TwbT still supply other plugins?')
