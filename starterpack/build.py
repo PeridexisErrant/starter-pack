@@ -121,6 +121,18 @@ def _soundCenSe_config():
         json.dump(config, f, indent=4)
 
 
+def _armok_vision_plugin():
+    """Copy the new plugin into place for Armok Vision, if applicable."""
+    hack = component.ALL.get('DFHack')
+    if hack is None:
+        return
+    plug = paths.utilities('Armok Vision', 'Plugins', hack.version,
+                           'RemoteFortressReader.plug.dll')
+    if os.path.isfile(plug):
+        shutil.copy2(plug, paths.plugins())
+        shutil.rmtree(paths.utilities('Armok Vision', 'Plugins'))
+
+
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
     if not os.path.isfile(paths.utilities('Dwarf Therapist')):
@@ -177,6 +189,7 @@ def create_utilities():
     _soundsense_xml()
     _soundCenSe_config()
     _therapist_ini()
+    _armok_vision_plugin()
     # Need file extension for association for readme-opener
     for readme in glob.glob(paths.utilities('*', 'README')):
         os.rename(readme, readme + '.txt')
