@@ -71,7 +71,7 @@ def fixup_manifest(filename, comp, **kwargs):
         manifest.pop('df_max_version', None)
     # Warn for missing fields
     if 'tooltip' not in manifest:
-        print('WARNING:  {} not in {}'.format(k, filename))
+        print('WARNING:  no tooltip in ' + filename)
     else:
         manifest['tooltip'] = manifest['tooltip'].strip()
     if comp in component.UTILITIES:
@@ -333,6 +333,7 @@ def build_df():
             raise DeprecationWarning('Init changes been merged')
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
+            # pylint:disable=unreachable
             raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')
