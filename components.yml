@@ -50,8 +50,6 @@ utilities:
         host: github
         ident: JapaMala/armok-vision
         needs_dfhack: True
-        manifest:
-            tooltip: A full 3D visualiser - shows off Dwarf Fortress with unprecedented detail and beauty.  (64bit)
     DF Story Maker:
         bay12: 128570
         host: dffd
