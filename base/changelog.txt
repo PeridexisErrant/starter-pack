@@ -1,4 +1,8 @@
+0.43.03-r07
+
 0.43.03-r06
+ - fixed Dwarf Therapist (missing memory layout)
+ - configured new PyLNP 'import from old pack'
 
 0.43.03-r05
  - added SoundCenSe
