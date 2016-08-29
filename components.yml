@@ -39,12 +39,6 @@ files:
         needs_dfhack: True
         install_after: DFHack
 utilities:
-    Announcement Window:
-        bay12: 153777
-        host: github
-        ident: NuAoA/AnnouncementWindow
-        manifest:
-            tooltip: A window for announcements, with customisable colours and filters.
     Armok Vision:
         bay12: 146473
         host: github

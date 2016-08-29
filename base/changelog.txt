@@ -1,4 +1,5 @@
 0.43.03-r07
+ - removed Announcement Window due to constant messages about virus reports
 
 0.43.03-r06
  - fixed Dwarf Therapist (missing memory layout)
