@@ -32,10 +32,10 @@ files:
         host: github
         ident: mifki/df-twbt
         extract_to: |
-            {DFHACK_VER}/automaterial.plug.dll:plugins/automaterial.plug.dll
-            {DFHACK_VER}/mousequery.plug.dll:plugins/mousequery.plug.dll
-            {DFHACK_VER}/resume.plug.dll:plugins/resume.plug.dll
-            {DFHACK_VER}/twbt.plug.dll:plugins/twbt.plug.dll
+            {DFHACK_VER}/automaterial.plug.dll:plugins/
+            {DFHACK_VER}/mousequery.plug.dll:plugins/
+            {DFHACK_VER}/resume.plug.dll:plugins/
+            {DFHACK_VER}/twbt.plug.dll:plugins/
         needs_dfhack: True
         install_after: DFHack
 utilities:

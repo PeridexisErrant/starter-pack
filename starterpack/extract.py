@@ -42,24 +42,18 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     print('{:28}  ->  {}'.format(os.path.basename(filename)[:28],
                                  os.path.relpath(out, paths.build())))
 
-    if not zipfile.is_zipfile(filename) or filename.endswith('.exe'):
+    if path_pairs is not None or filename.endswith('.exe') \
+            or not zipfile.is_zipfile(filename):
+        # ensures consistent handling for path_pairs
         return nonzip_extract(filename, target_dir, path_pairs)
     # More complex, but faster for zips to do it this way
     with zipfile.ZipFile(filename) as zf:
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
                      if not a[0].endswith('/'))
-        if path_pairs is not None:
-            for inpath, outpath in path_pairs:
-                if inpath in files:
-                    _copyfile(zf.open(files[inpath]), outpath)
-                else:
-                    print('WARNING:  {} not in {}'.format(
-                        inpath, os.path.basename(filename)))
-        else:
-            prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
-            for name in files:
-                out = os.path.join(target_dir, os.path.relpath(name, prefix))
-                _copyfile(zf.open(files[name]), out)
+        prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
+        for name in files:
+            out = os.path.join(target_dir, os.path.relpath(name, prefix))
+            _copyfile(zf.open(files[name]), out)
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
@@ -79,13 +73,16 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
         if not unpack_anything(filename, tmpdir):
             return
         # Copy from tempdir to destination
+        files = [os.path.join(root, f)
+                 for root, _, files in os.walk(tmpdir) for f in files]
+        prefix = os.path.commonpath(files) if len(files) > 1 else ''
         if target_dir:
-            files = [os.path.join(root, f)
-                     for root, _, files in os.walk(tmpdir) for f in files]
-            prefix = os.path.commonpath(files) if len(files) > 1 else ''
             copy_tree(os.path.join(tmpdir, prefix), target_dir)
         else:
             for inpath, outpath in path_pairs:
+                inpath = os.path.join(prefix, inpath)
+                if outpath.endswith('/'):
+                    outpath += os.path.basename(inpath)
                 if os.path.isfile(os.path.join(tmpdir, inpath)):
                     _copyfile(os.path.join(tmpdir, inpath), outpath)
                 else:
