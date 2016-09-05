@@ -10,7 +10,7 @@
 files:
     DFHack:
         bay12: 139553
-        host: github
+        host: github-asset
         ident: DFHack/dfhack
         extract_to: df
         install_after: Dwarf Fortress
@@ -29,7 +29,7 @@ files:
         install_after: Dwarf Fortress
     Taffer_misc:
         bay12: 107924
-        host: github/tag
+        host: github-source
         ident: nc-z/taffer
         extract_to: |
             taffer/colours/pastel/data/init/colors.txt:lnp/colors/Taffer_Pastel.txt
@@ -39,7 +39,7 @@ files:
             taffer/tilesets/default_20x20/serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer20x20_Serif_HSWalls.png
     TwbT:
         bay12: 138754
-        host: github
+        host: github-asset
         ident: mifki/df-twbt
         extract_to: |
             {DFHACK_VER}/automaterial.plug.dll:plugins/
@@ -51,7 +51,7 @@ files:
 utilities:
     Armok Vision:
         bay12: 146473
-        host: github
+        host: github-asset
         ident: JapaMala/armok-vision
         needs_dfhack: True
     DF Story Maker:
@@ -74,13 +74,13 @@ utilities:
             tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
     Dwarf Portrait:
         bay12: 158930
-        host: github
+        host: github-asset
         ident: JapaMala/Dwarf-Portrait
         manifest:
             tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
         bay12: 122968
-        host: github
+        host: github-asset
         ident: splintermind/Dwarf-Therapist
         manifest:
             readme: doc/Dwarf Therapist.pdf
@@ -125,7 +125,7 @@ utilities:
             readme: Readme_Quickfort.txt
     SoundCenSe:
         bay12: 159567
-        host: github
+        host: github-asset
         ident: Algorithman/SoundCenSe
     Soundsense:
         bay12: 60287
@@ -142,7 +142,7 @@ utilities:
 graphics:
     CLA:
         bay12: 105376
-        host: github/tag
+        host: github-source
         ident: DFgraphics/CLA
     DungeonSet:
         bay12: 152766
@@ -150,7 +150,7 @@ graphics:
         ident: 11637
     GemSet:
         bay12: 150753
-        host: github/tag
+        host: github-source
         ident: DFgraphics/GemSet
         needs_dfhack: True
     Ironhand:
@@ -163,17 +163,17 @@ graphics:
                 Ironhand has an enduring popularity.
     Mayday:
         bay12: 137370
-        host: github/tag
+        host: github-source
         ident: DFgraphics/Mayday
     Obsidian:
         bay12: 126934
-        host: github/tag
+        host: github-source
         ident: DFgraphics/Obsidian
     Phoebus:
         bay12: 152698
-        host: github/tag
+        host: github-source
         ident: DFgraphics/Phoebus
     Spacefox:
         bay12: 129219
-        host: github/tag
+        host: github-source
         ident: DFgraphics/Spacefox

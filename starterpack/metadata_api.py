@@ -47,7 +47,7 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
     def wrapper(self, ident):
         last_tstamp = saved.get('timestamps', {}).get(ident, 0)
         if (time.time() - last_tstamp) > 60*60:
-            if not isinstance(self, GitHubMetadata):
+            if not isinstance(self, GitHubAssetMetadata):
                 saved['metadata'][ident] = method(self, ident)
             else:
                 saved['metadata'][ident] = method(
@@ -67,13 +67,15 @@ def days_ago(func):
 def best_asset(fname_list, bitted_64=True):
     """Return a dict of the best asset from the list for each OS."""
     asst = {'win': None, 'osx': None, 'linux': None}
+
     def fname(a):
         return os.path.basename(a).lower()
     for k in asst:
         os_files = [a for a in fname_list
                     if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
         os64_files = [a for a in os_files if bitted_64 and '64' in fname(a)]
-        asst[k] = (os64_files or os_files or fname_list)[0]
+        lst = os64_files or os_files or fname_list
+        asst[k] = lst[0] if lst else None
     return asst
 
 
@@ -113,27 +115,25 @@ class DFFDMetadata(AbstractMetadata):
             float(self.json(ID)['updated_timestamp']))
 
 
-def hit_gh_api(slug, timestamp, endpoint='releases'):
-    """Return JSON payload, or None if not modified since timestamp."""
-    url = 'https://api.github.com/repos/{}/{}'.format(slug, endpoint)
-    utc = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc)
-    gmt_str = utc.strftime('%a, %d %b %Y %H:%M:%S') + ' GMT'
-    req = get_ok(url, auth=get_auth(), headers={'If-Modified-Since': gmt_str})
-    return req.json() if req.status_code != 304 else None
-
-
-class GitHubMetadata(AbstractMetadata):
+class GitHubAssetMetadata(AbstractMetadata):
     # pylint:disable=arguments-differ
     @cache
-    def json(self, repo, last_timestamp, last_json):
-        resp = hit_gh_api(repo, last_timestamp)
-        if resp is None:
-            # fixme:  /releases endpoint does not support last-modified header
+    def json(self, repo, last_timestamp=None, last_json=None):
+        """Return JSON payload, or None if not modified since timestamp."""
+        url = 'https://api.github.com/repos/{}/releases'.format(repo)
+        header = {'If-Modified-Since': datetime.datetime.fromtimestamp(
+            last_timestamp, datetime.timezone.utc).strftime(
+                '%a, %d %b %Y %H:%M:%S GMT')}
+        req = get_ok(url, auth=get_auth(), headers=header)
+        if req.status_code == 304:
             return last_json
-        assets = [r['browser_download_url'] for r in resp[0]['assets']]
-        return {'version': resp[0]['tag_name'].strip(),
-                'published_at': resp[0]['published_at'],
-                'assets': best_asset(assets)}
+        resp = req.json()[0]
+
+        assets = [r['browser_download_url'] for r in resp['assets']]
+        return {'version': resp['tag_name'].strip(),
+                'published_at': resp['published_at'],
+                'assets': best_asset(assets),
+                'zipball_url': resp['zipball_url']}
 
     def dl_link(self, repo):
         return self.json(repo)['assets'][paths.HOST_OS]
@@ -144,17 +144,9 @@ class GitHubMetadata(AbstractMetadata):
             self.json(repo)['published_at'], '%Y-%m-%dT%H:%M:%SZ')
 
 
-class GitHubTagMetadata(GitHubMetadata):
-    @cache
-    def json(self, repo, last_timestamp=None, last_json=None):
-        tag = hit_gh_api(repo, last_timestamp, endpoint='tags')
-        if tag is None:
-            return last_json
-        pubdate = get_ok(tag[0]['commit']['url'], auth=get_auth())
-        return {'version': tag[0]['name'], 'dl_link': tag[0]['zipball_url'],
-                'published_at': pubdate.json()['commit']['author']['date']}
-
-    dl_link = AbstractMetadata.dl_link
+class GitHubZipballMetadata(GitHubAssetMetadata):
+    def dl_link(self, repo):
+        return self.json(repo)['zipball_url']
 
     def filename(self, repo):
         return '{}_{}.zip'.format(
@@ -177,7 +169,7 @@ class BitbucketMetadata(AbstractMetadata):
         base = self.filename(repo).replace('PyLNP_', '').replace('tar.', '')
         return os.path.splitext(base)[0].split('-')[0]
 
-    dl_link = GitHubMetadata.dl_link
+    dl_link = GitHubAssetMetadata.dl_link
 
     @days_ago
     def days_since_update(self, repo):
@@ -226,8 +218,8 @@ class DFMetadata(AbstractMetadata):
 
 METADATA_TYPES = {
     'dffd': DFFDMetadata,
-    'github': GitHubMetadata,
-    'github/tag': GitHubTagMetadata,
+    'github-asset': GitHubAssetMetadata,
+    'github-source': GitHubZipballMetadata,
     'bitbucket': BitbucketMetadata,
     'manual': ManualMetadata,
     'special': DFMetadata,
