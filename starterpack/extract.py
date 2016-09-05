@@ -170,7 +170,7 @@ def add_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
     # Should use https://github.com/Lazy-Newb-Pack/LNP-shared-core someday...
     for d in ('colors', 'embarks', 'extras', 'keybinds', 'tilesets'):
-        shutil.copytree(paths.base(d), paths.lnp(d))
+        copy_tree(paths.base(d), paths.lnp(d))
 
 
 def main():

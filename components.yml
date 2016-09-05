@@ -27,6 +27,16 @@ files:
         extract_to: df/stocksettings
         needs_dfhack: True
         install_after: Dwarf Fortress
+    Taffer_misc:
+        bay12: 107924
+        host: github/tag
+        ident: nc-z/taffer
+        extract_to: |
+            taffer/colours/pastel/data/init/colors.txt:lnp/colors/Taffer_Pastel.txt
+            taffer/tilesets/default_10x10/sans_serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer10x10_Sans_HSWalls.png
+            taffer/tilesets/default_10x10/serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer10x10_Serif_HSWalls.png
+            taffer/tilesets/default_20x20/sans_serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer20x20_Sans_HSWalls.png
+            taffer/tilesets/default_20x20/serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer20x20_Serif_HSWalls.png
     TwbT:
         bay12: 138754
         host: github
