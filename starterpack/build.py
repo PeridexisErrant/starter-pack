@@ -135,7 +135,6 @@ def _armok_vision_plugin():
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
-    print('starting DT')
     if not os.path.isdir(paths.utilities('Dwarf Therapist')):
         return
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
@@ -146,7 +145,6 @@ def _therapist_ini():
         }[paths.HOST_OS].format(*paths.df_ver(as_string=False))
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
-    print(util_path)
     if not os.path.isfile(util_path):
         url = ('https://raw.githubusercontent.com/splintermind/'
                'Dwarf-Therapist/DF2016/share/memory_layouts/{}/{}')
