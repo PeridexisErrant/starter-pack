@@ -1,5 +1,12 @@
+0.43.03-r08
+
 0.43.03-r07
  - removed Announcement Window due to constant messages about virus reports
+ - updated Taffer's tilesets
+ - updated CLA graphics
+ - updated Dwarf Portrait
+ - updated PyLNP (bugfixes)
+ - updated Armok Vision (splatters, fallen leaves, etc)
 
 0.43.03-r06
  - fixed Dwarf Therapist (missing memory layout)
