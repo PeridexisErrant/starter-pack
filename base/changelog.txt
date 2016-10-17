@@ -1,4 +1,12 @@
 0.43.03-r08
+ - updated Armok Vision
+ - updated TwbT; fixed many crashes
+ - updated Ironhand graphics
+ - updated Spacefox graphics
+ - updated Mayday graphics
+ - updated GemSet graphics
+ - updated Obsidian graphics
+ - updated Taffer's tilesets
 
 0.43.03-r07
  - removed Announcement Window due to constant messages about virus reports

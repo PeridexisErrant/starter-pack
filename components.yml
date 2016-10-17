@@ -155,12 +155,8 @@ graphics:
         needs_dfhack: True
     Ironhand:
         bay12: 53180
-        host: dffd
-        ident: 11348
-        manifest:
-            tooltip: |
-                Less stylised than other packs and a little gritty,
-                Ironhand has an enduring popularity.
+        host: github-source
+        ident: DFgraphics/Ironhand
     Mayday:
         bay12: 137370
         host: github-source
