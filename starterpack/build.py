@@ -135,6 +135,9 @@ def _armok_vision_plugin():
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
+    if 'Dwarf Therapist' in component.ALL and \
+            component.ALL['Dwarf Therapist'].version != 'v37.0.0':
+        raise DeprecationWarning('Need to handle 64-bit therapist.ini')
     if not os.path.isdir(paths.utilities('Dwarf Therapist')):
         return
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS

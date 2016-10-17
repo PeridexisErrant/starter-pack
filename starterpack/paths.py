@@ -12,6 +12,8 @@ CONFIG = {}
 with suppress(IOError):
     with open('config.yml') as ymlf:
         CONFIG = yaml.safe_load(ymlf)
+BITS = str(CONFIG.pop('desired_bits', '64'))
+assert BITS in ('32', '64')
 
 HOST_OS = CONFIG.get('os') or {
     'linux': 'linux',

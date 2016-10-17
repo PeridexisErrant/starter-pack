@@ -64,18 +64,21 @@ def days_ago(func):
     return _inner
 
 
-def best_asset(fname_list, bitted_64=True):
+def best_asset(fname_list):
     """Return a dict of the best asset from the list for each OS."""
-    asst = {'win': None, 'osx': None, 'linux': None}
-
     def fname(a):
         return os.path.basename(a).lower()
-    for k in asst:
-        os_files = [a for a in fname_list
-                    if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
-        os64_files = [a for a in os_files if bitted_64 and '64' in fname(a)]
-        lst = os64_files or os_files or fname_list
-        asst[k] = lst[0] if lst else None
+
+    asst = {}
+    for bits in ('32', '64'):
+        wrong_bits = ['32', '64'][bits == '32']
+        for platform in ('win', 'osx', 'linux'):
+            os_files = [a for a in fname_list
+                        if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
+            un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
+            bitted = [a for a in os_files if bits in fname(a)]
+            lst = bitted or un_bitted or os_files or fname_list
+            asst[(platform, bits)] = lst[0] if lst else None
     return asst
 
 
@@ -120,14 +123,14 @@ class GitHubAssetMetadata(AbstractMetadata):
     @cache
     def json(self, repo, last_timestamp=None, last_json=None):
         """Return JSON payload, or None if not modified since timestamp."""
-        url = 'https://api.github.com/repos/{}/releases'.format(repo)
+        url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
         header = {'If-Modified-Since': datetime.datetime.fromtimestamp(
             last_timestamp, datetime.timezone.utc).strftime(
                 '%a, %d %b %Y %H:%M:%S GMT')}
         req = get_ok(url, auth=get_auth(), headers=header)
         if req.status_code == 304:
             return last_json
-        resp = req.json()[0]
+        resp = req.json()
 
         assets = [r['browser_download_url'] for r in resp['assets']]
         return {'version': resp['tag_name'].strip(),
@@ -136,7 +139,7 @@ class GitHubAssetMetadata(AbstractMetadata):
                 'zipball_url': resp['zipball_url']}
 
     def dl_link(self, repo):
-        return self.json(repo)['assets'][paths.HOST_OS]
+        return self.json(repo)['assets'][(paths.HOST_OS, paths.BITS)]
 
     @days_ago
     def days_since_update(self, repo):
@@ -174,7 +177,7 @@ class BitbucketMetadata(AbstractMetadata):
     @days_ago
     def days_since_update(self, repo):
         return datetime.datetime.strptime(
-            self.json(repo)['times'][paths.HOST_OS]
+            self.json(repo)['times'][(paths.HOST_OS, paths.BITS)]
             .split('.')[0], '%Y-%m-%dT%H:%M:%S')
 
 
@@ -194,6 +197,9 @@ def df_dl_from_ver(ver):
     url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
     tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
     _, vmaj, vmin = ver.split('.')
+    platform = paths.HOST_OS
+    if paths.BITS == '32':
+        platform += '32'
     return url.format(vmaj, vmin, paths.HOST_OS, tail)
 
 
