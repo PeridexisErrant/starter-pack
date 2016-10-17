@@ -72,13 +72,13 @@ def best_asset(fname_list):
     asst = {}
     for bits in ('32', '64'):
         wrong_bits = ['32', '64'][bits == '32']
-        for platform in ('win', 'osx', 'linux'):
+        for k in ('win', 'osx', 'linux'):
             os_files = [a for a in fname_list
                         if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
             un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
             bitted = [a for a in os_files if bits in fname(a)]
             lst = bitted or un_bitted or os_files or fname_list
-            asst[(platform, bits)] = lst[0] if lst else None
+            asst[(k, bits)] = lst[0] if lst else None
     return asst
 
 
@@ -107,7 +107,8 @@ class DFFDMetadata(AbstractMetadata):
             'http://dffd.bay12games.com/file_data/{}.json'.format(ID)).json()
 
     def filename(self, ID):
-        return self.json(ID)['filename']
+        return self.json(ID).get('filename',
+                                 'dffd_{}_{}'.format(ID, self.version(ID)))
 
     def dl_link(self, ID):
         return 'http://dffd.bay12games.com/download.php?id={}&f=b'.format(ID)
@@ -198,7 +199,7 @@ def df_dl_from_ver(ver):
     tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
     _, vmaj, vmin = ver.split('.')
     platform = paths.HOST_OS
-    if paths.BITS == '32':
+    if paths.BITS == '32' and ver > '0.43.03':
         platform += '32'
     return url.format(vmaj, vmin, paths.HOST_OS, tail)
 

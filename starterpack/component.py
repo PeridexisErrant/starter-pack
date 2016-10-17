@@ -82,6 +82,11 @@ class Hashabledict(dict):
 def _component(data):
     """Lighter weight than a class, but still easy to access."""
     category, item, config = data
+    config['host'] = config.get('host') or (
+        'dffd' if isinstance(config.get('ident'), int) else (
+            'github-source' if category == 'graphics' else 'github-asset'))
+    if str(config.get('requires_bits', paths.BITS)) != paths.BITS:
+        return
     ident = item if config['host'] == 'manual' else config['ident']
     meta = metadata_api.METADATA_TYPES[config['host']]()
     forum_url = 'http://www.bay12forums.com/smf/index.php?topic={}'
