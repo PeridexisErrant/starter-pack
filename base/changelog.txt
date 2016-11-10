@@ -7,6 +7,7 @@
  - updated GemSet graphics
  - updated Obsidian graphics
  - updated Taffer's tilesets
+ - added Meph's tileset
 
 0.43.03-r07
  - removed Announcement Window due to constant messages about virus reports
