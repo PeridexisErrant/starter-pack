@@ -98,15 +98,17 @@ def unpack_anything(filename, tmpdir):
     elif zipfile.is_zipfile(filename):
         # Uses fast version above; handled here for completeness
         zipfile.ZipFile(filename).extractall(tmpdir)
+        return True
     elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
             or tarfile.is_tarfile(filename):
         try:
             tarfile.TarFile(filename).extractall(tmpdir)
+            return True
         except tarfile.ReadError:
             try:
                 subprocess.run(['tar', '-xf', filename, '-C', tmpdir],
                                check=True)
-            except Exception:  # pylint:disable=broad-except
+            except subprocess.CalledProcessError:
                 print('ERROR: could not extract ' + filename +
                       ' by tarfile lib or `tar` in shell')
                 return False
@@ -117,10 +119,25 @@ def unpack_anything(filename, tmpdir):
             print('ERROR: .rar not supported; `pip install rarfile` and retry')
             return False
         rarfile.RarFile(filename).extractall(tmpdir)
-    else:
-        print('Error: skipping unsupported archive format ' + filename)
-        return False
-    return True
+        return True
+    elif filename.endswith('.7z') or filename.endswith('.7zip'):
+        if paths.HOST_OS == 'win':
+            exe = r'C:\Program Files\7-Zip\7z.exe'
+            if not os.path.isfile(exe):
+                exe = exe.replace('Program Files', 'Program Files (x86)')
+                if not os.path.isfile(exe):
+                    print('7z.exe unavailable; install 7zip and try again...')
+                    return False
+            try:
+                args = '"{}" x "{}" -o"{}"'.format(exe, filename, tmpdir)
+                subprocess.run(args, check=True, stdout=subprocess.DEVNULL)
+                return True
+            except subprocess.CalledProcessError as e:
+                print('ERROR: 7z.exe failed to extract ' + filename)
+                print(e.stderr)
+                return False
+    print('Error: skipping unsupported archive format ' + filename)
+    return False
 
 
 def extract_comp(pool, comp):
