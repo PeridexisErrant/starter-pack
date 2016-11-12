@@ -64,8 +64,11 @@ def fixup_manifest(filename, comp, **kwargs):
         if k in file_man:
             print('WARNING:  {}: {} is provided upstream'.format(filename, k))
     # Warn about and discard incompatibility flag
-    maxver = manifest.get('df_max_version', '1')
-    if maxver and maxver < paths.df_ver():
+    if (manifest.get('df_max_version') or '0') > paths.df_ver():
+        print('WARNING: overriding df_min_version {} for {}'.format(
+            manifest.get('df_min_version'), comp.name))
+        manifest.pop('df_min_version', None)
+    if (manifest.get('df_max_version') or '1') < paths.df_ver():
         print('WARNING: overriding df_max_version {} for {}'.format(
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
