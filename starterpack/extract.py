@@ -9,6 +9,7 @@ from distutils.dir_util import copy_tree
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -86,7 +87,9 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
                 if os.path.isfile(os.path.join(tmpdir, inpath)):
                     _copyfile(os.path.join(tmpdir, inpath), outpath)
                 else:
-                    print('WARNING:  {} not in {}'.format(inpath, filename))
+                    print('WARNING:  "{}" not found in "{}"'.format(
+                          os.path.relpath(inpath, tmpdir),
+                          os.path.basename(filename)))
 
 
 def unpack_anything(filename, tmpdir):
@@ -121,21 +124,19 @@ def unpack_anything(filename, tmpdir):
         rarfile.RarFile(filename).extractall(tmpdir)
         return True
     elif filename.endswith('.7z') or filename.endswith('.7zip'):
-        if paths.HOST_OS == 'win':
+        exe = '7z'
+        if sys.platform in ('win32', 'cygwin'):
             exe = r'C:\Program Files\7-Zip\7z.exe'
             if not os.path.isfile(exe):
                 exe = exe.replace('Program Files', 'Program Files (x86)')
-                if not os.path.isfile(exe):
-                    print('7z.exe unavailable; install 7zip and try again...')
-                    return False
-            try:
-                args = '"{}" x "{}" -o"{}"'.format(exe, filename, tmpdir)
-                subprocess.run(args, check=True, stdout=subprocess.DEVNULL)
-                return True
-            except subprocess.CalledProcessError as e:
-                print('ERROR: 7z.exe failed to extract ' + filename)
-                print(e.stderr)
-                return False
+        try:
+            args = '"{}" x "{}" -o"{}"'.format(exe, filename, tmpdir)
+            subprocess.run(args, check=True, stdout=subprocess.DEVNULL)
+            return True
+        except subprocess.CalledProcessError as e:
+            print('ERROR: 7z failed to extract ' + filename)
+            print(e.stderr)
+            return False
     print('Error: skipping unsupported archive format ' + filename)
     return False
 
