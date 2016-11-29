@@ -11,11 +11,11 @@ default_graphics: Phoebus
 forum_post: |
     The Starter Pack has updated to {PACK_VERSION}!
     As usual, [url={LINK}]you can get it here.[/url]
-    
+    _
     {CHANGELOG}
-    
+    _
     SHA256:  {CHECKSUM}
-    
+    _
     [i]If you want to say thanks, check out [url=https://www.patreon.com/bay12games]Toady's Patreon[/url], or even [url=https://www.patreon.com/PeridexisErrant]mine![/url][/i]  ;D
 # Use latest DF version, or override to match DFHack?
 force_dfhack_compatible: True

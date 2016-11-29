@@ -204,13 +204,11 @@ class ManualMetadata(AbstractMetadata):
 
 
 def df_dl_from_ver(ver):
-    url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
-    tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
     _, vmaj, vmin = ver.split('.')
-    platform = paths.HOST_OS
-    if paths.BITS == '32' and ver > '0.43.03':
-        platform += '32'
-    return url.format(vmaj, vmin, paths.HOST_OS, tail)
+    return 'http://bay12games.com/dwarves/df_{vmaj}_{vmin}_{os}{_32}.{ext}'\
+        .format(vmaj=vmaj, vmin=vmin, os=paths.HOST_OS,
+                _32='32' if paths.BITS == '32' and ver > '0.43.03' else '',
+                ext='zip' if paths.HOST_OS == 'win' else 'tar.bz2')
 
 
 class DFMetadata(AbstractMetadata):
