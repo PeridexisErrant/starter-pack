@@ -11,6 +11,9 @@ import yaml
 from . import paths
 
 
+ALLOW_PRERELEASE = paths.CONFIG.get('allow_prerelease_components', False)
+
+
 def get_ok(*args, **kwargs):
     """requests.get plus raise_for_status"""
     r = requests.get(*args, **kwargs)
@@ -45,15 +48,17 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
             yaml.dump(saved, f, indent=4)
 
     def wrapper(self, ident):
-        last_tstamp = saved.get('timestamps', {}).get(ident, 0)
-        if (time.time() - last_tstamp) > 60*60:
-            if not isinstance(self, GitHubAssetMetadata):
-                saved['metadata'][ident] = method(self, ident)
-            else:
-                saved['metadata'][ident] = method(
-                    self, ident, last_tstamp, saved['metadata'].get(ident))
-            saved['timestamps'][ident] = time.time()
-        return saved['metadata'][ident]
+        key, args = ident, (self, ident)
+        if isinstance(self, GitHubAssetMetadata):
+            key = (ALLOW_PRERELEASE, ident)
+            args = (self, ident, saved['timestamps'].get(key, 0),
+                    saved['metadata'].get(ident))
+        if (time.time() - saved['timestamps'].get(key, 0)) > 30*60:
+            new_json = method(*args)
+            if new_json is not None:
+                saved['metadata'][key] = new_json
+                saved['timestamps'][key] = time.time()
+        return saved['metadata'].get(key)
     return wrapper
 
 
@@ -124,7 +129,9 @@ class GitHubAssetMetadata(AbstractMetadata):
     @cache
     def json(self, repo, last_timestamp=None, last_json=None):
         """Return JSON payload, or None if not modified since timestamp."""
-        url = 'https://api.github.com/repos/{}/releases/latest'.format(repo)
+        url = 'https://api.github.com/repos/{}/releases'.format(repo)
+        if not ALLOW_PRERELEASE:
+            url += '/latest'
         header = {'If-Modified-Since': datetime.datetime.fromtimestamp(
             last_timestamp, datetime.timezone.utc).strftime(
                 '%a, %d %b %Y %H:%M:%S GMT')}
@@ -132,6 +139,8 @@ class GitHubAssetMetadata(AbstractMetadata):
         if req.status_code == 304:
             return last_json
         resp = req.json()
+        if ALLOW_PRERELEASE:
+            resp = resp[0]
 
         assets = [r['browser_download_url'] for r in resp['assets']]
         return {'version': resp['tag_name'].strip(),
