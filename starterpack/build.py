@@ -312,9 +312,6 @@ def build_lnp_dirs():
 
 def build_df():
     """Set up DF dir with DFHack config, install graphics, etc."""
-    # 0.42.03 bug - can't save macros without this dir; breaks Quickfort
-    # http://www.bay12games.com/dwarves/mantisbt/view.php?id=9398
-    os.makedirs(paths.df('data', 'init', 'macros'), exist_ok=True)
     # Several utilities assume gamelog.txt exists and misbehave otherwise
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')
@@ -333,13 +330,10 @@ def build_df():
                           ignore_errors=True)
         else:
             print('WARNING: DFHack distributed without html docs.')
-        if hack.version != '0.43.03-r1':
-            # if https://github.com/DFHack/dfhack/pull/970 is merged, much
-            # of ../base/extras/dfhack_PeridexisErrant.init can be removed.
-            raise DeprecationWarning('Init changes been merged')
+        if hack.version >= '0.43.05-r0' or \
+                component.ALL.get('TwbT').version > 'v5.70':
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
-            # pylint:disable=unreachable
             raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')

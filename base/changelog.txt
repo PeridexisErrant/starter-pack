@@ -1,4 +1,8 @@
-0.43.03-r10
+0.43.05-r01
+ - updated Dwarf Fortress (but still 32bit for now)
+ - updated DFHack
+ - updated Meph's tileset
+ - changed job automation from "autolabor" to "labormanager" (new plugin)
 
 0.43.03-r09
  - remove min_version specifier that was disabling some graphics packs

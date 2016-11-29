@@ -125,6 +125,12 @@ utilities:
         requires_bits: "64"
         manifest:
             tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
+    World Viewer 32:
+        bay12: 128932
+        ident: 7851
+        requires_bits: "32"
+        manifest:
+            tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
 graphics:
     CLA:
         bay12: 105376

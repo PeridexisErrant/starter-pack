@@ -6,19 +6,3 @@ multilevel 0
 # worth keeping Workflow keybindings for a while longer, IMO
 keybinding add Alt-W@dwarfmode/QueryBuilding/Some/Workshop/Job gui/workflow
 keybinding add Alt-W@overallstatus "gui/workflow status"
-
-
-## Should-be-default init things
-
-# add fertility indicator to nestboxes
-tweak eggs-fertile
-
-# Lethosor's scripts are part of DFHack, but not activated
-keybinding add Alt-S@title gui/settings-manager
-keybinding add Alt-S@dwarfmode/Default gui/settings-manager
-
-# UI improvement for embark screen; 'sand mouse' are done in default dfhack.init
-embark-tools enable sticky
-
-# extended status screen (bedrooms page)
-enable gui/extended-status
