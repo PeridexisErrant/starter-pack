@@ -9,6 +9,7 @@ from distutils.dir_util import copy_tree
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -42,24 +43,18 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     print('{:28}  ->  {}'.format(os.path.basename(filename)[:28],
                                  os.path.relpath(out, paths.build())))
 
-    if not zipfile.is_zipfile(filename) or filename.endswith('.exe'):
+    if path_pairs is not None or filename.endswith('.exe') \
+            or not zipfile.is_zipfile(filename):
+        # ensures consistent handling for path_pairs
         return nonzip_extract(filename, target_dir, path_pairs)
     # More complex, but faster for zips to do it this way
     with zipfile.ZipFile(filename) as zf:
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
                      if not a[0].endswith('/'))
-        if path_pairs is not None:
-            for inpath, outpath in path_pairs:
-                if inpath in files:
-                    _copyfile(zf.open(files[inpath]), outpath)
-                else:
-                    print('WARNING:  {} not in {}'.format(
-                        inpath, os.path.basename(filename)))
-        else:
-            prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
-            for name in files:
-                out = os.path.join(target_dir, os.path.relpath(name, prefix))
-                _copyfile(zf.open(files[name]), out)
+        prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
+        for name in files:
+            out = os.path.join(target_dir, os.path.relpath(name, prefix))
+            _copyfile(zf.open(files[name]), out)
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
@@ -79,17 +74,22 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
         if not unpack_anything(filename, tmpdir):
             return
         # Copy from tempdir to destination
+        files = [os.path.join(root, f)
+                 for root, _, files in os.walk(tmpdir) for f in files]
+        prefix = os.path.commonpath(files) if len(files) > 1 else ''
         if target_dir:
-            files = [os.path.join(root, f)
-                     for root, _, files in os.walk(tmpdir) for f in files]
-            prefix = os.path.commonpath(files) if len(files) > 1 else ''
             copy_tree(os.path.join(tmpdir, prefix), target_dir)
         else:
             for inpath, outpath in path_pairs:
+                inpath = os.path.join(prefix, inpath)
+                if outpath.endswith('/'):
+                    outpath += os.path.basename(inpath)
                 if os.path.isfile(os.path.join(tmpdir, inpath)):
                     _copyfile(os.path.join(tmpdir, inpath), outpath)
                 else:
-                    print('WARNING:  {} not in {}'.format(inpath, filename))
+                    print('WARNING:  "{}" not found in "{}"'.format(
+                          os.path.relpath(inpath, tmpdir),
+                          os.path.basename(filename)))
 
 
 def unpack_anything(filename, tmpdir):
@@ -101,15 +101,17 @@ def unpack_anything(filename, tmpdir):
     elif zipfile.is_zipfile(filename):
         # Uses fast version above; handled here for completeness
         zipfile.ZipFile(filename).extractall(tmpdir)
+        return True
     elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
             or tarfile.is_tarfile(filename):
         try:
             tarfile.TarFile(filename).extractall(tmpdir)
+            return True
         except tarfile.ReadError:
             try:
                 subprocess.run(['tar', '-xf', filename, '-C', tmpdir],
                                check=True)
-            except Exception:  # pylint:disable=broad-except
+            except subprocess.CalledProcessError:
                 print('ERROR: could not extract ' + filename +
                       ' by tarfile lib or `tar` in shell')
                 return False
@@ -120,10 +122,23 @@ def unpack_anything(filename, tmpdir):
             print('ERROR: .rar not supported; `pip install rarfile` and retry')
             return False
         rarfile.RarFile(filename).extractall(tmpdir)
-    else:
-        print('Error: skipping unsupported archive format ' + filename)
-        return False
-    return True
+        return True
+    elif filename.endswith('.7z') or filename.endswith('.7zip'):
+        exe = '7z'
+        if sys.platform in ('win32', 'cygwin'):
+            exe = r'C:\Program Files\7-Zip\7z.exe'
+            if not os.path.isfile(exe):
+                exe = exe.replace('Program Files', 'Program Files (x86)')
+        try:
+            args = '"{}" x "{}" -o"{}"'.format(exe, filename, tmpdir)
+            subprocess.run(args, check=True, stdout=subprocess.DEVNULL)
+            return True
+        except subprocess.CalledProcessError as e:
+            print('ERROR: 7z failed to extract ' + filename)
+            print(e.stderr)
+            return False
+    print('Error: skipping unsupported archive format ' + filename)
+    return False
 
 
 def extract_comp(pool, comp):
@@ -173,7 +188,7 @@ def add_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
     # Should use https://github.com/Lazy-Newb-Pack/LNP-shared-core someday...
     for d in ('colors', 'embarks', 'extras', 'keybinds', 'tilesets'):
-        shutil.copytree(paths.base(d), paths.lnp(d))
+        copy_tree(paths.base(d), paths.lnp(d))
 
 
 def main():

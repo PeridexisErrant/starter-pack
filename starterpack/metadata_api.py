@@ -11,6 +11,9 @@ import yaml
 from . import paths
 
 
+ALLOW_PRERELEASE = paths.CONFIG.get('allow_prerelease_components', False)
+
+
 def get_ok(*args, **kwargs):
     """requests.get plus raise_for_status"""
     r = requests.get(*args, **kwargs)
@@ -45,15 +48,17 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
             yaml.dump(saved, f, indent=4)
 
     def wrapper(self, ident):
-        last_tstamp = saved.get('timestamps', {}).get(ident, 0)
-        if (time.time() - last_tstamp) > 60*60:
-            if not isinstance(self, GitHubMetadata):
-                saved['metadata'][ident] = method(self, ident)
-            else:
-                saved['metadata'][ident] = method(
-                    self, ident, last_tstamp, saved['metadata'].get(ident))
-            saved['timestamps'][ident] = time.time()
-        return saved['metadata'][ident]
+        key, args = ident, (self, ident)
+        if isinstance(self, GitHubAssetMetadata):
+            key = (ALLOW_PRERELEASE, ident)
+            args = (self, ident, saved['timestamps'].get(key, 0),
+                    saved['metadata'].get(ident))
+        if (time.time() - saved['timestamps'].get(key, 0)) > 30*60:
+            new_json = method(*args)
+            if new_json is not None:
+                saved['metadata'][key] = new_json
+                saved['timestamps'][key] = time.time()
+        return saved['metadata'].get(key)
     return wrapper
 
 
@@ -64,16 +69,21 @@ def days_ago(func):
     return _inner
 
 
-def best_asset(fname_list, bitted_64=True):
+def best_asset(fname_list):
     """Return a dict of the best asset from the list for each OS."""
-    asst = {'win': None, 'osx': None, 'linux': None}
     def fname(a):
         return os.path.basename(a).lower()
-    for k in asst:
-        os_files = [a for a in fname_list
-                    if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
-        os64_files = [a for a in os_files if bitted_64 and '64' in fname(a)]
-        asst[k] = (os64_files or os_files or fname_list)[0]
+
+    asst = {}
+    for bits in ('32', '64'):
+        wrong_bits = ['32', '64'][bits == '32']
+        for k in ('win', 'osx', 'linux'):
+            os_files = [a for a in fname_list
+                        if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
+            un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
+            bitted = [a for a in os_files if bits in fname(a)]
+            lst = bitted or un_bitted or os_files or fname_list
+            asst[(k, bits)] = lst[0] if lst else None
     return asst
 
 
@@ -102,7 +112,8 @@ class DFFDMetadata(AbstractMetadata):
             'http://dffd.bay12games.com/file_data/{}.json'.format(ID)).json()
 
     def filename(self, ID):
-        return self.json(ID)['filename']
+        return self.json(ID).get('filename',
+                                 'dffd_{}_{}'.format(ID, self.version(ID)))
 
     def dl_link(self, ID):
         return 'http://dffd.bay12games.com/download.php?id={}&f=b'.format(ID)
@@ -113,30 +124,32 @@ class DFFDMetadata(AbstractMetadata):
             float(self.json(ID)['updated_timestamp']))
 
 
-def hit_gh_api(slug, timestamp, endpoint='releases'):
-    """Return JSON payload, or None if not modified since timestamp."""
-    url = 'https://api.github.com/repos/{}/{}'.format(slug, endpoint)
-    utc = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc)
-    gmt_str = utc.strftime('%a, %d %b %Y %H:%M:%S') + ' GMT'
-    req = get_ok(url, auth=get_auth(), headers={'If-Modified-Since': gmt_str})
-    return req.json() if req.status_code != 304 else None
-
-
-class GitHubMetadata(AbstractMetadata):
+class GitHubAssetMetadata(AbstractMetadata):
     # pylint:disable=arguments-differ
     @cache
-    def json(self, repo, last_timestamp, last_json):
-        resp = hit_gh_api(repo, last_timestamp)
-        if resp is None:
-            # fixme:  /releases endpoint does not support last-modified header
+    def json(self, repo, last_timestamp=None, last_json=None):
+        """Return JSON payload, or None if not modified since timestamp."""
+        url = 'https://api.github.com/repos/{}/releases'.format(repo)
+        if not ALLOW_PRERELEASE:
+            url += '/latest'
+        header = {'If-Modified-Since': datetime.datetime.fromtimestamp(
+            last_timestamp, datetime.timezone.utc).strftime(
+                '%a, %d %b %Y %H:%M:%S GMT')}
+        req = get_ok(url, auth=get_auth(), headers=header)
+        if req.status_code == 304:
             return last_json
-        assets = [r['browser_download_url'] for r in resp[0]['assets']]
-        return {'version': resp[0]['tag_name'].strip(),
-                'published_at': resp[0]['published_at'],
-                'assets': best_asset(assets)}
+        resp = req.json()
+        if ALLOW_PRERELEASE:
+            resp = resp[0]
+
+        assets = [r['browser_download_url'] for r in resp['assets']]
+        return {'version': resp['tag_name'].strip(),
+                'published_at': resp['published_at'],
+                'assets': best_asset(assets),
+                'zipball_url': resp['zipball_url']}
 
     def dl_link(self, repo):
-        return self.json(repo)['assets'][paths.HOST_OS]
+        return self.json(repo)['assets'][(paths.HOST_OS, paths.BITS)]
 
     @days_ago
     def days_since_update(self, repo):
@@ -144,17 +157,9 @@ class GitHubMetadata(AbstractMetadata):
             self.json(repo)['published_at'], '%Y-%m-%dT%H:%M:%SZ')
 
 
-class GitHubTagMetadata(GitHubMetadata):
-    @cache
-    def json(self, repo, last_timestamp=None, last_json=None):
-        tag = hit_gh_api(repo, last_timestamp, endpoint='tags')
-        if tag is None:
-            return last_json
-        pubdate = get_ok(tag[0]['commit']['url'], auth=get_auth())
-        return {'version': tag[0]['name'], 'dl_link': tag[0]['zipball_url'],
-                'published_at': pubdate.json()['commit']['author']['date']}
-
-    dl_link = AbstractMetadata.dl_link
+class GitHubZipballMetadata(GitHubAssetMetadata):
+    def dl_link(self, repo):
+        return self.json(repo)['zipball_url']
 
     def filename(self, repo):
         return '{}_{}.zip'.format(
@@ -177,12 +182,12 @@ class BitbucketMetadata(AbstractMetadata):
         base = self.filename(repo).replace('PyLNP_', '').replace('tar.', '')
         return os.path.splitext(base)[0].split('-')[0]
 
-    dl_link = GitHubMetadata.dl_link
+    dl_link = GitHubAssetMetadata.dl_link
 
     @days_ago
     def days_since_update(self, repo):
         return datetime.datetime.strptime(
-            self.json(repo)['times'][paths.HOST_OS]
+            self.json(repo)['times'][(paths.HOST_OS, paths.BITS)]
             .split('.')[0], '%Y-%m-%dT%H:%M:%S')
 
 
@@ -199,10 +204,11 @@ class ManualMetadata(AbstractMetadata):
 
 
 def df_dl_from_ver(ver):
-    url = 'http://bay12games.com/dwarves/df_{}_{}_{}.{}'
-    tail = 'zip' if paths.HOST_OS == 'win' else 'tar.bz2'
     _, vmaj, vmin = ver.split('.')
-    return url.format(vmaj, vmin, paths.HOST_OS, tail)
+    return 'http://bay12games.com/dwarves/df_{vmaj}_{vmin}_{os}{_32}.{ext}'\
+        .format(vmaj=vmaj, vmin=vmin, os=paths.HOST_OS,
+                _32='32' if paths.BITS == '32' and ver > '0.43.03' else '',
+                ext='zip' if paths.HOST_OS == 'win' else 'tar.bz2')
 
 
 class DFMetadata(AbstractMetadata):
@@ -226,8 +232,8 @@ class DFMetadata(AbstractMetadata):
 
 METADATA_TYPES = {
     'dffd': DFFDMetadata,
-    'github': GitHubMetadata,
-    'github/tag': GitHubTagMetadata,
+    'github-asset': GitHubAssetMetadata,
+    'github-source': GitHubZipballMetadata,
     'bitbucket': BitbucketMetadata,
     'manual': ManualMetadata,
     'special': DFMetadata,

@@ -64,8 +64,11 @@ def fixup_manifest(filename, comp, **kwargs):
         if k in file_man:
             print('WARNING:  {}: {} is provided upstream'.format(filename, k))
     # Warn about and discard incompatibility flag
-    maxver = manifest.get('df_max_version', '1')
-    if maxver and maxver < paths.df_ver():
+    if (manifest.get('df_max_version') or '0') > paths.df_ver():
+        print('WARNING: overriding df_min_version {} for {}'.format(
+            manifest.get('df_min_version'), comp.name))
+        manifest.pop('df_min_version', None)
+    if (manifest.get('df_max_version') or '1') < paths.df_ver():
         print('WARNING: overriding df_max_version {} for {}'.format(
             manifest.get('df_max_version'), comp.name))
         manifest.pop('df_max_version', None)
@@ -135,7 +138,9 @@ def _armok_vision_plugin():
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
-    print('starting DT')
+    if 'Dwarf Therapist' in component.ALL and \
+            component.ALL['Dwarf Therapist'].version != 'v37.0.0':
+        raise DeprecationWarning('Need to handle 64-bit therapist.ini')
     if not os.path.isdir(paths.utilities('Dwarf Therapist')):
         return
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
@@ -146,7 +151,6 @@ def _therapist_ini():
         }[paths.HOST_OS].format(*paths.df_ver(as_string=False))
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
-    print(util_path)
     if not os.path.isfile(util_path):
         url = ('https://raw.githubusercontent.com/splintermind/'
                'Dwarf-Therapist/DF2016/share/memory_layouts/{}/{}')
@@ -308,9 +312,6 @@ def build_lnp_dirs():
 
 def build_df():
     """Set up DF dir with DFHack config, install graphics, etc."""
-    # 0.42.03 bug - can't save macros without this dir; breaks Quickfort
-    # http://www.bay12games.com/dwarves/mantisbt/view.php?id=9398
-    os.makedirs(paths.df('data', 'init', 'macros'), exist_ok=True)
     # Several utilities assume gamelog.txt exists and misbehave otherwise
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')
@@ -329,13 +330,10 @@ def build_df():
                           ignore_errors=True)
         else:
             print('WARNING: DFHack distributed without html docs.')
-        if hack.version != '0.43.03-r1':
-            # if https://github.com/DFHack/dfhack/pull/970 is merged, much
-            # of ../base/extras/dfhack_PeridexisErrant.init can be removed.
-            raise DeprecationWarning('Init changes been merged')
+        if hack.version >= '0.43.05-r0' or \
+                component.ALL.get('TwbT').version > 'v5.70':
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
-            # pylint:disable=unreachable
             raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')

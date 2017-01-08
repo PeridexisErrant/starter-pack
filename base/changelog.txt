@@ -1,5 +1,30 @@
+0.43.05-r01
+ - updated Dwarf Fortress (but still 32bit for now)
+ - updated DFHack
+ - updated Meph's tileset
+ - changed job automation from "autolabor" to "labormanager" (new plugin)
+
+0.43.03-r09
+ - remove min_version specifier that was disabling some graphics packs
+
+0.43.03-r08
+ - updated Armok Vision
+ - updated TwbT; fixed many crashes
+ - updated Ironhand graphics
+ - updated Spacefox graphics
+ - updated Mayday graphics
+ - updated GemSet graphics
+ - updated Obsidian graphics
+ - updated Taffer's tilesets
+ - added Meph's tileset
+
 0.43.03-r07
  - removed Announcement Window due to constant messages about virus reports
+ - updated Taffer's tilesets
+ - updated CLA graphics
+ - updated Dwarf Portrait
+ - updated PyLNP (bugfixes)
+ - updated Armok Vision (splatters, fallen leaves, etc)
 
 0.43.03-r06
  - fixed Dwarf Therapist (missing memory layout)

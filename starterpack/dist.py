@@ -78,9 +78,11 @@ def release_docs():
         'LINK': 'http://dffd.bay12games.com/file.php?id=' + dffd_id,
         'CHANGELOG': changes,
         'CHECKSUM': sha256.hexdigest(),
+        'BITS': paths.BITS,
         }
     with open(paths.dist('forum_post.txt'), 'w') as f:
-        f.write(paths.CONFIG.get('forum_post', '').format(**post_kwargs))
+        f.write(paths.CONFIG.get('forum_post', '')
+                .replace('_\n', '\n').format(**post_kwargs))
 
 
 def main():
