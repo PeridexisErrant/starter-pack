@@ -49,9 +49,9 @@ dfhack:
             DFHack fixes to run regularly, changes the game a little but helps a lot on old or slow hardware.
             (fast-heat, dump worn items, remove all contaminants)
     Automatic Job Assignments:
-        command: enable labormanager
+        command: enable autolabor
         file: onMapLoad
-        tooltip: The labormanager plugin automates job assignments, replacing tools such as Dwarf Therapist
+        tooltip: The autolabor plugin automates job assignments, replacing tools such as Dwarf Therapist
 folders:
     - [Main folder, ""]
     - [Dwarf Fortress folder, <df>]

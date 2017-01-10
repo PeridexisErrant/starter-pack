@@ -1,8 +1,8 @@
-0.43.05-r01
- - updated Dwarf Fortress (but still 32bit for now)
- - updated DFHack
- - updated Meph's tileset
- - changed job automation from "autolabor" to "labormanager" (new plugin)
+0.43.03-r10
+ - updated Meph's graphics pack
+ - removed Taffer's serif tileset (kept default sans-serif)
+ - updated Spacefox with some new creature graphics
+ - updated Armok Vision
 
 0.43.03-r09
  - remove min_version specifier that was disabling some graphics packs

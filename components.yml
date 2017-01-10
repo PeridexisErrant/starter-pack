@@ -33,11 +33,9 @@ files:
         host: github-source
         ident: nc-z/taffer
         extract_to: |
-            taffer/colours/pastel/data/init/colors.txt:lnp/colors/Taffer_Pastel.txt
-            taffer/tilesets/default_10x10/sans_serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer10x10_Sans_HSWalls.png
-            taffer/tilesets/default_10x10/serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer10x10_Serif_HSWalls.png
-            taffer/tilesets/default_20x20/sans_serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer20x20_Sans_HSWalls.png
-            taffer/tilesets/default_20x20/serif/hollow_walls/straight_walls/data/art/taffer.png:lnp/tilesets/Taffer20x20_Serif_HSWalls.png
+            10x/taffer/colours/pastel/data/init/colors.txt:lnp/colors/Taffer_Pastel.txt
+            10x/data/art/taffer.png:lnp/tilesets/Taffer_10px.png
+            20x/data/art/taffer.png:lnp/tilesets/Taffer_20px.png
     TwbT:
         bay12: 138754
         ident: mifki/df-twbt
@@ -130,7 +128,7 @@ utilities:
         ident: 7851
         requires_bits: "32"
         manifest:
-            tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
+            tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".
 graphics:
     CLA:
         bay12: 105376

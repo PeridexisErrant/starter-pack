@@ -335,6 +335,8 @@ def build_df():
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
             raise DeprecationWarning('Does TwbT still supply other plugins?')
+        if hack.version >= '0.43.05-r0':
+            raise DeprecationWarning('Switch job assignments to labormanager')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')
     if pack in os.listdir(paths.graphics()):
