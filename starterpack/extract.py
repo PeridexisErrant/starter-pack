@@ -81,15 +81,13 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
             copy_tree(os.path.join(tmpdir, prefix), target_dir)
         else:
             for inpath, outpath in path_pairs:
-                inpath = os.path.join(prefix, inpath)
                 if outpath.endswith('/'):
                     outpath += os.path.basename(inpath)
-                if os.path.isfile(os.path.join(tmpdir, inpath)):
-                    _copyfile(os.path.join(tmpdir, inpath), outpath)
+                if os.path.isfile(os.path.join(tmpdir, prefix, inpath)):
+                    _copyfile(os.path.join(tmpdir, prefix, inpath), outpath)
                 else:
                     print('WARNING:  "{}" not found in "{}"'.format(
-                          os.path.relpath(inpath, tmpdir),
-                          os.path.basename(filename)))
+                          inpath, os.path.basename(filename)))
 
 
 def unpack_anything(filename, tmpdir):
@@ -164,10 +162,14 @@ def extract_everything():
     def q_key(comp):
         """Decide extract priority by pointer-chase depth, filesize in ties."""
         after = {c.install_after: c.name for c in component.ALL.values()}
-        name, score = comp.name, 0
+        name, seen = comp.name, []
         while name in after:
-            name, score = after.get(name), score + 1
-        return score, os.path.getsize(comp.path)
+            seen.append(name)
+            name = after.get(name)
+            if name in seen:
+                raise ValueError('Cyclic "install_after" config detected: ' +
+                                 ' -> '.join(seen + [name]))
+        return len(seen), os.path.getsize(comp.path)
 
     queue = list(component.ALL.values()) + [
         component.ALL['Dwarf Fortress']._replace(name=path, extract_to=path)
