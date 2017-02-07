@@ -5,9 +5,10 @@ This project is NOT an actual pack, or intended for public use.
 
 See the [hourly build log here](http://peridexiserrant.neocities.org/starter-pack.log.txt).
 
-There is *no support* for using this tool.  Do not ask questions or ask for features.
-(bug reports are welcome though!)  This tool is designed to help me keep
-things up to date, and maybe other pack maintainers will find it useful.
+There is *no support* for using this tool - it is designed for my own use,
+and released in the hope that others might find it useful.
+Bug reports are most welcome; feature requests are not
+(missing OS support is considered a bug - it should work on Windows, OSX, and Linux).
 
 **What it does:**
 
@@ -31,7 +32,7 @@ For anyone using these tools to assemble their own pack:
   (https://creativecommons.org/licenses/by-sa/4.0).
 
   Any outputs you produce with this software are entirely your
-  own, subject to licenses of the componentes you downloaded.
+  own, subject to licenses of the components you downloaded.
   The pack I publish is shared under the informal system above.
 
 - Check out `config.yml` and `components.yml`.  The system is
