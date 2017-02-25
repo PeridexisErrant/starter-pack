@@ -84,3 +84,8 @@ def zipped():
 def base(*paths):
     """Return the path to the persistent content directory."""
     return os.path.join('base', *paths)
+
+
+def components(*paths):
+    """Return the path to the downloaded components cache dir."""
+    return os.path.join('components', *paths)

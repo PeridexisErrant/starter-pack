@@ -52,8 +52,8 @@ def download(c):
 
 def download_files():
     """Download files which are in config.yml, but not saved in components."""
-    if not os.path.isdir('components'):
-        os.mkdir('components')
+    if not os.path.isdir(paths.components()):
+        os.mkdir(paths.components())
     with concurrent.futures.ThreadPoolExecutor() as executor:
         executor.map(download, ALL.values(), timeout=60)
 
@@ -96,7 +96,7 @@ def _component(data):
         return _template(
             category,
             item,
-            os.path.join('components', meta.filename(ident)),
+            paths.components(meta.filename(ident)),
             meta.filename(ident),
             meta.dl_link(ident),
             meta.version(ident),
@@ -139,7 +139,7 @@ def get_globals():
                 all_comps['Dwarf Fortress'] = \
                     all_comps['Dwarf Fortress']._replace(
                         version=target_ver, dl_link=link, filename=fname,
-                        path=os.path.join('components', fname))
+                        path=paths.components(fname))
             else:
                 print('Cannot force invalid DF version ' + target_ver)
     # Skip over DFHack-requiring entries if DFHack is not configured

@@ -3,7 +3,7 @@
 _*
 
 # All the downloaded utilities etc go here
-components/
+components*/
 
 # No need to track the assembled or compressed pack
 build/

@@ -164,7 +164,7 @@ def _therapist_ini():
     if not os.path.isfile(util_path):
         url = ('https://raw.githubusercontent.com/splintermind/'
                'Dwarf-Therapist/DF2016/share/memory_layouts/{}/{}')
-        comp_path = os.path.join('components', fname)
+        comp_path = paths.components(fname)
         try:
             if not os.path.isfile(comp_path):
                 component.raw_dl(url.format(dirname, fname), comp_path)
