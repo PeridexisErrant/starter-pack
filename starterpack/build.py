@@ -138,11 +138,21 @@ def _armok_vision_plugin():
 
 def _therapist_ini():
     """Ensure memory layout for Dwarf Therapist is present."""
-    if 'Dwarf Therapist' in component.ALL and \
-            component.ALL['Dwarf Therapist'].version != 'v37.0.0':
-        raise DeprecationWarning('Need to handle 64-bit therapist.ini')
+    def teardown(message):
+        print('WARNING:  {}, removing DT...'.format(message))
+        therapist = component.ALL.pop('Dwarf Therapist')
+        component.UTILITIES.remove(therapist)
+        shutil.rmtree(paths.utilities('Dwarf Therapist'))
+
     if not os.path.isdir(paths.utilities('Dwarf Therapist')):
         return
+    if paths.BITS == '64' and \
+            component.ALL['Dwarf Therapist'].version == 'v37.0.0':
+        return teardown('Therapist does not support 64bit')
+    elif component.ALL['Dwarf Therapist'].version > 'v37.0.0':
+        raise DeprecationWarning('Need to handle 64-bit therapist.ini')
+
+
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     fname = {
         'win': 'v0.{}.{}_graphics.ini',
@@ -160,10 +170,7 @@ def _therapist_ini():
                 component.raw_dl(url.format(dirname, fname), comp_path)
             shutil.copy(comp_path, util_path)
         except Exception:  # pylint:disable=broad-except
-            print('WARNING:  no Therapist memory layout, removing DT...')
-            therapist = component.ALL.pop('Dwarf Therapist')
-            component.UTILITIES.remove(therapist)
-            shutil.rmtree(paths.utilities('Dwarf Therapist'))
+            teardown('no Therapist memory layout')
 
 
 def _exes_for(util):
@@ -331,7 +338,7 @@ def build_df():
         else:
             print('WARNING: DFHack distributed without html docs.')
         if hack.version >= '0.43.05-r0' or \
-                component.ALL.get('TwbT').version > 'v5.70':
+                component.ALL.get('TwbT').version > 'v5.77':
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
             raise DeprecationWarning('Does TwbT still supply other plugins?')
