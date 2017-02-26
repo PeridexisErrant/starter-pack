@@ -1,6 +1,7 @@
 """Utility methods to get various paths.  Acts as a single source of truth."""
 # pylint:disable=missing-docstring,cyclic-import
 
+import argparse
 from contextlib import suppress
 import os
 import sys
@@ -12,15 +13,25 @@ CONFIG = {}
 with suppress(IOError):
     with open('config.yml') as ymlf:
         CONFIG = yaml.safe_load(ymlf)
-BITS = str(CONFIG.pop('desired_bits', '64'))
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--os', choices=['win', 'linux', 'osx'],
+                    default=CONFIG.get('os') or {
+                    'linux': 'linux',  'win32': 'win',
+                    'cygwin': 'win', 'darwin': 'osx'}[sys.platform])
+parser.add_argument('--bits', choices=['32', '64',],
+                    default=str(CONFIG.pop('desired_bits', '64')))
+parser.add_argument('--prerelease-components', action='store_true',
+                    default=CONFIG.get('allow_prerelease_components', False))
+parser.add_argument('--prerelease-components', action='store_true',
+                    default=CONFIG.get('allow_prerelease_components', False))
+parser.add_argument('--pack-release', action='store_true')
+ARGS = parser.parse_args()
+
+BITS = ARGS.bits
 assert BITS in ('32', '64')
 
-HOST_OS = CONFIG.get('os') or {
-    'linux': 'linux',
-    'win32': 'win',
-    'cygwin': 'win',
-    'darwin': 'osx',
-    }[sys.platform]
+HOST_OS = ARGS.os
 
 
 def df_ver(as_string=True):

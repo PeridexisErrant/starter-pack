@@ -219,6 +219,8 @@ def _twbt_settings(pack):
     leave_text_tiles = ('CLA', 'DungeonSet')
     if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
         return
+    if component.ALL.get('TwbT').version >= 'v5.77' and paths.BITS != '64':
+        raise RuntimeError('This version of TwbT does not support 32-bit.')
     init_file = paths.graphics(pack, 'data', 'init', 'init.txt')
     with open(init_file) as f:
         init = f.readlines()
