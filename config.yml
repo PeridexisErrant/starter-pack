@@ -20,4 +20,4 @@ forum_post: |
 # Use latest DF version, or override to match DFHack?
 force_dfhack_compatible: True
 # Are alpha releases OK?  (GitHub only; False for stable packs)
-allow_prerelease_components: True
+allow_prerelease_components: False

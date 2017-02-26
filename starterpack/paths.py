@@ -21,10 +21,11 @@ parser.add_argument('--os', choices=['win', 'linux', 'osx'],
                     'cygwin': 'win', 'darwin': 'osx'}[sys.platform])
 parser.add_argument('--bits', choices=['32', '64',],
                     default=str(CONFIG.pop('desired_bits', '64')))
-parser.add_argument('--prerelease-components', action='store_true',
-                    default=CONFIG.get('allow_prerelease_components', False))
-parser.add_argument('--prerelease-components', action='store_true',
-                    default=CONFIG.get('allow_prerelease_components', False))
+parser.add_argument('--prerelease-components', dest='prerelease',
+                    action='store_true')
+parser.add_argument('--no-prerelease-components', dest='prerelease',
+                    action='store_false')
+parser.set_defaults(prerelease=None)
 parser.add_argument('--pack-release', action='store_true')
 ARGS = parser.parse_args()
 
@@ -32,6 +33,9 @@ BITS = ARGS.bits
 assert BITS in ('32', '64')
 
 HOST_OS = ARGS.os
+
+if ARGS.prerelease is not None:
+    CONFIG['allow_prerelease_components'] = ARGS.prerelease
 
 
 def df_ver(as_string=True):
