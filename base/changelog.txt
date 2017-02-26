@@ -1,3 +1,6 @@
+0.43.05-r02
+ - nothing yet
+
 0.43.05-r01
  - updated Dwarf Fortress: now 64-bit!
  - updated Meph's tileset
