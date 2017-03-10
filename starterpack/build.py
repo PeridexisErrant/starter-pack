@@ -149,16 +149,14 @@ def _therapist_ini():
     if paths.BITS == '64' and \
             component.ALL['Dwarf Therapist'].version == 'v37.0.0':
         return teardown('Therapist does not support 64bit')
-    elif component.ALL['Dwarf Therapist'].version > 'v37.0.0':
-        raise DeprecationWarning('Need to handle 64-bit therapist.ini')
-
 
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     fname = {
-        'win': 'v0.{}.{}_graphics.ini',
+        'win': 'v0.{}.{}_{}graphics.ini',
         'osx': 'v0.{}.{}_osx.ini',
         'linux': 'v0{}.{}.ini'
-        }[paths.HOST_OS].format(*paths.df_ver(as_string=False))
+        }[paths.HOST_OS].format(*paths.df_ver(as_string=False),
+                                '' if paths.BITS == '32' else 'x64')
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):

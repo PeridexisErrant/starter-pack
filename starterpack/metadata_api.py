@@ -196,11 +196,14 @@ class ManualMetadata(AbstractMetadata):
         with open('components.yml') as f:
             for category in yaml.safe_load(f).values():
                 if identifier in category:
-                    return category[identifier]
+                    cfg = category[identifier]
+                    cfg.update(cfg.pop(paths.BITS + 'bit', {}))
+                    return cfg
+        raise ValueError(identifier)
 
     @days_ago
     def days_since_update(self, ID):
-        return self.json(ID)['updated'].date()
+        return datetime.datetime.strptime(self.json(ID)['updated'], '%Y-%m-%d')
 
 
 def df_dl_from_ver(ver):

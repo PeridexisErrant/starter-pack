@@ -82,9 +82,18 @@ class Hashabledict(dict):
 def _component(data):
     """Lighter weight than a class, but still easy to access."""
     category, item, config = data
+    # Merge in the bit-specific config
+    if paths.BITS == '64':
+        config.update(config.pop('64bit', {}))
+        config.pop('32bit', None)
+    else:
+        config.update(config.pop('32bit', {}))
+        config.pop('64bit', None)
+    # Autodetect host
     config['host'] = config.get('host') or (
         'dffd' if isinstance(config.get('ident'), int) else (
             'github-source' if category == 'graphics' else 'github-asset'))
+    # Skip unsupported items
     if str(config.get('requires_bits', paths.BITS)) != paths.BITS:
         return
     ident = item if config['host'] == 'manual' else config['ident']
@@ -109,6 +118,7 @@ def _component(data):
             )
     except Exception:  # pylint:disable=broad-except
         print('ERROR: in {}, check release exists'.format(ident))
+        raise
 
 
 def get_globals():

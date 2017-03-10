@@ -1,5 +1,8 @@
 0.43.05-r02
- - nothing yet
+ - updated Armok Vision
+ - updated Dwarf Therapist: experimental 64bit support, requires https://www.microsoft.com/en-us/download/details.aspx?id=53587
+ - updated Quickfort, unofficial 64bit support
+ - added curses tileset for HD displays
 
 0.43.05-r01
  - updated Dwarf Fortress: now 64-bit!

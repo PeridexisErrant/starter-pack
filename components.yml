@@ -46,6 +46,15 @@ files:
             {DFHACK_VER}/twbt.plug.dll:plugins/
         needs_dfhack: True
         install_after: DFHack
+    Quickfort_64:
+        requires_bits: "64"
+        bay12: "126076.msg7386267#msg7386267"
+        host: manual
+        dl_link: http://download1072.mediafire.com/xywpk44sp8ug/l3t59kdp3uj4s4y/Quickfort_2.04_AHK64bit.zip
+        version: "1"
+        updated: "2017-03-10"
+        extract_to: lnp/utilities/Quickfort
+        install_after: Quickfort
 utilities:
     Armok Vision:
         bay12: 146473
@@ -72,11 +81,18 @@ utilities:
         manifest:
             tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
-        bay12: 122968
-        ident: splintermind/Dwarf-Therapist
-        manifest:
-            readme: doc/Dwarf Therapist.pdf
-            tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
+        32bit:
+            bay12: 122968
+            ident: splintermind/Dwarf-Therapist
+            manifest:
+                readme: doc/Dwarf Therapist.pdf
+                tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
+        64bit:
+            bay12: "122968.msg7386300#msg7386300"
+            host: manual
+            dl_link: https://dl.dropboxusercontent.com/u/94651132/DwarfTherapist43.5.1X64.zip
+            version: "v43.5.1"
+            updated: "2017-03-10"
     Isoworld:
         bay12: 70700
         ident: 3418
@@ -119,14 +135,10 @@ utilities:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
     World Viewer:
         bay12: 128932
-        ident: 11454
-        requires_bits: "64"
-        manifest:
-            tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".  (64bit)
-    World Viewer 32:
-        bay12: 128932
-        ident: 7851
-        requires_bits: "32"
+        32bit:
+            ident: 7851
+        64bit:
+            ident: 11454
         manifest:
             tooltip: Another third-party legends viewer, which takes advantage of extras from DFHack "exportlegends".
 graphics:
