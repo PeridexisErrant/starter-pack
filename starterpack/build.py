@@ -319,6 +319,8 @@ def build_lnp_dirs():
 
 def build_df():
     """Set up DF dir with DFHack config, install graphics, etc."""
+    # Various utilities assume this dir exists, but some DF releases omit it
+    os.makedirs(paths.df('data', 'init', 'macros'), exist_ok=True)
     # Several utilities assume gamelog.txt exists and misbehave otherwise
     with open(paths.df('gamelog.txt'), 'w', encoding='cp437') as f:
         f.write('*** STARTING NEW GAME ***\n')
