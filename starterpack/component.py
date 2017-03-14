@@ -54,8 +54,8 @@ def download_files():
     """Download files which are in config.yml, but not saved in components."""
     if not os.path.isdir(paths.components()):
         os.mkdir(paths.components())
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(download, ALL.values(), timeout=60)
+    with concurrent.futures.ThreadPoolExecutor(10) as executor:
+        executor.map(download, ALL.values(), timeout=180)
 
 
 _template = collections.namedtuple('Component', [
@@ -133,7 +133,7 @@ def get_globals():
             'bay12': '&board=10',
             'extract_to': 'df'}
     items = [(c, i, config[c][i]) for c, v in config.items() for i in v]
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor(5 * os.cpu_count()) as executor:
         results = executor.map(_component, items, timeout=20)
     all_comps = {r.name: r for r in results if r}
     # optionally force DFHack-compatible DF version

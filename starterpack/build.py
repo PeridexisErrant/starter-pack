@@ -52,17 +52,19 @@ def dodgy_json(filename):
 
 def fixup_manifest(filename, comp, **kwargs):
     """Update manifest.json at `filename` with metadata for `comp`."""
-    file_man = {}
-    if os.path.isfile(filename):
-        file_man.update(dodgy_json(filename))
     # overwrite metadata in order: detected, configured, in-code, upstream
     manifest = {'title': comp.name, 'needs_dfhack': comp.needs_dfhack,
-                'content_version': comp.version,
-                **kwargs, **comp.manifest, **file_man}
+                'content_version': comp.version}
+    manifest.update(kwargs)
+    manifest.update(comp.manifest)
     # Report if manifest in components.yml is overriding
+    file_man = {}
+    if os.path.isfile(filename):
+        file_man = dodgy_json(filename)
     for k in comp.manifest:
         if k in file_man:
             print('WARNING:  {}: {} is provided upstream'.format(filename, k))
+    manifest.update(file_man)
     # Warn about and discard incompatibility flag
     if (manifest.get('df_max_version') or '0') > paths.df_ver():
         print('WARNING: overriding df_min_version {} for {}'.format(
@@ -151,12 +153,12 @@ def _therapist_ini():
         return teardown('Therapist does not support 64bit')
 
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
+    ma, mi = paths.df_ver(as_string=False)
     fname = {
         'win': 'v0.{}.{}_{}graphics.ini',
         'osx': 'v0.{}.{}_osx.ini',
         'linux': 'v0{}.{}.ini'
-        }[paths.HOST_OS].format(*paths.df_ver(as_string=False),
-                                '' if paths.BITS == '32' else 'x64')
+        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == '32' else 'x64')
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
