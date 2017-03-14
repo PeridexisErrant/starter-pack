@@ -1,5 +1,5 @@
 0.43.05-r03
- - nothing yet
+ - updated Dwarf Mockup; a large upgrade I missed for a year (oops)
 
 0.43.05-r02
  - updated Armok Vision

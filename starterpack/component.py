@@ -101,6 +101,8 @@ def _component(data):
     forum_url = 'http://www.bay12forums.com/smf/index.php?topic={}'
     if config.get('extract_to') is None and category == 'files':
         print('ERROR - files/{} must set extract_to'.format(item))
+    if config.get('extract_to') is not None and category != 'files':
+        print('ERROR - only files may set extract_to'.format(item))
     try:
         return _template(
             category,

@@ -72,7 +72,8 @@ utilities:
             tooltip: Creates a Minecraft level from exported world maps (dfhack "exportlegends maps" in legends mode).
     Dwarf Mockup:
         bay12: 143546
-        ident: 9654
+        host: bitbucket
+        ident: fredsen/dwarfmockup
         manifest:
             tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
     Dwarf Portrait:
