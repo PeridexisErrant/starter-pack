@@ -67,12 +67,13 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     OSX disk images (.dmg) are also unsupported by Python.
     """
     if filename.endswith('.exe') and paths.HOST_OS == 'win':
-        return _copyfile(
-            filename, os.path.join(target_dir, os.path.basename(filename)))
+        _copyfile(filename,
+                  os.path.join(target_dir, os.path.basename(filename)))
+        return True
 
     with tempfile.TemporaryDirectory() as tmpdir:
         if not unpack_anything(filename, tmpdir):
-            return
+            raise RuntimeError('Could not extract file {}'.format(filename))
         # Copy from tempdir to destination
         files = [os.path.join(root, f)
                  for root, _, files in os.walk(tmpdir) for f in files]
@@ -88,6 +89,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
                 else:
                     print('WARNING:  "{}" not found in "{}"'.format(
                           inpath, os.path.basename(filename)))
+    return True
 
 
 def unpack_anything(filename, tmpdir):
@@ -188,6 +190,9 @@ def extract_everything():
                 else:
                     break  # if there was nothing eligible to extract, sleep
             time.sleep(0.01)
+    failed = [k for k, v in futures.items() if v.exception() is not None]
+    if failed:
+        raise RuntimeError('Could not extract: ' + ', '.join(failed))
 
 
 def add_lnp_dirs():
