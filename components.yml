@@ -22,7 +22,7 @@ files:
         ident: Pidgeot/python-lnp
         extract_to: |
             PyLNP.exe:build/Starter Pack Launcher (PyLNP).exe
-    Stocksettings:
+    Stocksettings presets:
         bay12: 146213
         ident: 10170
         extract_to: df/stocksettings

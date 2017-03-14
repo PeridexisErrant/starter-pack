@@ -52,8 +52,7 @@ def create_about():
 
 def zip_pack():
     """Compress the build dir to a zipped pack."""
-    if not os.path.isdir(paths.dist()):
-        os.makedirs(paths.dist())
+    os.makedirs(paths.dist(), exist_ok=True)
     with zipfile.ZipFile(paths.zipped(), 'w', zipfile.ZIP_DEFLATED) as zf:
         for dirname, _, files in os.walk(paths.build()):
             zf.write(dirname, os.path.relpath(dirname, paths.build()))
