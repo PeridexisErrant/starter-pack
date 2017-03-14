@@ -9,15 +9,16 @@ import sys
 import yaml
 
 
+native_os = {'linux': 'linux',  'win32': 'win',
+             'cygwin': 'win', 'darwin': 'osx'}[sys.platform]
+
 CONFIG = {}
 with suppress(IOError):
     with open('config.yml') as ymlf:
         CONFIG = yaml.safe_load(ymlf)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--os', choices=['win', 'linux', 'osx'],
-                    default={'linux': 'linux',  'win32': 'win',
-                             'cygwin': 'win', 'darwin': 'osx'}[sys.platform])
+parser.add_argument('--os', choices=['win', 'linux', 'osx'], default=native_os)
 parser.add_argument('--bits', choices=['32', '64',],
                     default=str(CONFIG.pop('desired_bits', '64')))
 parser.add_argument('--prerelease-components', dest='prerelease',
@@ -92,6 +93,8 @@ def dist(*paths):
 def zipped():
     """Return the path to the zipped pack to upload."""
     name = CONFIG.get('packname') or "Unknown Pack {}"
+    if native_os != HOST_OS:
+        name += '-' + HOST_OS
     return dist(name.format(pack_ver(warn=False)) + '.zip')
 
 
