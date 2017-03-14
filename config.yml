@@ -1,6 +1,4 @@
-###   Various configurable bits  ###
-# Build a pack for the current OS (one of "win", "osx", "linux")
-os: win
+###   Various configurable bits.  Also check command-line options with `main.py -h`  ###
 # "32" or "64" as a string
 desired_bits: "64"
 # Packname, will format with first line of base/changelog.txt

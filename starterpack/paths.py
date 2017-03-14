@@ -16,9 +16,8 @@ with suppress(IOError):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--os', choices=['win', 'linux', 'osx'],
-                    default=CONFIG.get('os') or {
-                    'linux': 'linux',  'win32': 'win',
-                    'cygwin': 'win', 'darwin': 'osx'}[sys.platform])
+                    default={'linux': 'linux',  'win32': 'win',
+                             'cygwin': 'win', 'darwin': 'osx'}[sys.platform])
 parser.add_argument('--bits', choices=['32', '64',],
                     default=str(CONFIG.pop('desired_bits', '64')))
 parser.add_argument('--prerelease-components', dest='prerelease',
