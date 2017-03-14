@@ -178,11 +178,15 @@ def extract_everything():
     with concurrent.futures.ProcessPoolExecutor(8) as pool:
         futures = dict()
         while queue:
-            while queue and sum(f.running() for f in futures.values()) < 8:
+            while sum(f.running() for f in futures.values()) < 8:
                 for idx, comp in enumerate(queue):
-                    aft = comp.install_after
-                    if not aft or (aft in futures and futures[aft].done()):
+                    aft = futures.get(comp.install_after)
+                    # Even if it's highest-priority, wait for parent job(s)
+                    if aft is None or aft.done():
                         futures[comp.name] = extract_comp(pool, queue.pop(idx))
+                        break  # reset index or we might pop the wrong item
+                else:
+                    break  # if there was nothing eligible to extract, sleep
             time.sleep(0.01)
 
 
