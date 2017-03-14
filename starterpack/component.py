@@ -89,12 +89,18 @@ def _component(data):
     else:
         config.update(config.pop('32bit', {}))
         config.pop('64bit', None)
+    # Merge in any os-specific config
+    config.update(config.get('os-' + paths.HOST_OS, {}))
+    for k in ('os-win', 'os-osx', 'os-linux'):
+        config.pop(k, None)
     # Autodetect host
     config['host'] = config.get('host') or (
         'dffd' if isinstance(config.get('ident'), int) else (
             'github-source' if category == 'graphics' else 'github-asset'))
     # Skip unsupported items
     if str(config.get('requires_bits', paths.BITS)) != paths.BITS:
+        return
+    if paths.HOST_OS not in config.get('requires_os', [paths.HOST_OS]):
         return
     ident = item if config['host'] == 'manual' else config['ident']
     meta = metadata_api.METADATA_TYPES[config['host']]()
