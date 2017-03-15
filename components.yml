@@ -120,9 +120,10 @@ utilities:
             tooltip: Makes an isometric world map from exported detailed maps, or connects to DF for a 'detailed view' in Adventure Mode.
     Legends Browser:
         bay12: 155307
-        ident: 11619
+        ident: robertjanetzko/LegendsBrowser
         manifest:
             tooltip: An in-browser legends utility, available for all operating systems.
+            linux_exe: legendsbrowser-1.0.12.jar
     Legends Viewer:
         requires_os: win
         bay12: 154617
@@ -157,6 +158,7 @@ utilities:
         ident: 11849
         manifest:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
+            linux_exe: soundSense.sh
     World Viewer:
         requires_os: win
         bay12: 128932

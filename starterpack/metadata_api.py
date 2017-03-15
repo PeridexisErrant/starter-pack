@@ -78,11 +78,14 @@ def best_asset(fname_list):
     for bits in ('32', '64'):
         wrong_bits = ['32', '64'][bits == '32']
         for k in ('win', 'osx', 'linux'):
+            ftype = {'win': '.exe', 'osx': '.dmg', 'linux': '.sh'}[k]
+            typed = [a for a in fname_list if a.endswith(ftype)] + [
+                     a for a in fname_list if a.endswith('.jar')]
             os_files = [a for a in fname_list
                         if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
             un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
             bitted = [a for a in os_files if bits in fname(a)]
-            lst = bitted or un_bitted or os_files or fname_list
+            lst = bitted or un_bitted or os_files or typed or fname_list
             asst[(k, bits)] = lst[0] if lst else None
     return asst
 

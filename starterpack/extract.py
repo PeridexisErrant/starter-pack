@@ -43,7 +43,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     print('{:28}  ->  {}'.format(os.path.basename(filename)[:28],
                                  os.path.relpath(out, paths.build())))
 
-    if path_pairs is not None or filename.endswith('.exe') \
+    if path_pairs is not None or filename[-4:] in ('.exe', '.jar') \
             or not zipfile.is_zipfile(filename):
         # ensures consistent handling for path_pairs
         return nonzip_extract(filename, target_dir, path_pairs)
@@ -66,7 +66,8 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     the .tar.bz2 archived DF releases (complicated header issue).
     OSX disk images (.dmg) are also unsupported by Python.
     """
-    if filename.endswith('.exe') and paths.HOST_OS == 'win':
+    if filename.endswith('.exe') and paths.HOST_OS == 'win' \
+            or filename.endswith('.jar'):
         _copyfile(filename,
                   os.path.join(target_dir, os.path.basename(filename)))
         return True
