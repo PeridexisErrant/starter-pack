@@ -69,7 +69,7 @@ def days_ago(func):
     return _inner
 
 
-def best_asset(fname_list):
+def best_asset(fname_list, break_ties_by_type=True):
     """Return a dict of the best asset from the list for each OS."""
     def fname(a):
         return os.path.basename(a).lower()
@@ -78,9 +78,11 @@ def best_asset(fname_list):
     for bits in ('32', '64'):
         wrong_bits = ['32', '64'][bits == '32']
         for k in ('win', 'osx', 'linux'):
-            ftype = {'win': '.exe', 'osx': '.dmg', 'linux': '.sh'}[k]
-            typed = [a for a in fname_list if a.endswith(ftype)] + [
-                     a for a in fname_list if a.endswith('.jar')]
+            typed = []
+            if break_ties_by_type:
+                ftype = {'win': '.exe', 'osx': '.dmg', 'linux': '.sh'}[k]
+                typed = [a for a in fname_list if a.endswith(ftype)] + [
+                         a for a in fname_list if a.endswith('.jar')]
             os_files = [a for a in fname_list
                         if k in fname(a) or (k == 'osx' and 'mac' in fname(a))]
             un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
@@ -176,7 +178,7 @@ class BitbucketMetadata(AbstractMetadata):
         dls = get_ok('https://api.bitbucket.org/2.0/repositories/' + repo +
                      '/downloads?pagelen=100').json().get('values', [])
         assets = [v['links']['self']['href'] for v in dls]
-        best = best_asset(assets)
+        best = best_asset(assets, break_ties_by_type=False)
         times = dict(zip(assets, [v['created_on'] for v in dls]))
         times = {k: times[v] for k, v in best.items()}
         return {'assets': best, 'times': times}
