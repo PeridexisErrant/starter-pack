@@ -80,9 +80,13 @@ def fixup_manifest(filename, comp, **kwargs):
     else:
         manifest['tooltip'] = manifest['tooltip'].strip()
     if comp in component.UTILITIES:
-        for _os in ('win', 'osx', 'linux'):
-            if paths.HOST_OS == _os and not manifest[_os + '_exe']:
-                print('WARNING: {}_exe for {} not set!'.format(_os, comp.name))
+        key = paths.HOST_OS + '_exe'
+        exe = manifest.get(key)
+        if exe is None:
+            print('WARNING: {} for {} not set!'.format(key, comp.name))
+        exe = paths.utilities(comp.name, exe)
+        if not os.path.isfile(exe):
+            print('WARNING: {} "{}" does not exist!'.format(key, exe))
     # Save if manifest is not same as on disk
     if manifest != file_man:
         with open(filename, 'w') as f:
