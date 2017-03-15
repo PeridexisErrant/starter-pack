@@ -104,24 +104,15 @@ def unpack_anything(filename, tmpdir):
         return True
     elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
             or tarfile.is_tarfile(filename):
-        try:
-            tarfile.TarFile(filename).extractall(tmpdir)
-            return True
-        except tarfile.ReadError:
-            try:
-                subprocess.run(['tar', '-xf', filename, '-C', tmpdir],
-                               check=True)
-            except subprocess.CalledProcessError:
-                print('ERROR: could not extract ' + filename +
-                      ' by tarfile lib or `tar` in shell')
-                return False
+        tarfile.open(filename).extractall(tmpdir)
+        return True
     elif filename.endswith('.rar'):
         try:
             import rarfile
         except ImportError:
             print('ERROR: .rar not supported; `pip install rarfile` and retry')
             return False
-        rarfile.RarFile(filename).extractall(tmpdir)
+        rarfile.open(filename).extractall(tmpdir)
         return True
     elif filename.endswith('.7z') or filename.endswith('.7zip'):
         exe = '7z'
