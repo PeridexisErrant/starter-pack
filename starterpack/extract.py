@@ -121,12 +121,13 @@ def unpack_anything(filename, tmpdir):
             exe = r'C:\Program Files\7-Zip\7z.exe'
             if not os.path.isfile(exe):
                 exe = exe.replace('Program Files', 'Program Files (x86)')
+            exe = '"{}"'.format(exe)
+        args = '{} x "{}" -o"{}"'.format(exe, filename, tmpdir)
         try:
-            args = '"{}" x "{}" -o"{}"'.format(exe, filename, tmpdir)
             subprocess.run(args, check=True, stdout=subprocess.DEVNULL)
             return True
         except subprocess.CalledProcessError as e:
-            print('ERROR: 7z failed to extract ' + filename)
+            print('ERROR: failed to extract {}, install 7z'.format(filename))
             print(e.stderr)
             return False
     print('Error: skipping unsupported archive format ' + filename)
