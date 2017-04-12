@@ -185,11 +185,6 @@ graphics:
     Mayday:
         bay12: 137370
         ident: DFgraphics/Mayday
-    Meph's Tileset:
-        bay12: 161047
-        ident: 12516
-        manifest:
-            tooltip: High-resolution, with a tile for every item in a variety of styles.
     Obsidian:
         bay12: 126934
         ident: DFgraphics/Obsidian
