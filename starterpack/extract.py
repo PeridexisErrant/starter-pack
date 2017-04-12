@@ -184,8 +184,13 @@ def extract_everything():
                     break  # if there was nothing eligible to extract, sleep
             time.sleep(0.01)
     failed = [k for k, v in futures.items() if v.exception() is not None]
+    for key in failed:
+        comp = component.ALL.pop(key, None)
+        for lst in (component.FILES, component.GRAPHICS, component.UTILITIES):
+            if comp in lst:
+                lst.remove(comp)
     if failed:
-        raise RuntimeError('Could not extract: ' + ', '.join(failed))
+        print('ERROR:  Could not extract: ' + ', '.join(failed))
 
 
 def add_lnp_dirs():
