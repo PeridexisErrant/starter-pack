@@ -346,7 +346,7 @@ def build_df():
         else:
             print('WARNING: DFHack distributed without html docs.')
         if hack.version >= '0.43.05-r0' or \
-                component.ALL.get('TwbT').version > 'v5.78':
+                component.ALL.get('TwbT').version > 'v5.83':
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
             raise DeprecationWarning('Does TwbT still supply other plugins?')
