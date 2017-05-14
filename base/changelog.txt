@@ -1,7 +1,11 @@
+0.43.05-r04
+ - updated DFHack to 0.43.05-r1
+ - switched from autolabor to new labormanager plugin
+
 0.43.05-r03
  - updated Dwarf Mockup; a large upgrade I missed for a year (oops)
  - removed Meph's tileset due to consistent reports of crashes
- - updated DFHack to 430.5-beta2
+ - updated DFHack to 0.43.05-beta2
  - updated TwbT to v5.83
 
 0.43.05-r02

@@ -2,7 +2,7 @@
 
 # Before running the commands in the launcher's DFHack tab,
 # disable persistent plugins.  That way state will match the tab.
-disable autolabor
+disable labormanager
 autonestbox stop
 
 # should-be-standard bugfixes

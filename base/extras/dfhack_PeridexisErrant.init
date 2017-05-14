@@ -2,7 +2,3 @@
 
 # TwbT multilevel is a dfhack option in the launcher due to stability issues
 multilevel 0
-
-# worth keeping Workflow keybindings for a while longer, IMO
-keybinding add Alt-W@dwarfmode/QueryBuilding/Some/Workshop/Job gui/workflow
-keybinding add Alt-W@overallstatus "gui/workflow status"
