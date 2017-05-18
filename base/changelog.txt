@@ -1,6 +1,9 @@
+0.43.05-r05
+
 0.43.05-r04
  - updated DFHack to 0.43.05-r1
  - switched from autolabor to new labormanager plugin
+ - updated TwbT to v5.84
 
 0.43.05-r03
  - updated Dwarf Mockup; a large upgrade I missed for a year (oops)
