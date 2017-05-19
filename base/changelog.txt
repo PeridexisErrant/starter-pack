@@ -1,4 +1,7 @@
+0.43.05-r06
+
 0.43.05-r05
+ - bugfix: allowed PyLNP to enable/disable DFHack
 
 0.43.05-r04
  - updated DFHack to 0.43.05-r1

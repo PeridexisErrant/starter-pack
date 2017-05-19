@@ -333,11 +333,11 @@ def build_df():
 
     if 'DFHack' in component.ALL:
         os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
+        shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
         # Rename the example init file; disable prerelease builds
         hack = component.ALL.get('DFHack')
         if paths.HOST_OS == 'win' and 'alpha' in hack.version.lower():
             print('DFHack is an alpha version; disabling...')
-            shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
             shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
         # Check docs exist, and minimise size
         if os.path.isfile(paths.df('hack', 'docs', 'index.html')):
