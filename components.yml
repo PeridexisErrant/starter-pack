@@ -123,7 +123,7 @@ utilities:
         ident: robertjanetzko/LegendsBrowser
         manifest:
             tooltip: An in-browser legends utility, available for all operating systems.
-            linux_exe: legendsbrowser-1.0.12.jar
+            linux_exe: legendsbrowser-1.12.1.jar
     Legends Viewer:
         requires_os: win
         bay12: 154617
