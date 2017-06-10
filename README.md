@@ -28,8 +28,7 @@ For anyone using these tools to assemble their own pack:
 
   Some files in `./base/` are mine; some are by other people in
   the Dwarf Fortress community.  Treat this files as if they are
-  under an informal version of the [CC-BY-SA license]
-  (https://creativecommons.org/licenses/by-sa/4.0).
+  under an informal version of the [CC-BY-SA license](https://creativecommons.org/licenses/by-sa/4.0).
 
   Any outputs you produce with this software are entirely your
   own, subject to licenses of the components you downloaded.

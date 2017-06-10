@@ -68,6 +68,10 @@ def plugins(*paths):
     return df('hack', 'plugins', *paths)
 
 
+def init(*paths):
+    return df('data', 'init', *paths)
+
+
 def lnp(*paths):
     return build('LNP', *paths)
 

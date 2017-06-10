@@ -359,6 +359,11 @@ def build_df():
             f.write(txt.format(os.path.basename(paths.curr_baseline()), pack))
     else:
         print('WARNING:  {} graphics not available to install!'.format(pack))
+    # Set macro delay to zero, for Quickfort
+    with open(paths.init('init.txt'), encoding='cp437') as f:
+        init = f.read().replace('[MACRO_MS:15]', '[MACRO_MS:0]')
+    with open(paths.init('init.txt'), 'w', encoding='cp437') as f:
+        f.write(init)
 
 
 def main():

@@ -1,4 +1,5 @@
 0.43.05-r06
+ - set MACRO_MS to zero (improves Quickfort performance)
 
 0.43.05-r05
  - bugfix: allowed PyLNP to enable/disable DFHack
