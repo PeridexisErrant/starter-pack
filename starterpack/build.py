@@ -121,9 +121,7 @@ def _soundsense_xml():
         with open(script) as f:
             text = f.read()
         with open(script, 'w') as f:
-            f.read(text.replace('\r\n', '\n'))
-        os.chmod(script, 0o110 | os.stat(script).st_mode)
-
+            f.write(text.replace('\r\n', '\n'))
 
 
 def _soundCenSe_config():
@@ -232,6 +230,10 @@ def create_utilities():
     for util in component.UTILITIES:
         fixup_manifest(paths.utilities(util.name, 'manifest.json'),
                        util, **_exes_for(util))
+        if paths.HOST_OS != 'win':
+            with open(paths.utilities(util.name, 'manifest.json')) as f:
+                exe = json.load(f)[paths.HOST_OS + '_exe']
+            os.chmod(exe, 0o110 | os.stat(exe).st_mode)
 
 
 # Configure graphics packs
