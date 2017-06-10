@@ -115,6 +115,16 @@ def _soundsense_xml():
     if component.ALL['Soundsense'].version != '2016-1':
         raise DeprecationWarning('Do you still need the empty "ss_fix.log" ?')
 
+    if paths.HOST_OS != 'win':
+        # Fix DOS line endings and make script user+group executable
+        script = paths.utilities('Soundsense', 'soundSense.sh')
+        with open(script) as f:
+            text = f.read()
+        with open(script, 'w') as f:
+            f.read(text.replace('\r\n', '\n'))
+        os.chmod(script, 0o110 | os.stat(script).st_mode)
+
+
 
 def _soundCenSe_config():
     """Check and update version strings in xml path config"""
@@ -135,8 +145,9 @@ def _armok_vision_plugin():
     hack = component.ALL.get('DFHack')
     if hack is None:
         return
+    end = 'dll' if paths.HOST_OS == 'win' else 'so'
     plug = paths.utilities('Armok Vision', 'Plugins', hack.version,
-                           'RemoteFortressReader.plug.dll')
+                           'RemoteFortressReader.plug.' + end)
     if os.path.isfile(plug):
         shutil.copy2(plug, paths.plugins())
         shutil.rmtree(paths.utilities('Armok Vision', 'Plugins'))
@@ -179,25 +190,32 @@ def _therapist_ini():
 
 def _exes_for(util):
     """Find the best available match for Windows and OSX utilities."""
-    win_exe, osx_exe = '', ''
+    win_exe, osx_exe, linux_exe = '', '', ''
     for _, dirs, files in os.walk(paths.utilities(util.name)):
-        for f in files:  # Windows: first .exe found, first .bat otherwise
+        # Windows: first .exe found, first .bat otherwise
+        # Linux: first .jar found, otherwise .sh
+        # OSX: as for linux, but a .app directory wins
+        for f in files:
+            if win_exe and osx_exe and linux_exe:
+                break
             if f.endswith('.exe'):
                 win_exe = f
                 break
             elif not win_exe and f.endswith('.bat'):
                 win_exe = f
-        for f in files:  # OSX: first .jar found, otherwise .sh
-            if f.endswith('.jar'):
+            elif f.endswith('.jar'):
                 osx_exe = f
-                break
-            elif not osx_exe and f.endswith('.sh'):
-                osx_exe = f
-        for dname in dirs:   # But on OSX we prefer .app dirs above any file
+                linux_exe = f
+            elif f.endswith('.sh'):
+                if not osx_exe:
+                    osx_exe = f
+                if not linux_exe:
+                    linux_exe = f
+        for dname in dirs:
             if dname.endswith('.app'):
                 osx_exe = dname
                 break
-    return {'win_exe': win_exe, 'osx_exe': osx_exe, 'linux_exe': ''}
+    return {'win_exe': win_exe, 'osx_exe': osx_exe, 'linux_exe': linux_exe}
 
 
 def create_utilities():
@@ -333,12 +351,13 @@ def build_df():
 
     if 'DFHack' in component.ALL:
         os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
-        shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
-        # Rename the example init file; disable prerelease builds
         hack = component.ALL.get('DFHack')
-        if paths.HOST_OS == 'win' and 'alpha' in hack.version.lower():
-            print('DFHack is an alpha version; disabling...')
-            shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
+        if paths.HOST_OS == 'win':
+            if 'alpha' in hack.version.lower():
+                print('DFHack is an alpha version; disabling...')
+                shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
+            else:
+                shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
         # Check docs exist, and minimise size
         if os.path.isfile(paths.df('hack', 'docs', 'index.html')):
             shutil.rmtree(paths.df('hack', 'docs', '.doctrees'),
