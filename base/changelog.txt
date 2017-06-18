@@ -1,5 +1,11 @@
+0.43.05-r07
+ - nothing yet
+
 0.43.05-r06
  - set MACRO_MS to zero (improves Quickfort performance)
+ - updated PyLNP to v0.12b (minor bugfixes)
+ - updated Legends Browser to 1.12.2
+ - DungeonSet and GemSet graphics no longer change TwbT settings
 
 0.43.05-r05
  - bugfix: allowed PyLNP to enable/disable DFHack

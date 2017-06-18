@@ -41,6 +41,18 @@ def rough_simplify(df_dir):
                 os.remove(path)
         elif fname not in {'data', 'raw'}:
             shutil.rmtree(path)
+    # Remove various DFHack init files, but not silently
+    # See https://dfhack.readthedocs.io/en/stable/docs/Core.html#init-files
+    inits = glob.glob(os.path.join(df_dir, 'raw', 'init.d', '*.lua'))
+    inits += glob.glob(os.path.join(df_dir, 'raw', '*.init'))
+    inits += glob.glob(os.path.join(df_dir, 'raw', 'objects', '*.init'))
+    if inits:
+        print('Note: removing DFHack init file{} from {} graphics: {}'
+              .format('' if len(inits) == 1 else 's',
+                      os.path.basename(df_dir),
+                      ', '.join(os.path.relpath(p, df_dir) for p in inits)))
+        for p in inits:
+            os.remove(p)
 
 
 def dodgy_json(filename):
