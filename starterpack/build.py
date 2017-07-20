@@ -152,15 +152,25 @@ def _soundCenSe_config():
 
 def _armok_vision_plugin():
     """Copy the new plugin into place for Armok Vision, if applicable."""
+    av = component.ALL.get('Armok Vision')
     hack = component.ALL.get('DFHack')
-    if hack is None:
+    if av is None or hack is None:
         return
     end = 'dll' if paths.HOST_OS == 'win' else 'so'
-    plug = paths.utilities('Armok Vision', 'Plugins', hack.version,
-                           'RemoteFortressReader.plug.' + end)
+    if av.version.replace('v', '') < '0.17.0':
+        plug = paths.utilities('Armok Vision', 'Plugins', hack.version,
+                               'RemoteFortressReader.plug.' + end)
+    else:
+        dirname = 'v{} {}'.format(
+            paths.df_ver(),
+            'SDL' if paths.BITS == '32' else paths.HOST_OS + '64')
+        plug = paths.utilities(
+            'Armok Vision', 'Plugins', dirname, hack.version,
+            'RemoteFortressReader.plug.' + end)
     if os.path.isfile(plug):
         shutil.copy2(plug, paths.plugins())
         shutil.rmtree(paths.utilities('Armok Vision', 'Plugins'))
+        print('Note: installed new plugin for Armok Vision')
 
 
 def _therapist_ini():
@@ -364,8 +374,10 @@ def build_df():
         f.write('*** STARTING NEW GAME ***\n')
 
     if 'DFHack' in component.ALL:
-        os.rename(paths.df('dfhack.init-example'), paths.df('dfhack.init'))
-        hack = component.ALL.get('DFHack')
+        for init in ('dfhack', 'onLoad'):
+            os.rename(paths.df(init + '.init-example'),
+                      paths.df(init + '.init'))
+        hack = component.ALL['DFHack']
         if paths.HOST_OS == 'win':
             if 'alpha' in hack.version.lower():
                 print('DFHack is an alpha version; disabling...')
@@ -378,9 +390,11 @@ def build_df():
                           ignore_errors=True)
         else:
             print('WARNING: DFHack distributed without html docs.')
-        if hack.version >= '0.43.05-r2':
+        if 'TwbT' in component.ALL and \
+                component.ALL['TwbT'].version.replace('v', '') > '5.85':
             # No good way to check, so it just goes here...
             # See https://github.com/DFHack/dfhack/issues/981
+            # http://www.bay12forums.com/smf/index.php?topic=138754.msg7514825#msg7514825
             raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')

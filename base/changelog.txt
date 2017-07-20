@@ -1,5 +1,12 @@
-0.43.05-r08
+0.43.05-r09
  - nothing yet
+
+0.43.05-r08
+ - updated Armok Vision to 0.17, performance and new features including animation
+ - updated SoundCenSe to 1.4.4, crash fix for Windows 10
+ - updated DFHack to r2, many new features and bugfixes
+ - updated Legends Browser to 1.13, fixes minor display bugs
+ - updated TwbT to 5.85
 
 0.43.05-r07
  - updated PyLNP to 0.12c (fixes broken build process)
