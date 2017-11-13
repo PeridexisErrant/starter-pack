@@ -45,15 +45,11 @@ files:
         ident: mifki/df-twbt
         os-win:
             extract_to: |
-                {DFHACK_VER}/automaterial.plug.dll:plugins/
                 {DFHACK_VER}/mousequery.plug.dll:plugins/
-                {DFHACK_VER}/resume.plug.dll:plugins/
                 {DFHACK_VER}/twbt.plug.dll:plugins/
         os-linux:
             extract_to: |
-                {DFHACK_VER}/automaterial.plug.so:plugins/
                 {DFHACK_VER}/mousequery.plug.so:plugins/
-                {DFHACK_VER}/resume.plug.so:plugins/
                 {DFHACK_VER}/twbt.plug.so:plugins/
         needs_dfhack: True
         install_after: DFHack
@@ -99,18 +95,11 @@ utilities:
             tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
         requires_os: win
-        32bit:
-            bay12: 122968
-            ident: splintermind/Dwarf-Therapist
-            manifest:
-                readme: doc/Dwarf Therapist.pdf
-                tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
-        64bit:
-            bay12: "122968.msg7386300#msg7386300"
-            host: manual
-            dl_link: https://dl.dropboxusercontent.com/u/94651132/DwarfTherapist43.5.1X64.zip
-            version: "v43.5.1"
-            updated: "2017-03-10"
+        bay12: "122968.msg7570014#msg7570014"
+        ident: Dwarf-Therapist/Dwarf-Therapist
+        manifest:
+            readme: doc/Dwarf Therapist.pdf
+            tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         requires_os: win
         bay12: 70700

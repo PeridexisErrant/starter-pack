@@ -1,5 +1,11 @@
-0.43.05-r09
+0.43.05-r10
  - nothing yet
+
+0.43.05-r09
+ - updated Legends Viewer to 1.18.00, lots and lots of bugfixes and new features
+ - updated Armok Vision to v0.18.0, massive upgrade to creature sprites
+ - updated Dwarf Therapist to v38.1.0, many bugfixes and small improvements
+ - updated TwbT to 6.21, supports separate back/mid/foreground sprites
 
 0.43.05-r08
  - updated Armok Vision to 0.17, performance and new features including animation

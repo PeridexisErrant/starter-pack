@@ -183,9 +183,6 @@ def _therapist_ini():
 
     if not os.path.isdir(paths.utilities('Dwarf Therapist')):
         return
-    if paths.BITS == '64' and \
-            component.ALL['Dwarf Therapist'].version == 'v37.0.0':
-        return teardown('Therapist does not support 64bit')
 
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     ma, mi = paths.df_ver(as_string=False)
@@ -193,12 +190,12 @@ def _therapist_ini():
         'win': 'v0.{}.{}_{}graphics.ini',
         'osx': 'v0.{}.{}_osx.ini',
         'linux': 'v0{}.{}.ini'
-        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == '32' else 'x64')
+        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == '32' else 'x64_')
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
-        url = ('https://raw.githubusercontent.com/splintermind/'
-               'Dwarf-Therapist/DF2016/share/memory_layouts/{}/{}')
+        url = ('https://raw.githubusercontent.com/Dwarf-Therapist/'
+               'Dwarf-Therapist/master/share/memory_layouts/{}/{}')
         comp_path = paths.components(fname)
         try:
             if not os.path.isfile(comp_path):
@@ -390,12 +387,6 @@ def build_df():
                           ignore_errors=True)
         else:
             print('WARNING: DFHack distributed without html docs.')
-        if 'TwbT' in component.ALL and \
-                component.ALL['TwbT'].version.replace('v', '') > '5.85':
-            # No good way to check, so it just goes here...
-            # See https://github.com/DFHack/dfhack/issues/981
-            # http://www.bay12forums.com/smf/index.php?topic=138754.msg7514825#msg7514825
-            raise DeprecationWarning('Does TwbT still supply other plugins?')
     # Install Phoebus graphics by default
     pack = paths.CONFIG.get('default_graphics')
     if pack in os.listdir(paths.graphics()):
