@@ -1,5 +1,9 @@
-0.43.05-r10
+0.43.05-r11
  - nothing yet
+
+0.43.05-r10
+ - fixed DFHack; I'd broken the config (oops!)
+ - fixed TwbT config before first time changing graphics pack
 
 0.43.05-r09
  - updated Legends Viewer to 1.18.00, lots and lots of bugfixes and new features

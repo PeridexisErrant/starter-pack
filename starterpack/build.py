@@ -294,6 +294,10 @@ def _check_a_graphics_pack(pack):
                        component.ALL[pack])
         if not component.ALL[pack].needs_dfhack:  # native TwbT support assumed
             _twbt_settings(pack)
+    for file in os.listdir(paths.lnp('tilesets')):
+        if not os.path.isfile(paths.df('data', 'art', file)):
+            shutil.copy(paths.lnp('tilesets', file),
+                        paths.df('data', 'art', file))
 
 
 def create_graphics():
@@ -376,11 +380,14 @@ def build_df():
                       paths.df(init + '.init'))
         hack = component.ALL['DFHack']
         if paths.HOST_OS == 'win':
+            real_size = os.path.getsize(paths.df('SDLreal.dll'))
+            shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
+            hack_size = os.path.getsize(paths.df('SDLhack.dll'))
+            assert hack_size > 2 * real_size
+            assert os.path.getsize(paths.df('SDL.dll')) == hack_size
             if 'alpha' in hack.version.lower():
                 print('DFHack is an alpha version; disabling...')
                 shutil.copy(paths.df('SDLreal.dll'), paths.df('SDL.dll'))
-            else:
-                shutil.copy(paths.df('SDL.dll'), paths.df('SDLhack.dll'))
         # Check docs exist, and minimise size
         if os.path.isfile(paths.df('hack', 'docs', 'index.html')):
             shutil.rmtree(paths.df('hack', 'docs', '.doctrees'),
