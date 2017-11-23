@@ -1,5 +1,9 @@
-0.43.05-r11
- - nothing yet
+0.44.01-r01
+ - updated Dwarf Fortress to 0.44.01
+ - updated PyLNP to 0.13
+ - removed Therapist, DFHack, etc pending compatibility
+ - graphics packs included but *not yet* updated
+  (do not update graphics on saves - may be incompatible)
 
 0.43.05-r10
  - fixed DFHack; I'd broken the config (oops!)

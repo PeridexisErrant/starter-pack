@@ -16,6 +16,6 @@ forum_post: |
     _
     [i]If you want to say thanks, check out [url=https://www.patreon.com/bay12games]Toady's Patreon[/url], or even [url=https://www.patreon.com/PeridexisErrant]mine![/url][/i]  ;D
 # Use latest DF version, or override to match DFHack?
-force_dfhack_compatible: True
+force_dfhack_compatible: False
 # Are alpha releases OK?  (GitHub only; False for stable packs)
-allow_prerelease_components: False
+allow_prerelease_components: True
