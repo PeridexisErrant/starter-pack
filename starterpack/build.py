@@ -352,6 +352,9 @@ def build_lnp_dirs():
     with open(paths.base('PyLNP-json.yml')) as f:
         pylnp_conf = yaml.load(f)
     pylnp_conf['updates']['packVersion'] = paths.pack_ver()
+    pylnp_conf['updates']['dffdID'] = paths.CONFIG['dffdID']
+    if not paths.ARGS.stable:
+        pylnp_conf['updates']['dffdID'] = paths.CONFIG['unstable_dffdID']
     for hack in pylnp_conf['dfhack'].values():
         # remove trailing newline from multiline tooltips
         hack['tooltip'] = hack['tooltip'].strip()

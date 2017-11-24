@@ -1,6 +1,4 @@
 ###   Various configurable bits.  Also check command-line options with `main.py -h`  ###
-# "32" or "64" as a string
-desired_bits: "64"
 # Packname, will format with first line of base/changelog.txt
 packname: "PeridexisErrant's Starter Pack {}"
 # Which graphics pack should be installed by default
@@ -15,7 +13,6 @@ forum_post: |
     SHA256:  {CHECKSUM}
     _
     [i]If you want to say thanks, check out [url=https://www.patreon.com/bay12games]Toady's Patreon[/url], or even [url=https://www.patreon.com/PeridexisErrant]mine![/url][/i]  ;D
-# Use latest DF version, or override to match DFHack?
-force_dfhack_compatible: False
-# Are alpha releases OK?  (GitHub only; False for stable packs)
-allow_prerelease_components: True
+# point PyLNP at the right hosting link for updates
+dffdID: "7622"
+unstable_dffdID: "13201"

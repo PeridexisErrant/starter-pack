@@ -2,12 +2,11 @@
 # TODO:  save checksums and timestamp in changelog or history file
 
 import hashlib
+import json
 import os
 import re
 import shutil
 import zipfile
-
-import yaml
 
 from . import component
 from . import paths
@@ -64,8 +63,8 @@ def zip_pack():
 def release_docs():
     """Document the file checksum and create a forum post."""
     shutil.copy(paths.lnp('about', 'contents.txt'), paths.dist())
-    with open(paths.base('PyLNP-json.yml')) as config:
-        dffd_id = yaml.load(config)['updates']['dffdID']
+    with open(paths.lnp('PyLNP.json')) as config:
+        dffd_id = json.load(config)['updates']['dffdID']
     with open(paths.lnp('about', 'changelog.txt')) as f:
         changes = f.read().split('\n\n')[0]
     sha256 = hashlib.sha256()

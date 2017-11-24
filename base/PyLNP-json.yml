@@ -2,7 +2,6 @@ hideUtilityExt: false
 hideUtilityPath: true
 updates:
     updateMethod: dffd
-    dffdID: "13201"
     defaultInterval: 0
 to_import:
     - [text_prepend, <df>/gamelog.txt]

@@ -145,7 +145,7 @@ def get_globals():
         results = executor.map(_component, items, timeout=20)
     all_comps = {r.name: r for r in results if r}
     # optionally force DFHack-compatible DF version
-    if paths.CONFIG.get('force_dfhack_compatible') and 'DFHack' in all_comps:
+    if paths.ARGS.stable and 'DFHack' in all_comps:
         target_ver = all_comps['DFHack'].version.replace('v', '').split('-')[0]
         df_ver = all_comps['Dwarf Fortress'].version
         if target_ver != df_ver:
