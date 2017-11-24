@@ -62,7 +62,8 @@ def zip_pack():
 
 def release_docs():
     """Document the file checksum and create a forum post."""
-    shutil.copy(paths.lnp('about', 'contents.txt'), paths.dist())
+    if paths.ARGS.stable:
+        shutil.copy(paths.lnp('about', 'contents.txt'), paths.dist())
     with open(paths.lnp('PyLNP.json')) as config:
         dffd_id = json.load(config)['updates']['dffdID']
     with open(paths.lnp('about', 'changelog.txt')) as f:
@@ -78,9 +79,15 @@ def release_docs():
         'CHECKSUM': sha256.hexdigest(),
         'BITS': paths.BITS,
         }
+    key = 'forum_post' if paths.ARGS.stable else 'unstable_forum_post'
     with open(paths.dist('forum_post.txt'), 'w') as f:
-        f.write(paths.CONFIG.get('forum_post', '')
+        f.write(paths.CONFIG.get(key, '')
                 .replace('_\n', '\n').format(**post_kwargs))
+        if not paths.ARGS.stable:
+            with open(paths.lnp('about', 'contents.txt')) as contents:
+                f.write('\n[spoiler=Full contents]\n')
+                f.write(contents.read())
+                f.write('\n[/spoiler]')
 
 
 def main():
