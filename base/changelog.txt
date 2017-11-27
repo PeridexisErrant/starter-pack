@@ -1,3 +1,7 @@
+0.43.05-r11
+ - updated DFHack
+ - updated TwbT
+
 0.44.02-r01
  - updated Dwarf Fortress
  - updated Phoebus graphics - *but still for 43.05*
