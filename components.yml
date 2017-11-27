@@ -32,14 +32,6 @@ files:
         extract_to: df/stocksettings
         needs_dfhack: True
         install_after: Dwarf Fortress
-    Taffer_misc:
-        bay12: 107924
-        host: github-source
-        ident: nc-z/taffer
-        extract_to: |
-            10x/taffer/colours/pastel/data/init/colors.txt:lnp/colors/Taffer_Pastel.txt
-            10x/data/art/taffer.png:lnp/tilesets/Taffer_10px.png
-            20x/data/art/taffer.png:lnp/tilesets/Taffer_20px.png
     TwbT:
         bay12: 138754
         ident: mifki/df-twbt
