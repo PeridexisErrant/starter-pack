@@ -1,3 +1,11 @@
+0.44.02-r02
+ - updated Phoebus graphics for 44.02
+ - updated CLA graphics for 44.01 (equivalent to .02)
+ - updated Legends Browser to 1.14
+ - updated World Viewer to 2.4.2
+ - updated Legends Viewer to 1.19.20
+ - updated Dwarf Therapist config http://www.bay12forums.com/smf/index.php?topic=122968.msg7627556#msg7627556
+
 0.43.05-r11
  - updated DFHack
  - updated TwbT

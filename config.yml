@@ -15,7 +15,6 @@ forum_post: |
     [i]If you want to say thanks, check out [url=https://www.patreon.com/bay12games]Toady's Patreon[/url], or even [url=https://www.patreon.com/PeridexisErrant]mine![/url][/i]  ;D
 unstable_forum_post: |
     [size=18pt]The Starter Pack has updated to {PACK_VERSION}![/size]
-    As usual, [url={LINK}]you can get it here.[/url]
     [url={LINK}]You can get alpha versions of the starter pack here.[/url]
     _
     {CHANGELOG}
