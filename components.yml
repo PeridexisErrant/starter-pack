@@ -87,7 +87,7 @@ utilities:
             tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
         requires_os: win
-        bay12: "122968.msg7570014#msg7570014"
+        bay12: 168411
         ident: Dwarf-Therapist/Dwarf-Therapist
         manifest:
             readme: doc/Dwarf Therapist.pdf
