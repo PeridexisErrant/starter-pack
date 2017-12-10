@@ -1,3 +1,10 @@
+0.44.02-r03
+ - updated Dwarf Therapist to v39.0.0
+ - updated Ironhand, Obsidian, Phoebus, and Spacefox graphics packs
+ - added Jecowa's update of Meph's graphics pack
+ - updated Legends Viewer
+ - updated Legends Browser
+
 0.44.02-r02
  - updated Phoebus graphics for 44.02
  - updated CLA graphics for 44.01 (equivalent to .02)

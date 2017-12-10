@@ -89,9 +89,6 @@ utilities:
         requires_os: win
         bay12: 168411
         ident: Dwarf-Therapist/Dwarf-Therapist
-        manifest:
-            readme: doc/Dwarf Therapist.pdf
-            tooltip: Makes managing your dwarves' jobs and psychology easy! (NB - DFHack "autolabor" must be disabled).
     Isoworld:
         requires_os: win
         bay12: 70700
@@ -165,6 +162,9 @@ graphics:
     Mayday:
         bay12: 137370
         ident: DFgraphics/Mayday
+    Meph:
+        bay12: 161047
+        ident: jecowa/Meph
     Obsidian:
         bay12: 126934
         ident: DFgraphics/Obsidian
