@@ -11,9 +11,6 @@ import yaml
 from . import paths
 
 
-ALLOW_PRERELEASE = paths.CONFIG.get('allow_prerelease_components', False)
-
-
 def get_ok(*args, **kwargs):
     """requests.get plus raise_for_status"""
     r = requests.get(*args, **kwargs)
@@ -50,7 +47,7 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
     def wrapper(self, ident):
         key, args = ident, (self, ident)
         if isinstance(self, GitHubAssetMetadata):
-            key = (ALLOW_PRERELEASE, ident)
+            key = (not paths.ARGS.stable, ident)
             args = (self, ident, saved['timestamps'].get(key, 0),
                     saved['metadata'].get(ident))
         if (time.time() - saved['timestamps'].get(key, 0)) > 30*60:
@@ -135,7 +132,7 @@ class GitHubAssetMetadata(AbstractMetadata):
     def json(self, repo, last_timestamp=None, last_json=None):
         """Return JSON payload, or None if not modified since timestamp."""
         url = 'https://api.github.com/repos/{}/releases'.format(repo)
-        if not ALLOW_PRERELEASE:
+        if paths.ARGS.stable:
             url += '/latest'
         header = {'If-Modified-Since': datetime.datetime.fromtimestamp(
             last_timestamp, datetime.timezone.utc).strftime(
@@ -144,7 +141,7 @@ class GitHubAssetMetadata(AbstractMetadata):
         if req.status_code == 304:
             return last_json
         resp = req.json()
-        if ALLOW_PRERELEASE:
+        if not paths.ARGS.stable:
             resp = resp[0]
 
         assets = [r['browser_download_url'] for r in resp['assets']]

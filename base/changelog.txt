@@ -1,3 +1,9 @@
+0.44.02-r04
+ - added DFHack 0.44.02-alpha1
+ - added TwbT again (requires DFHack), v6.23
+ - updated Obsidian, Phoebus, Spacefox, Mayday, Ironhand graphics
+ - added Gemset graphics again (requires DFHack)
+
 0.44.02-r03
  - updated Dwarf Therapist to v39.0.0
  - updated Ironhand, Obsidian, Phoebus, and Spacefox graphics packs
@@ -11,7 +17,7 @@
  - updated Legends Browser to 1.14
  - updated World Viewer to 2.4.2
  - updated Legends Viewer to 1.19.20
- - updated Dwarf Therapist config http://www.bay12forums.com/smf/index.php?topic=122968.msg7627556#msg7627556
+ - updated Dwarf Therapist config
 
 0.43.05-r11
  - updated DFHack
