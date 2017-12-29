@@ -187,10 +187,10 @@ def _therapist_ini():
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     ma, mi = paths.df_ver(as_string=False)
     fname = {
-        'win': 'v0.{}.{}_{}graphics.ini',
+        'win': 'v0.{}.{}_graphics_{}.ini',
         'osx': 'v0.{}.{}_osx.ini',
         'linux': 'v0{}.{}.ini'
-        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == '32' else 'x64_')
+        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == 'win32' else 'win64')
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
