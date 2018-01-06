@@ -1,3 +1,11 @@
+0.44.03-r01
+ - updated Dwarf Fortress to 0.44.03
+ - updated DFHack to 0.44.03-beta1
+ - updated TwbT to v6.31
+ - updated Legends Viewer
+ - updated graphics packs: Ironhand, Mayday, Gemset, Obsidian, Phoebus, Spacefox, and Meph
+ - updated Dwarf Therapist
+
 0.44.02-r04
  - added DFHack 0.44.02-alpha1
  - added TwbT again (requires DFHack), v6.23
