@@ -41,18 +41,6 @@ def rough_simplify(df_dir):
                 os.remove(path)
         elif fname not in {'data', 'raw'}:
             shutil.rmtree(path)
-    # Remove various DFHack init files, but not silently
-    # See https://dfhack.readthedocs.io/en/stable/docs/Core.html#init-files
-    inits = glob.glob(os.path.join(df_dir, 'raw', 'init.d', '*.lua'))
-    inits += glob.glob(os.path.join(df_dir, 'raw', '*.init'))
-    inits += glob.glob(os.path.join(df_dir, 'raw', 'objects', '*.init'))
-    if inits:
-        print('Note: removing DFHack init file{} from {} graphics: {}'
-              .format('' if len(inits) == 1 else 's',
-                      os.path.basename(df_dir),
-                      ', '.join(os.path.relpath(p, df_dir) for p in inits)))
-        for p in inits:
-            os.remove(p)
 
 
 def dodgy_json(filename):
@@ -186,11 +174,8 @@ def _therapist_ini():
 
     dirname = 'windows' if paths.HOST_OS == 'win' else paths.HOST_OS
     ma, mi = paths.df_ver(as_string=False)
-    fname = {
-        'win': 'v0.{}.{}_{}graphics.ini',
-        'osx': 'v0.{}.{}_osx.ini',
-        'linux': 'v0{}.{}.ini'
-        }[paths.HOST_OS].format(ma, mi, '' if paths.BITS == '32' else 'x64_')
+    fname = 'v0.{}.{}_graphics_{}{}.ini'.format(
+        ma, mi, paths.HOST_OS, paths.BITS)
     util_path = paths.utilities(
         'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):

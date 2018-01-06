@@ -1,3 +1,7 @@
+0.44.03-r02
+ - now actually with Therapist (oops)
+ - some graphics packs now include DFHack settings (eg for TwbT)
+
 0.44.03-r01
  - updated Dwarf Fortress to 0.44.03
  - updated DFHack to 0.44.03-beta1
