@@ -1,3 +1,16 @@
+0.44.05-r01
+ - updated Dwarf Fortress
+ - updated DFHack to 44.05-alpha1
+ - updated TwbT to 6.33
+ - updated Therapist to v39.2.0
+ - updated graphics: GemSet, Meph
+ - Phoebus, Spacefox, Ironhand, Obsidian, and Mayday have optional TwbT creature support:
+        * move "onLoad.init" into the /raws/ folder (to enable creature transparency)
+        * move the contents of /data/twbt_art/ into /data/art/
+        * move the contents of /data/twbt_init/ into /data/init/
+        * move the contents of /raw/twbt_graphics/ into /raw/graphics/
+        * move the contents of /raw/twbt_objects/ into /raw/objects/
+
 0.44.03-r02
  - now actually with Therapist (oops)
  - some graphics packs now include DFHack settings (eg for TwbT)

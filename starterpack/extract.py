@@ -113,7 +113,7 @@ def unpack_anything(filename, tmpdir):
         except ImportError:
             print('ERROR: .rar not supported; `pip install rarfile` and retry')
             return False
-        rarfile.open(filename).extractall(tmpdir)
+        rarfile.RarFile(filename).extractall(tmpdir)
         return True
     elif filename.endswith('.7z') or filename.endswith('.7zip'):
         exe = '7z'
