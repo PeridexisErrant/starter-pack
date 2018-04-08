@@ -1,3 +1,13 @@
+0.44.09-r01
+ - updated Dwarf Fortress
+ - updated DFHack to 44.09-r1
+ - updated TwbT to v6.41
+ - updated Dwarf Therapist to v39.3.1
+ - updated Legends Browser to 1.17.1
+ - updated Legends Viewer to 1.19.07
+ - updated Armok Vision to 0.19.1
+ - updated graphics: Mayday, Phoebus, Obsidian, Meph, Spacefox, Ironhand, GemSet
+
 0.44.05-r03
  - updated DFHack to 44.05-r2
  - updated TwbT to v6.35
