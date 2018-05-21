@@ -1,3 +1,6 @@
+0.44.10-r02
+ - really including Dwarf Therapist (taught build script about new location of memory layouts)
+
 0.44.10-r01
  - updated Dwarf Fortress
  - updated DFHack to 44.10-r1

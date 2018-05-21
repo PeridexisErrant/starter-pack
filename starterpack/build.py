@@ -177,7 +177,7 @@ def _therapist_ini():
     fname = 'v0.{}.{}_graphics_{}{}.ini'.format(
         ma, mi, paths.HOST_OS, paths.BITS)
     util_path = paths.utilities(
-        'Dwarf Therapist', 'share', 'memory_layouts', dirname, fname)
+        'Dwarf Therapist', 'data', 'memory_layouts', dirname, fname)
     if not os.path.isfile(util_path):
         url = ('https://raw.githubusercontent.com/Dwarf-Therapist/'
                'Dwarf-Therapist/master/share/memory_layouts/{}/{}')
