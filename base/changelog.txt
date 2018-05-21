@@ -1,3 +1,11 @@
+0.44.10-r01
+ - updated Dwarf Fortress
+ - updated DFHack to 44.10-r1
+ - updated TwbT to v6.4
+ - updated Legends Viewer to 1.19.8
+ - updated Dwarf Therapist to v40.0.0
+ - updated graphics: Mayday, Phoebus, Obsidian, Meph, Spacefox, Ironhand, GemSet (again)
+
 0.44.09-r01
  - updated Dwarf Fortress
  - updated DFHack to 44.09-r1
