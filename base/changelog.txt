@@ -1,5 +1,6 @@
 0.44.10-r02
  - really including Dwarf Therapist (taught build script about new location of memory layouts)
+ - baked in optional TwbT enhancements for most graphics packs
 
 0.44.10-r01
  - updated Dwarf Fortress
