@@ -37,7 +37,7 @@ def rough_simplify(df_dir):
     for fname in os.listdir(df_dir):
         path = os.path.join(df_dir, fname)
         if os.path.isfile(path):
-            if fname != 'manifest.json':
+            if fname != 'manifest.json' and not fname.endswith('.init'):
                 os.remove(path)
         elif fname not in {'data', 'raw'}:
             shutil.rmtree(path)
@@ -262,8 +262,9 @@ def _twbt_settings(pack):
     with open(init_file, 'w') as f:
         f.writelines(init)
     # Copy twbt-specific graphics files into place
-    for k in ('graphics', 'objects'):
-        t = paths.graphics(pack, 'raw', 'twbt_' + k)
+    for dir_, k in [('raw', 'graphics'), ('raw', 'objects'),
+                    ('data', 'art'), ('data', 'init')]:
+        t = paths.graphics(pack, dir_, 'twbt_' + k)
         if os.path.isdir(t):
             overwrite_dir(t, paths.graphics(pack, 'raw', k))
             shutil.rmtree(t)
@@ -283,7 +284,9 @@ def _check_a_graphics_pack(pack):
     if pack != 'ASCII':
         fixup_manifest(paths.graphics(pack, 'manifest.json'),
                        component.ALL[pack])
-        if not component.ALL[pack].needs_dfhack:  # native TwbT support assumed
+        # If the needs_dfhack key is set for a graphics pack, assume that it
+        # has native TwbT support.  Otherwise, try to patch it in...
+        if not component.ALL[pack].needs_dfhack:
             _twbt_settings(pack)
     for file in os.listdir(paths.lnp('tilesets')):
         if not os.path.isfile(paths.df('data', 'art', file)):
@@ -372,6 +375,10 @@ def build_df():
         for init in ('dfhack', 'onLoad'):
             os.rename(paths.df(init + '.init-example'),
                       paths.df(init + '.init'))
+        with open(paths.df('dfhack.init')) as f:
+            ini = f.read()
+        with open(paths.df('dfhack.init'), mode='w') as f:
+            f.write(ini.replace('.init-example', '.init'))
         hack = component.ALL['DFHack']
         if paths.HOST_OS == 'win':
             real_size = os.path.getsize(paths.df('SDLreal.dll'))

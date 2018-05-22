@@ -1,3 +1,8 @@
+0.44.10-r03
+ - actually, really, truly does the graphics enhancements (TwbT required)
+   Many thanks to Jecowa and the others who helped.  Today has *not* been my day...
+ - fixed a DFHack console error message (onLoad.init-example not found)
+
 0.44.10-r02
  - really including Dwarf Therapist (taught build script about new location of memory layouts)
  - baked in optional TwbT enhancements for most graphics packs
