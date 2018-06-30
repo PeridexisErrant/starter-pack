@@ -26,6 +26,9 @@ files:
         os-linux:
             extract_to: |
                 PyLNP:build/starter-pack-launcher
+        os-osx:
+            extract_to: |
+                PyLNP.app:build/Starter Pack Launcher (PyLNP).app
     Stocksettings presets:
         bay12: 146213
         ident: 10170
@@ -43,6 +46,9 @@ files:
             extract_to: |
                 {DFHACK_VER}/mousequery.plug.so:plugins/
                 {DFHACK_VER}/twbt.plug.so:plugins/
+        os-osx:
+            extract_to: |
+                {DFHACK_VER}/twbt.plug.dylib:plugins/
         needs_dfhack: True
         install_after: DFHack
     Quickfort_64:
