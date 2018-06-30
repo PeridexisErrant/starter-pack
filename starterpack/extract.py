@@ -19,14 +19,57 @@ from . import component
 from . import paths
 
 
-def _copyfile(src, dest):
+class UnixAwareZipFile(zipfile.ZipFile):
+    """A ZipFile subclass aware of how to extract UNIX file permissions."""
+    @staticmethod
+    def get_mode(info):
+        """Returns the file mode that should be restored, or 0 if unknown."""
+        # Values below are from the "version made by" documentation at
+        # https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+        unix, macos = 3, 19
+        if info.create_system in (unix, macos):
+            return (info.external_attr >> 16) & 0o777
+        return 0
+
+    def _extract_member(self, member, targetpath, pwd):
+        # Based on internal implementation details of ZipFile, based on
+        # https://github.com/python/cpython/blob/3.7/Lib/zipfile.py
+        if not isinstance(member, zipfile.ZipInfo):
+            member = self.getinfo(member)
+        targetpath = super()._extract_member(member, targetpath, pwd)
+        mode = UnixAwareZipFile.get_mode(member)
+        if mode != 0:
+            try:
+                os.chmod(targetpath, mode)
+            except OSError:
+                print('Failed to correct mode of', targetpath)
+                raise
+        return targetpath
+
+
+def _copyfile(src, dest, zipinfo=None):
     """Copy the source file path or object to the dest path, creating dirs."""
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     if isinstance(src, str):
-        shutil.copy2(src, dest)
-    else:
+        if os.path.isfile(src):
+            shutil.copy2(src, dest)
+        elif os.path.isdir(src):
+            copy_tree(src, dest)
+        else:
+            raise IOError('Unexpected file type for %s', src)
+    elif isinstance(src, zipfile.ZipExtFile):
         with open(dest, 'wb') as out:
             shutil.copyfileobj(src, out)
+        if zipinfo:
+            mode = UnixAwareZipFile.get_mode(zipinfo)
+            if mode != 0:
+                try:
+                    chmod(dest, mode)
+                except OSError:
+                    print('Failed to correct mode of', targetpath)
+                    raise
+    else:
+        raise NotImplementedException('Unexpected source type')
 
 
 def unzip_to(filename, target_dir=None, path_pairs=None):
@@ -52,9 +95,9 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
                      if not a[0].endswith('/'))
         prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
-        for name in files:
+        for name, info in files.items():
             out = os.path.join(target_dir, os.path.relpath(name, prefix))
-            _copyfile(zf.open(files[name]), out)
+            _copyfile(zf.open(info), out, zipinfo=info)
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
@@ -85,7 +128,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
             for inpath, outpath in path_pairs:
                 if outpath.endswith('/'):
                     outpath += os.path.basename(inpath)
-                if os.path.isfile(os.path.join(tmpdir, prefix, inpath)):
+                if os.path.exists(os.path.join(tmpdir, prefix, inpath)):
                     _copyfile(os.path.join(tmpdir, prefix, inpath), outpath)
                 else:
                     print('WARNING:  "{}" not found in "{}"'.format(
@@ -109,8 +152,10 @@ def unpack_anything(filename, tmpdir):
         unpack_dmg(filename, tmpdir)
         return True
     elif zipfile.is_zipfile(filename):
-        # Uses fast version above; handled here for completeness
-        zipfile.ZipFile(filename).extractall(tmpdir)
+        # zip files *can* include information about UNIX file modes, but Python
+        # does not extract them. Skip using zipfile and just shell out to the
+        # command line.
+        UnixAwareZipFile(filename).extractall(tmpdir)
         return True
     elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
             or tarfile.is_tarfile(filename):
