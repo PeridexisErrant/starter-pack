@@ -93,12 +93,21 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     return True
 
 
+def unpack_dmg(filename, dest):
+    """Extract a .dmg disk image on macOS into the dest dir."""
+    assert filename.endswith('.dmg') and paths.HOST_OS == 'osx'
+    with tempfile.TemporaryDirectory() as tmpdir:
+        subprocess.check_call(['hdiutil', 'attach', '-quiet', '-readonly',
+                               '-nobrowse', '-mountpoint', tmpdir, filename])
+        copy_tree(tmpdir, dest)
+        subprocess.check_call(['hdiutil', 'detach', '-quiet', tmpdir])
+
+
 def unpack_anything(filename, tmpdir):
     """Extract practically any archive format from src file to dest dir."""
     if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
-        # TODO:  support .dmg extraction via shell on macOS
-        raise NotImplementedError(
-            'TODO: mount .dmg, copy contents to tmpdir, unmount')
+        unpack_dmg(filename, tmpdir)
+        return True
     elif zipfile.is_zipfile(filename):
         # Uses fast version above; handled here for completeness
         zipfile.ZipFile(filename).extractall(tmpdir)
