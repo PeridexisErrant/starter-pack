@@ -191,12 +191,12 @@ def _therapist_ini():
 
 
 def _exes_for(util):
-    """Find the best available match for Windows and OSX utilities."""
+    """Find the best available match for Windows and macOS utilities."""
     win_exe, osx_exe, linux_exe = '', '', ''
     for _, dirs, files in os.walk(paths.utilities(util.name)):
         # Windows: first .exe found, first .bat otherwise
         # Linux: first .jar found, otherwise .sh
-        # OSX: as for linux, but a .app directory wins
+        # macOS: as for linux, but a .app directory wins
         for f in files:
             if win_exe and osx_exe and linux_exe:
                 break

@@ -64,7 +64,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
 
     Involves a lot of shelling out, as Python's `tarfile` cannot open
     the .tar.bz2 archived DF releases (complicated header issue).
-    OSX disk images (.dmg) are also unsupported by Python.
+    macOS disk images (.dmg) are also unsupported by Python.
     """
     if filename.endswith('.exe') and paths.HOST_OS == 'win' \
             or filename.endswith('.jar'):
@@ -96,7 +96,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
 def unpack_anything(filename, tmpdir):
     """Extract practically any archive format from src file to dest dir."""
     if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
-        # TODO:  support .dmg extraction via shell on OSX
+        # TODO:  support .dmg extraction via shell on macOS
         raise NotImplementedError(
             'TODO: mount .dmg, copy contents to tmpdir, unmount')
     elif zipfile.is_zipfile(filename):
