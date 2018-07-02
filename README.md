@@ -38,11 +38,8 @@ For anyone using these tools to assemble their own pack:
   set up and configured via these files, which are also commented.
 
 - You will need Python 3.5+, as I make extensive use of several
-  new features.  You will also need the `requests` and `pyaml`
-  libraries (both can be installed with `pip`).
-
-  Optional dependencies to unpack exotic archive types may be
-  added in future, but will not be required.
+  new features.  Dependencies can be installed with
+  `pip install -r requirements.txt`.
 
 - Many items in the provided config will only work on Windows
   (or when building for windows on another OS; tested on Debian).
