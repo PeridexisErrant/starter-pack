@@ -26,7 +26,7 @@ def get_auth():
     return None
 
 
-def cache(method=lambda *_: None, *, saved={}, dump=False):
+def cache(method=lambda *_: None, *, saved={}, dump=False, expiration=30*60):
     """A caching decorator.
 
     Reads cache from local file if cache is empty.
@@ -37,10 +37,11 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
         try:
             with open('_cached.yml') as f:
                 saved.update(yaml.load(f))
+                print('Loaded metadata from cache file')
         except IOError:
-            print('Downloading metadata for components...\n')
             saved.update({'metadata': {}, 'timestamps': {}})
     elif dump:
+        print('Saving metadata to cache file')
         with open('_cached.yml', 'w') as f:
             yaml.dump(saved, f, indent=4)
 
@@ -50,11 +51,13 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
             key = (not paths.ARGS.stable, ident)
             args = (self, ident, saved['timestamps'].get(key, 0),
                     saved['metadata'].get(ident))
-        if (time.time() - saved['timestamps'].get(key, 0)) > 30*60:
+        if (time.time() - saved['timestamps'].get(key, 0)) > expiration:
+            print('Refreshing metadata for package', ident)
             new_json = method(*args)
+            # We take a return value of None to mean that it hasn't been updated
             if new_json is not None:
                 saved['metadata'][key] = new_json
-                saved['timestamps'][key] = time.time()
+            saved['timestamps'][key] = time.time()
         return saved['metadata'].get(key)
     return wrapper
 
