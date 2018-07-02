@@ -237,7 +237,8 @@ def create_utilities():
         if paths.HOST_OS != 'win':
             with open(paths.utilities(util.name, 'manifest.json')) as f:
                 exe = json.load(f)[paths.HOST_OS + '_exe']
-            os.chmod(exe, 0o110 | os.stat(exe).st_mode)
+            path = paths.utilities(util.name, exe)
+            os.chmod(path, 0o110 | os.stat(path).st_mode)
 
 
 # Configure graphics packs
