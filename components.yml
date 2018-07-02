@@ -63,6 +63,7 @@ files:
         install_after: Quickfort
 utilities:
     Armok Vision:
+        requires_os: win linux
         bay12: 146473
         ident: JapaMala/armok-vision
         needs_dfhack: True
