@@ -50,13 +50,13 @@ def cache(method=lambda *_: None, *, saved={}, dump=False, expiration=30*60):
         if isinstance(self, GitHubAssetMetadata):
             key = (not paths.ARGS.stable, ident)
             args = (self, ident, saved['timestamps'].get(key, 0),
-                    saved['metadata'].get(ident))
+                    saved['metadata'].get(key))
         if (time.time() - saved['timestamps'].get(key, 0)) > expiration:
             print('Refreshing metadata for package', ident)
             new_json = method(*args)
-            # We take a return value of None to mean that it hasn't been updated
-            if new_json is not None:
-                saved['metadata'][key] = new_json
+            if new_json is None:
+                raise RuntimeError('Failed to get metadata for', ident)
+            saved['metadata'][key] = new_json
             saved['timestamps'][key] = time.time()
         return saved['metadata'].get(key)
     return wrapper
