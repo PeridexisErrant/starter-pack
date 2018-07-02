@@ -108,6 +108,7 @@ utilities:
         ident: robertjanetzko/LegendsBrowser
         manifest:
             tooltip: An in-browser legends utility, available for all operating systems.
+            osx_exe: Legends Browser.app/Contents/MacOS/JavaAppLauncher
     Legends Viewer:
         requires_os: win
         bay12: 154617

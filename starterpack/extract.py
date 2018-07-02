@@ -169,6 +169,10 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
         files = [os.path.join(root, f)
                  for root, _, files in os.walk(tmpdir) for f in files]
         prefix = os.path.commonpath(files) if len(files) > 1 else ''
+        # BAD HACK: It's an unsafe assumption (made above) that the common
+        # path should always be stripped.
+        if filename.endswith('.dmg') and 'Legends Browser' in target_dir:
+            prefix = ''
         if target_dir:
             copy_tree(os.path.join(tmpdir, prefix), target_dir,
                       preserve_symlinks=True)
@@ -246,7 +250,6 @@ def unpack_anything(filename, tmpdir):
 
 def extract_comp(comp):
     """Extracts a single component."""
-    print('Extracting', comp.name)
     if ':' not in comp.extract_to:
         # first part of extract_to is paths method, remainder is args
         dest, *details = comp.extract_to.split('/')
