@@ -144,6 +144,7 @@ utilities:
         manifest:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
             linux_exe: soundSense.sh
+            osx_exe: soundSense.sh
     World Viewer:
         requires_os: win
         bay12: 128932
