@@ -178,10 +178,18 @@ def unpack_dmg(filename, dest):
     """Extract a .dmg disk image on macOS into the dest dir."""
     assert filename.endswith('.dmg') and paths.HOST_OS == 'osx'
     with tempfile.TemporaryDirectory() as tmpdir:
-        subprocess.check_call(['hdiutil', 'attach', '-quiet', '-readonly',
-                               '-nobrowse', '-mountpoint', tmpdir, filename])
-        copy_tree(tmpdir, dest)
-        subprocess.check_call(['hdiutil', 'detach', '-quiet', tmpdir])
+        try:
+            subprocess.check_call(['hdiutil', 'attach', '-quiet', '-readonly',
+                                   '-nobrowse', '-mountpoint', tmpdir,
+                                   filename])
+        except subprocess.CalledProcessError:
+            print('Failed to mount', filename, ' -- is it already mounted?')
+            raise
+        try:
+            copy_tree(tmpdir, dest, preserve_symlinks=True)
+        finally:
+            subprocess.check_call(['hdiutil', 'detach', '-quiet', tmpdir])
+
 
 
 def unpack_anything(filename, tmpdir):
