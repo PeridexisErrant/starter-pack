@@ -1,3 +1,11 @@
+0.44.12-r01
+ - updated Dwarf Fortress
+ - updated DFHack to 0.44.12-r1
+ - updated TwbT to v6.53
+ - updated Dwarf Therapist to v40.1.2
+ - updated Legends Viewer to 1.19.09
+ - updated graphics: Ironhand, Obsidian, Spacefox, Phoebus
+
 0.44.10-r03
  - actually, really, truly does the graphics enhancements (TwbT required)
    Many thanks to Jecowa and the others who helped.  Today has *not* been my day...
