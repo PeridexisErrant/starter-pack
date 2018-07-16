@@ -37,11 +37,9 @@ files:
         ident: mifki/df-twbt
         os-win:
             extract_to: |
-                {DFHACK_VER}/mousequery.plug.dll:plugins/
                 {DFHACK_VER}/twbt.plug.dll:plugins/
         os-linux:
             extract_to: |
-                {DFHACK_VER}/mousequery.plug.so:plugins/
                 {DFHACK_VER}/twbt.plug.so:plugins/
         needs_dfhack: True
         install_after: DFHack

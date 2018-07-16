@@ -1,3 +1,6 @@
+0.44.12-r02
+ - fixed Dwarf Therapist (use 64bit build)
+
 0.44.12-r01
  - updated Dwarf Fortress
  - updated DFHack to 0.44.12-r1
