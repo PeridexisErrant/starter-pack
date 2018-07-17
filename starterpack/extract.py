@@ -4,7 +4,6 @@ This module is about as generic as it can usefully be, pushing the special
 cases back into build.py
 """
 
-import concurrent.futures
 from distutils.dir_util import copy_tree
 import os
 import shutil
@@ -19,14 +18,105 @@ from . import component
 from . import paths
 
 
-def _copyfile(src, dest):
+class TaskQueue:
+    def __init__(self):
+        self.tasks = {}
+
+    def add(self, name, value, prereqs=None):
+        self.tasks[name] = (value, prereqs or [])
+
+    def pop(self):
+        """Pops the next executable task off the queue and returns it."""
+        for name, (value, prereqs) in self.tasks.items():
+            if len(prereqs) == 0:
+                self.remove(name)
+                return value
+        # Nothing found with no pending prerequisites; maybe there's a circular
+        # reference?
+        if len(self.tasks) == 0:
+            raise IndexError('pop from empty queue')
+        raise RuntimeError('circular dependencies detected')
+
+    def remove(self, name):
+        """Removes a task, and removes it as a dependency of other tasks."""
+        del self.tasks[name]
+        for _, prereqs in self.tasks.values():
+            try:
+                prereqs.remove(name)
+            except ValueError:
+                continue
+
+    def _check(self):
+        """Tests that every task is well-defined."""
+        for name, (_, prereqs) in self.tasks.items():
+            for prereq in prereqs:
+                if prereq not in self.tasks:
+                    raise ValueError('Task "%s" depends on missing task "%s"' %
+                                     (name, prereq))
+
+    def __iter__(self):
+        """Allows iterating over queued tasks, which empties the queue."""
+        self._check()
+        return self
+
+    def __next__(self):
+        try:
+            return self.pop()
+        except IndexError:
+            raise StopIteration
+
+
+class UnixAwareZipFile(zipfile.ZipFile):
+    """A ZipFile subclass aware of how to extract UNIX file permissions."""
+    @staticmethod
+    def get_mode(info):
+        """Returns the file mode that should be restored, or 0 if unknown."""
+        # Values below are from the "version made by" documentation at
+        # https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+        unix, macos = 3, 19
+        if info.create_system in (unix, macos):
+            return (info.external_attr >> 16) & 0o777
+        return 0
+
+    def _extract_member(self, member, targetpath, pwd):
+        # Based on internal implementation details of ZipFile, based on
+        # https://github.com/python/cpython/blob/3.7/Lib/zipfile.py
+        if not isinstance(member, zipfile.ZipInfo):
+            member = self.getinfo(member)
+        targetpath = super()._extract_member(member, targetpath, pwd)
+        mode = UnixAwareZipFile.get_mode(member)
+        if mode != 0:
+            try:
+                os.chmod(targetpath, mode)
+            except OSError:
+                print('Failed to correct mode of', targetpath)
+                raise
+        return targetpath
+
+
+def _copyfile(src, dest, zipinfo=None):
     """Copy the source file path or object to the dest path, creating dirs."""
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     if isinstance(src, str):
-        shutil.copy2(src, dest)
-    else:
+        if os.path.isfile(src):
+            shutil.copy2(src, dest)
+        elif os.path.isdir(src):
+            copy_tree(src, dest, preserve_symlinks=True)
+        else:
+            raise IOError('Unexpected file type for %s', src)
+    elif isinstance(src, zipfile.ZipExtFile):
         with open(dest, 'wb') as out:
             shutil.copyfileobj(src, out)
+        if zipinfo:
+            mode = UnixAwareZipFile.get_mode(zipinfo)
+            if mode != 0:
+                try:
+                    os.chmod(dest, mode)
+                except OSError:
+                    print('Failed to correct mode of', targetpath)
+                    raise
+    else:
+        raise NotImplementedException('Unexpected source type')
 
 
 def unzip_to(filename, target_dir=None, path_pairs=None):
@@ -52,9 +142,9 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
                      if not a[0].endswith('/'))
         prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
-        for name in files:
+        for name, info in files.items():
             out = os.path.join(target_dir, os.path.relpath(name, prefix))
-            _copyfile(zf.open(files[name]), out)
+            _copyfile(zf.open(info), out, zipinfo=info)
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
@@ -64,7 +154,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
 
     Involves a lot of shelling out, as Python's `tarfile` cannot open
     the .tar.bz2 archived DF releases (complicated header issue).
-    OSX disk images (.dmg) are also unsupported by Python.
+    macOS disk images (.dmg) are also unsupported by Python.
     """
     if filename.endswith('.exe') and paths.HOST_OS == 'win' \
             or filename.endswith('.jar'):
@@ -79,13 +169,18 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
         files = [os.path.join(root, f)
                  for root, _, files in os.walk(tmpdir) for f in files]
         prefix = os.path.commonpath(files) if len(files) > 1 else ''
+        # BAD HACK: It's an unsafe assumption (made above) that the common
+        # path should always be stripped.
+        if filename.endswith('.dmg') and 'Legends Browser' in target_dir:
+            prefix = ''
         if target_dir:
-            copy_tree(os.path.join(tmpdir, prefix), target_dir)
+            copy_tree(os.path.join(tmpdir, prefix), target_dir,
+                      preserve_symlinks=True)
         else:
             for inpath, outpath in path_pairs:
                 if outpath.endswith('/'):
                     outpath += os.path.basename(inpath)
-                if os.path.isfile(os.path.join(tmpdir, prefix, inpath)):
+                if os.path.exists(os.path.join(tmpdir, prefix, inpath)):
                     _copyfile(os.path.join(tmpdir, prefix, inpath), outpath)
                 else:
                     print('WARNING:  "{}" not found in "{}"'.format(
@@ -93,15 +188,34 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     return True
 
 
+def unpack_dmg(filename, dest):
+    """Extract a .dmg disk image on macOS into the dest dir."""
+    assert filename.endswith('.dmg') and paths.HOST_OS == 'osx'
+    with tempfile.TemporaryDirectory() as tmpdir:
+        try:
+            subprocess.check_call(['hdiutil', 'attach', '-quiet', '-readonly',
+                                   '-nobrowse', '-mountpoint', tmpdir,
+                                   filename])
+        except subprocess.CalledProcessError:
+            print('Failed to mount', filename, ' -- is it already mounted?')
+            raise
+        try:
+            copy_tree(tmpdir, dest, preserve_symlinks=True)
+        finally:
+            subprocess.check_call(['hdiutil', 'detach', '-quiet', tmpdir])
+
+
+
 def unpack_anything(filename, tmpdir):
     """Extract practically any archive format from src file to dest dir."""
     if filename.endswith('.dmg') and paths.HOST_OS == 'osx':
-        # TODO:  support .dmg extraction via shell on OSX
-        raise NotImplementedError(
-            'TODO: mount .dmg, copy contents to tmpdir, unmount')
+        unpack_dmg(filename, tmpdir)
+        return True
     elif zipfile.is_zipfile(filename):
-        # Uses fast version above; handled here for completeness
-        zipfile.ZipFile(filename).extractall(tmpdir)
+        # zip files *can* include information about UNIX file modes, but Python
+        # does not extract them. Skip using zipfile and just shell out to the
+        # command line.
+        UnixAwareZipFile(filename).extractall(tmpdir)
         return True
     elif any(filename.endswith('.tar.' + ext) for ext in ('bz2', 'xz', 'gz'))\
             or tarfile.is_tarfile(filename):
@@ -134,63 +248,39 @@ def unpack_anything(filename, tmpdir):
     return False
 
 
-def extract_comp(pool, comp):
-    """Return args with which comp can be sent to the executor."""
+def extract_comp(comp):
+    """Extracts a single component."""
     if ':' not in comp.extract_to:
         # first part of extract_to is paths method, remainder is args
         dest, *details = comp.extract_to.split('/')
-        return pool.submit(unzip_to, comp.path, getattr(paths, dest)(*details))
+        return unzip_to(comp.path, target_dir=getattr(paths, dest)(*details))
     # else using the path_pairs option; extract pairs from string
     pairs = []
-    for pair in comp.extract_to.strip().split('\n'):
-        src, to = pair.split(':')
+    for pair in comp.extract_to.strip().splitlines():
+        src, _, to = pair.partition(':')
         dest, *details = to.split('/')
         # Note: can add format variables here as needed
         if '{DFHACK_VER}' in src:
             src = src.format(DFHACK_VER=component.ALL['DFHack'].version)
-        pairs.append([src, getattr(paths, dest)(*details)])
-    return pool.submit(unzip_to, comp.path, None, pairs)
+        pairs.append((src, getattr(paths, dest)(*details)))
+    return unzip_to(comp.path, path_pairs=pairs)
 
 
 def extract_everything():
-    """Extract everything in components.yml, respecting order requirements."""
-    def q_key(comp):
-        """Decide extract priority by pointer-chase depth, filesize in ties."""
-        after = {c.install_after: c.name for c in component.ALL.values()}
-        name, seen = comp.name, []
-        while name in after:
-            seen.append(name)
-            name = after.get(name)
-            if name in seen:
-                raise ValueError('Cyclic "install_after" config detected: ' +
-                                 ' -> '.join(seen + [name]))
-        return len(seen), os.path.getsize(comp.path)
+    """Extract every component, respecting order requirements."""
+    queue = TaskQueue()
+    def enqueue_comp(comp):
+        after = [ comp.install_after ] if comp.install_after else []
+        queue.add(comp.name, comp, prereqs=after)
 
-    queue = list(component.ALL.values()) + [
-        component.ALL['Dwarf Fortress']._replace(name=path, extract_to=path)
-        for path in ('curr_baseline', 'graphics/ASCII')]
-    queue.sort(key=q_key, reverse=True)
-    with concurrent.futures.ProcessPoolExecutor(8) as pool:
-        futures = dict()
-        while queue:
-            while sum(f.running() for f in futures.values()) < 8:
-                for idx, comp in enumerate(queue):
-                    aft = futures.get(comp.install_after)
-                    # Even if it's highest-priority, wait for parent job(s)
-                    if aft is None or aft.done():
-                        futures[comp.name] = extract_comp(pool, queue.pop(idx))
-                        break  # reset index or we might pop the wrong item
-                else:
-                    break  # if there was nothing eligible to extract, sleep
-            time.sleep(0.01)
-    failed = [k for k, v in futures.items() if v.exception() is not None]
-    for key in failed:
-        comp = component.ALL.pop(key, None)
-        for lst in (component.FILES, component.GRAPHICS, component.UTILITIES):
-            if comp in lst:
-                lst.remove(comp)
-    if failed:
-        print('ERROR:  Could not extract: ' + ', '.join(failed))
+    for comp in component.ALL.values():
+        enqueue_comp(comp)
+    for path in ('curr_baseline', 'graphics/ASCII'):
+        comp = component.ALL['Dwarf Fortress']._replace(name=path,
+                                                        extract_to=path)
+        enqueue_comp(comp)
+    for comp in queue:
+        extract_comp(comp)
 
 
 def add_lnp_dirs():
