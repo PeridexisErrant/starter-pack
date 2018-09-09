@@ -1,3 +1,9 @@
+0.44.12-r03
+ - updated Dwarf Therapist to v41.0.2
+ - updated PyLNP to 0.13a
+ - updated TwbT to 6.54
+ - fixed bad install of TwbT graphics (thanks to taleden for reporting it)
+
 0.44.12-r02
  - fixed Dwarf Therapist (use 64bit build)
 

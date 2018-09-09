@@ -3,8 +3,6 @@
 This project is NOT an actual pack, or intended for public use.
 [See here](http://www.bay12forums.com/smf/index.php?topic=126076) for that.
 
-See the [hourly build log here](http://peridexiserrant.neocities.org/starter-pack.log.txt).
-
 There is *no support* for using this tool - it is designed for my own use,
 and released in the hope that others might find it useful.
 Bug reports are most welcome; feature requests are not
