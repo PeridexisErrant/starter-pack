@@ -261,15 +261,6 @@ def _twbt_settings(pack):
             init[n] = '[PRINT_MODE:TWBT]\n'
     with open(init_file, 'w') as f:
         f.writelines(init)
-    # Copy twbt-specific graphics files into place.  PyLNP aspires to handle
-    # this as of 0.13a, but it's basically broken.  See
-    # https://bitbucket.org/Pidgeot/python-lnp/issues/159
-    for dir_, k in [('raw', 'graphics'), ('raw', 'objects'),
-                    ('data', 'art'), ('data', 'init')]:
-        t = paths.graphics(pack, dir_, 'twbt_' + k)
-        if os.path.isdir(t):
-            overwrite_dir(t, paths.graphics(pack, dir_, k))
-            shutil.rmtree(t)
 
 
 def _check_a_graphics_pack(pack):

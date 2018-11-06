@@ -1,3 +1,9 @@
+0.44.12-r04
+ - updated Dwarf Therapist to v41.0.3
+ - updated TwbT to 6.55
+ - updated Legends Viewer to 1.19.10
+ - updated PyLNP to 0.13b
+
 0.44.12-r03
  - updated Dwarf Therapist to v41.0.2
  - updated PyLNP to 0.13a
