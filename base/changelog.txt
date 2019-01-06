@@ -1,3 +1,7 @@
+0.44.12-r05
+ - updated DFHack to 0.44.12-r2
+ - updated TwbT to 6.57
+
 0.44.12-r04
  - updated Dwarf Therapist to v41.0.3
  - updated TwbT to 6.55
