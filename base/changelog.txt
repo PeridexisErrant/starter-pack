@@ -1,3 +1,9 @@
+0.44.12-r06
+ - updated Armok Vision to 0.20.2
+ - updated TwbT to 6.61
+ - added Announcement Window (1.2b)
+ - updated CLA graphics to 44.xx-v26
+
 0.44.12-r05
  - updated DFHack to 0.44.12-r2
  - updated TwbT to 6.57
