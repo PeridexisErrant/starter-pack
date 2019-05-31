@@ -25,7 +25,7 @@ For anyone using these tools to assemble their own pack:
   applies to all the code, and to the code *only*.
 
   Some files in `./base/` are mine; some are by other people in
-  the Dwarf Fortress community.  Treat this files as if they are
+  the Dwarf Fortress community.  Treat these files as if they are
   under an informal version of the [CC-BY-SA license](https://creativecommons.org/licenses/by-sa/4.0).
 
   Any outputs you produce with this software are entirely your
@@ -46,6 +46,3 @@ For anyone using these tools to assemble their own pack:
   (or when building for windows on another OS; tested on Debian).
   If you are interested in helping support OSX or Linux, please
   get in touch with my handle at gmail.
-
-
-

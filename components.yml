@@ -1,5 +1,5 @@
 # Each component, under files/utilities/graphics:
-#     SHOULD have a "bay12" key set to the forum thread number
+#     MUST have a "bay12" key set to the forum thread number
 #     SHOULD have "host" set to one of "dffd", "github-asset", "github-source",
 #       "bitbucket", or "manual".  If unset, defaults to "dffd" if "host" is an int,
 #       "github-source" if under graphics, or "github-asset" otherwise.
@@ -53,7 +53,22 @@ files:
         updated: "2017-03-10"
         extract_to: lnp/utilities/Quickfort
         install_after: Quickfort
+    Announcement window icons:
+        requires_os: win
+        bay12: 153777
+        host: manual
+        dl_link: https://github.com/BrachystochroneSD/AnnouncementWindow/releases/download/v1.3.0/icons_pack.zip
+        version: "1.3"
+        updated: "2019-04-23"
+        extract_to: "lnp/utilities/Announcement Window"
+        install_after: "Announcement Window"
 utilities:
+    Announcement Window:
+        requires_os: win
+        bay12: 153777
+        ident: BrachystochroneSD/AnnouncementWindow
+        manifest:
+            tooltip: Announcement Window:Shows live announcements and combat reports in a separate window.
     Armok Vision:
         bay12: 146473
         ident: JapaMala/armok-vision
