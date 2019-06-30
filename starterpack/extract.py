@@ -22,15 +22,14 @@ class TaskQueue:
     def __init__(self):
         self.tasks = {}
 
-    def add(self, name, value, prereqs=None):
-        self.tasks[name] = (value, prereqs or [])
+    def add(self, name, prereqs=None):
+        self.tasks[name] = (prereqs or [])
 
     def pop(self):
-        """Pops the next executable task off the queue and returns it."""
-        for name, (value, prereqs) in self.tasks.items():
+        for name, prereqs in self.tasks.items():
             if len(prereqs) == 0:
                 self.remove(name)
-                return value
+                return name
         # Nothing found with no pending prerequisites; maybe there's a circular
         # reference?
         if len(self.tasks) == 0:
@@ -38,27 +37,17 @@ class TaskQueue:
         raise RuntimeError('circular dependencies detected')
 
     def remove(self, name):
-        """Removes a task, and removes it as a dependency of other tasks."""
         del self.tasks[name]
-        for _, prereqs in self.tasks.values():
+        for prereqs in self.tasks.values():
             try:
                 prereqs.remove(name)
             except ValueError:
                 continue
-
-    def _check(self):
-        """Tests that every task is well-defined."""
-        for name, (_, prereqs) in self.tasks.items():
-            for prereq in prereqs:
-                if prereq not in self.tasks:
-                    raise ValueError('Task "%s" depends on missing task "%s"' %
-                                     (name, prereq))
-
+    
     def __iter__(self):
         """Allows iterating over queued tasks, which empties the queue."""
-        self._check()
         return self
-
+    
     def __next__(self):
         try:
             return self.pop()
@@ -111,7 +100,7 @@ def _copyfile(src, dest, zipinfo=None):
             mode = UnixAwareZipFile.get_mode(zipinfo)
             if mode != 0:
                 try:
-                    os.chmod(dest, mode)
+                    chmod(dest, mode)
                 except OSError:
                     print('Failed to correct mode of', targetpath)
                     raise
@@ -128,6 +117,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     In 'path_pairs' mode, the argument should be a sequence of paths.
     The file at the first path within the zip is written at the second path.
     """
+    print('unzip_to', filename, target_dir, path_pairs)
     assert bool(target_dir) != bool(path_pairs), 'Choose one unzip mode!'
     out = target_dir or os.path.commonpath([p[1] for p in path_pairs])
     print('{:28}  ->  {}'.format(os.path.basename(filename)[:28],
@@ -269,16 +259,9 @@ def extract_comp(comp):
 def extract_everything():
     """Extract every component, respecting order requirements."""
     queue = TaskQueue()
-    def enqueue_comp(comp):
-        after = [ comp.install_after ] if comp.install_after else []
-        queue.add(comp.name, comp, prereqs=after)
-
     for comp in component.ALL.values():
-        enqueue_comp(comp)
-    for path in ('curr_baseline', 'graphics/ASCII'):
-        comp = component.ALL['Dwarf Fortress']._replace(name=path,
-                                                        extract_to=path)
-        enqueue_comp(comp)
+        after = [ comp.install_after ] if comp.install_after else []
+        queue.add(comp, prereqs=after)
     for comp in queue:
         extract_comp(comp)
 
