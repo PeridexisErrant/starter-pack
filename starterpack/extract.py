@@ -163,7 +163,7 @@ def extract_comp(pool, comp):
         return pool.submit(unzip_to, comp.path, getattr(paths, dest)(*details))
     # else using the path_pairs option; extract pairs from string
     pairs = []
-    for pair in comp.extract_to.strip().split('\n'):
+    for pair in comp.extract_to.strip().splitlines():
         src, to = pair.split(':')
         dest, *details = to.split('/')
         # Note: can add format variables here as needed
