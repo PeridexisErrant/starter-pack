@@ -26,6 +26,9 @@ files:
         os-linux:
             extract_to: |
                 PyLNP:build/starter-pack-launcher
+        os-osx:
+            extract_to: |
+                PyLNP.app:build/Starter Pack Launcher (PyLNP).app
     Stocksettings presets:
         bay12: 146213
         ident: 10170
@@ -41,6 +44,9 @@ files:
         os-linux:
             extract_to: |
                 {DFHACK_VER}/twbt.plug.so:plugins/
+        os-osx:
+            extract_to: |
+                {DFHACK_VER}/twbt.plug.dylib:plugins/
         needs_dfhack: True
         install_after: DFHack
     Quickfort_64:
@@ -70,6 +76,7 @@ utilities:
         manifest:
             tooltip: Announcement Window:Shows live announcements and combat reports in a separate window.
     Armok Vision:
+        requires_os: win linux
         bay12: 146473
         ident: JapaMala/armok-vision
         needs_dfhack: True
@@ -114,6 +121,7 @@ utilities:
         ident: robertjanetzko/LegendsBrowser
         manifest:
             tooltip: An in-browser legends utility, available for all operating systems.
+            osx_exe: Legends Browser.app/Contents/MacOS/JavaAppLauncher
     Legends Viewer:
         requires_os: win
         bay12: 154617
@@ -149,6 +157,7 @@ utilities:
         manifest:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
             linux_exe: soundSense.sh
+            osx_exe: soundSense.sh
     World Viewer:
         requires_os: win
         bay12: 128932
