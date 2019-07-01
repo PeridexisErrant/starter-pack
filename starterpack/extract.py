@@ -23,10 +23,17 @@ def _copyfile(src, dest):
     """Copy the source file path or object to the dest path, creating dirs."""
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     if isinstance(src, str):
-        shutil.copy2(src, dest)
-    else:
+        if os.path.isfile(src):
+            shutil.copy2(src, dest)
+        elif os.path.isdir(src):
+            copy_tree(src, dest, preserve_symlinks=True)
+        else:
+            raise IOError('Unexpected file type for %s' % src)
+    elif isinstance(src, zipfile.ZipExtFile):
         with open(dest, 'wb') as out:
             shutil.copyfileobj(src, out)
+    else:
+        raise NotImplementedException('Unexpected source type %s' % type(src))
 
 
 def unzip_to(filename, target_dir=None, path_pairs=None):
@@ -52,9 +59,9 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
                      if not a[0].endswith('/'))
         prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
-        for name in files:
+        for name, info in files.items():
             out = os.path.join(target_dir, os.path.relpath(name, prefix))
-            _copyfile(zf.open(files[name]), out)
+            _copyfile(zf.open(info), out)
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
@@ -84,12 +91,12 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
         if filename.endswith('.dmg') and 'Legends Browser' in target_dir:
             prefix = ''
         if target_dir:
-            copy_tree(os.path.join(tmpdir, prefix), target_dir)
+            copy_tree(os.path.join(tmpdir, prefix), target_dir, preserve_symlinks=True)
         else:
             for inpath, outpath in path_pairs:
                 if outpath.endswith('/'):
                     outpath += os.path.basename(inpath)
-                if os.path.isfile(os.path.join(tmpdir, prefix, inpath)):
+                if os.path.exists(os.path.join(tmpdir, prefix, inpath)):
                     _copyfile(os.path.join(tmpdir, prefix, inpath), outpath)
                 else:
                     print('WARNING:  "{}" not found in "{}"'.format(
@@ -164,7 +171,7 @@ def extract_comp(pool, comp):
     # else using the path_pairs option; extract pairs from string
     pairs = []
     for pair in comp.extract_to.strip().splitlines():
-        src, to = pair.split(':')
+        src, _, to = pair.partition(':')
         dest, *details = to.split('/')
         # Note: can add format variables here as needed
         if '{DFHACK_VER}' in src:
@@ -218,7 +225,7 @@ def add_lnp_dirs():
     """Install the LNP subdirs that I can't create automatically."""
     # Should use https://github.com/Lazy-Newb-Pack/LNP-shared-core someday...
     for d in ('colors', 'embarks', 'extras', 'keybinds', 'tilesets'):
-        copy_tree(paths.base(d), paths.lnp(d))
+        copy_tree(paths.base(d), paths.lnp(d), preserve_symlinks=True)
 
 
 def main():
