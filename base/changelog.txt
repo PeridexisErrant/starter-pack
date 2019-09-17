@@ -1,3 +1,8 @@
+0.44.12-r07
+ - updated Dwarf Therapist to v41.1.0
+ - added Vettlingr graphics
+ - franken-dfhack spliced in a patch for stonesense with wagons
+
 0.44.12-r06
  - updated Armok Vision to 0.20.2
  - updated TwbT to 6.61

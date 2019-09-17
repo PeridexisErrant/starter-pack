@@ -50,7 +50,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
     # More complex, but faster for zips to do it this way
     with zipfile.ZipFile(filename) as zf:
         files = dict(a for a in zip(zf.namelist(), zf.infolist())
-                     if not a[0].endswith('/'))
+                     if not (a[0].endswith('/') or "__MACOSX/" in a[0]))
         prefix = os.path.commonpath(list(files)) if len(files) > 1 else ''
         for name in files:
             out = os.path.join(target_dir, os.path.relpath(name, prefix))
@@ -75,6 +75,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     with tempfile.TemporaryDirectory() as tmpdir:
         if not unpack_anything(filename, tmpdir):
             raise RuntimeError('Could not extract file {}'.format(filename))
+        shutil.rmtree(os.path.join(tmpdir, "__MACOSX"), ignore_errors=True)
         # Copy from tempdir to destination
         files = [os.path.join(root, f)
                  for root, _, files in os.walk(tmpdir) for f in files]
