@@ -42,8 +42,10 @@ def pack_ver(*, warn=True):
     """Return the current version string of the created pack."""
     with open('base/changelog.txt') as f:
         ver = f.readline().strip()
-    if warn and not ver.startswith(df_ver()):
-        print('ERROR:  pack version must start with DF version.')
+        if warn and not ver.startswith(df_ver()):
+            print('ERROR:  pack version must start with DF version.')
+        for _ in range(100):
+            assert not f.readline().startswith(ver), ver + " in changelog twice"
     return ver
 
 

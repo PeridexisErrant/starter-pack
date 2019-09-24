@@ -1,3 +1,7 @@
+0.44.12-r08
+ - fixed DFHack, I hope
+ - updated Vettlingr graphics to version 1.2
+
 0.44.12-r07
  - updated Dwarf Therapist to v41.1.0
  - added Vettlingr graphics
