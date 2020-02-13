@@ -6,7 +6,7 @@ This project is NOT an actual pack, or intended for public use.
 There is *no support* for using this tool - it is designed for my own use,
 and released in the hope that others might find it useful.
 Bug reports are most welcome; feature requests are not
-(missing OS support is considered a bug - it should work on Windows, OSX, and Linux).
+(missing OS support is considered a bug - it should work on Windows, macOS, and Linux).
 
 **What it does:**
 
@@ -36,13 +36,10 @@ For anyone using these tools to assemble their own pack:
   set up and configured via these files, which are also commented.
 
 - You will need Python 3.5+, as I make extensive use of several
-  new features.  You will also need the `requests` and `pyaml`
-  libraries (both can be installed with `pip`).
-
-  Optional dependencies to unpack exotic archive types may be
-  added in future, but will not be required.
+  new features.  Dependencies can be installed with
+  `pip install -r requirements.txt`.
 
 - Many items in the provided config will only work on Windows
   (or when building for windows on another OS; tested on Debian).
-  If you are interested in helping support OSX or Linux, please
+  If you are interested in helping support macOS or Linux, please
   get in touch with my handle at gmail.
