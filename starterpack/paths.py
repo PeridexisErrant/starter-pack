@@ -19,7 +19,7 @@ with suppress(IOError):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--os', choices=['win', 'linux', 'osx'], default=native_os)
-parser.add_argument('--bits', choices=['32', '64',], default='64')
+parser.add_argument('--bits', choices=['32', '64'], default='64')
 parser.add_argument('--stable', dest='stable', action='store_true')
 parser.add_argument('--unstable', dest='stable', action='store_false')
 parser.set_defaults(stable=True)

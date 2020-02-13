@@ -1,3 +1,13 @@
+0.47.02-r01
+    (preview/unstable; not yet recommended for new players)
+ - updated Vettlingr graphics to 1.3-1
+ - updated Dwarf Fortress to v0.47.02
+ - updated graphics packs for compatibility - CLA, Ironhand, Mayday, Meph, Obsidian, Phoebus, Spacefox
+ - updated Legends Browser to 1.18.1
+ - updated Legends Viewer to 1.20.01
+ - updated Dwarf Therapist to v41.1.3
+ - updated DFHack to 0.47.02-alpha0-200213001 (a nightly build - may be unstable)
+
 0.44.12-r08
  - fixed DFHack, I hope
  - updated Vettlingr graphics to version 1.2

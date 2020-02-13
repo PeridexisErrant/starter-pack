@@ -16,6 +16,16 @@ files:
         ident: DFHack/dfhack
         extract_to: df
         install_after: Dwarf Fortress
+        ##  These lines can be un-commented and edited as appropriate to get a
+        ##  nightly build of DFHack from https://buildmaster.lubar.me/applications/3/overview
+        ##  You'll need to go to the latest build page, download the appropriate artifact
+        ##  (e.g. Windows64.zip), then *extract the zipfile inside that zip* to the
+        ##  components cache.  With the keys below also updated, it should then work...
+        ##  TODO: consider automating this process when passed --unstable
+        # host: manual
+        # dl_link: http://example.com/dfhack-0.47.02-alpha0-200213001-Windows-64.zip
+        # version: "0.47.02-alpha0-200213001"
+        # updated: "2020-02-13"
     PyLNP:
         bay12: 140808
         host: bitbucket
@@ -53,7 +63,7 @@ files:
         updated: "2017-03-10"
         extract_to: lnp/utilities/Quickfort
         install_after: Quickfort
-    Announcement window icons:
+    Ann. window icons:
         requires_os: win
         bay12: 153777
         host: manual
@@ -73,6 +83,8 @@ utilities:
         bay12: 146473
         ident: JapaMala/armok-vision
         needs_dfhack: True
+        manifest:
+            tooltip: Armok Vision visualises your fortress in real-time true 3D!
     DF Story Maker:
         requires_os: win
         bay12: 128570
@@ -99,7 +111,6 @@ utilities:
         manifest:
             tooltip: View generated sketch versions of any creature in DF
     Dwarf Therapist:
-        requires_os: win
         bay12: 168411
         ident: Dwarf-Therapist/Dwarf-Therapist
     Isoworld:
