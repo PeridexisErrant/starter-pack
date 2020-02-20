@@ -89,7 +89,7 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
                 if os.path.isfile(os.path.join(tmpdir, prefix, inpath)):
                     _copyfile(os.path.join(tmpdir, prefix, inpath), outpath)
                 else:
-                    print('WARNING:  "{}" not found in "{}"'.format(
+                    raise FileNotFoundError('WARNING:  "{}" not found in "{}"'.format(
                           inpath, os.path.basename(filename)))
     return True
 
@@ -176,6 +176,10 @@ def extract_everything():
         while queue:
             while sum(f.running() for f in futures.values()) < 8:
                 for idx, comp in enumerate(queue):
+                    if comp.extract_to is False:
+                        assert comp.filename.endswith(".ini")
+                        queue.pop(idx)
+                        continue  # for Therapist, handled in build.py
                     aft = futures.get(comp.install_after)
                     # Even if it's highest-priority, wait for parent job(s)
                     if aft is None or aft.done():

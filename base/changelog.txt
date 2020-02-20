@@ -1,3 +1,12 @@
+0.47.03-r01
+    (preview/unstable; not yet recommended for new players)
+ - updated Dwarf Fortress to v0.47.03
+ - updated graphics packs for compatibility - Ironhand, Mayday, Meph, Obsidian, Phoebus, Spacefox
+ - updated Legends Viewer to 1.20.02
+ - updated DFHack to 0.47.03-alpha0-200219000 (a nightly build - may be unstable)
+ - updated default embark profiles
+ - DOES NOT include Text Will Be Text plugin
+
 0.47.02-r01
     (preview/unstable; not yet recommended for new players)
  - updated Vettlingr graphics to 1.3-1

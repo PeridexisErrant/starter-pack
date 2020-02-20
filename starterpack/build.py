@@ -337,7 +337,7 @@ def build_lnp_dirs():
 
     # Create new PyLNP.json
     with open(paths.base('PyLNP-json.yml')) as f:
-        pylnp_conf = yaml.load(f)
+        pylnp_conf = yaml.load(f, Loader=yaml.Loader)
     pylnp_conf['updates']['packVersion'] = paths.pack_ver()
     pylnp_conf['updates']['dffdID'] = paths.CONFIG['dffdID']
     if not paths.ARGS.stable:
@@ -345,6 +345,12 @@ def build_lnp_dirs():
     for hack in pylnp_conf['dfhack'].values():
         # remove trailing newline from multiline tooltips
         hack['tooltip'] = hack['tooltip'].strip()
+    if "TwbT" not in component.ALL:
+        for k, v in dict(pylnp_conf['dfhack']).items():
+            for cmd in ("twbt", "multilevel"):
+                if v["command"].startswith(cmd):
+                    pylnp_conf['dfhack'].pop(k, None)
+        os.remove(paths.df('dfhack_PeridexisErrant.init'))
     with open(paths.lnp('PyLNP.json'), 'w') as f:
         json.dump(pylnp_conf, f, indent=2)
     # Create init files with any DFHack options with enabled=True

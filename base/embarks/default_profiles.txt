@@ -1,7 +1,7 @@
 Simple defaults for new players; designed to give you an easy start with better preparation than 'play now'.  All written specifically for DF 40.xx
 
 [PROFILE]
-    [TITLE:DFVIDTUTS2015 - Easy start made for new players]
+    [TITLE:DFVIDTUTS2020 - Easy start made for new players]
     [SKILL:1:MINING:5]
     [SKILL:1:NEGOTIATION:1]
     [SKILL:1:JUDGING_INTENT:1]
@@ -55,14 +55,14 @@ Simple defaults for new players; designed to give you an easy start with better 
     [ITEM:2:THREAD:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
     [ITEM:2:CLOTH:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
     [ITEM:2:CHAIN:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
-    [ITEM:3:BOX:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [ITEM:2:BOX:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
     [ITEM:2:THREAD:NONE:CREATURE_MAT:SHEEP:HAIR]
     [ITEM:2:CLOTH:NONE:CREATURE_MAT:SHEEP:HAIR]
     [ITEM:1:LIQUID_MISC:NONE:LYE:NONE]
     [ITEM:10:DRINK:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:DRINK]
     [ITEM:20:DRINK:NONE:PLANT_MAT:GRASS_TAIL_PIG:DRINK]
     [ITEM:20:DRINK:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:DRINK]
-    [ITEM:12:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
+    [ITEM:11:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
     [ITEM:1:POWDER_MISC:NONE:INORGANIC:SAND_TAN]
     [ITEM:1:POWDER_MISC:NONE:INORGANIC:SAND_WHITE]
     [ITEM:1:POWDER_MISC:NONE:INORGANIC:SAND_BLACK]
@@ -91,8 +91,6 @@ Simple defaults for new players; designed to give you an easy start with better 
     [ITEM:1:MEAT:NONE:CREATURE_MAT:SHEEP:MUSCLE]
     [ITEM:1:MEAT:NONE:CREATURE_MAT:COW:MUSCLE]
     [ITEM:1:WEAPON:ITEM_WEAPON_AXE_BATTLE:INORGANIC:COPPER]
-    [PET:1:BIRD_TURKEY:MALE:STANDARD]
-    [PET:4:BIRD_TURKEY:FEMALE:STANDARD]
     [PET:5:DOG:FEMALE:STANDARD]
     [PET:1:DOG:MALE:STANDARD]
     [PET:1:DOG:MALE:TRAINED_HUNTER]
@@ -100,10 +98,16 @@ Simple defaults for new players; designed to give you an easy start with better 
     [PET:1:CAT:MALE:STANDARD]
     [PET:1:SHEEP:FEMALE:STANDARD]
     [PET:1:SHEEP:MALE:STANDARD]
-    [PET:6:BIRD_CHICKEN:FEMALE:STANDARD]
+    [PET:4:BIRD_CHICKEN:FEMALE:STANDARD]
     [PET:1:BIRD_CHICKEN:MALE:STANDARD]
     [PET:2:BIRD_DUCK:FEMALE:STANDARD]
     [PET:1:BIRD_DUCK:MALE:STANDARD]
+    [PET:1:BIRD_GOOSE:FEMALE:STANDARD]
+    [PET:1:BIRD_GOOSE:MALE:STANDARD]
+    [PET:1:BIRD_GUINEAFOWL:FEMALE:STANDARD]
+    [PET:1:BIRD_GUINEAFOWL:MALE:STANDARD]
+    [PET:4:BIRD_TURKEY:FEMALE:STANDARD]
+    [PET:1:BIRD_TURKEY:MALE:STANDARD]
 
 [PROFILE]
     [TITLE:JKATZ MAXBOXES]
@@ -174,7 +178,7 @@ Simple defaults for new players; designed to give you an easy start with better 
     [PET:1:PIG:MALE:STANDARD]
 
 [PROFILE]
-    [TITLE:JKATZ FAST EXPAND (40.15+)]
+    [TITLE:JKATZ FAST EXPAND]
     [SKILL:1:MINING:2]
     [SKILL:1:DIAGNOSE:2]
     [SKILL:1:SURGERY:2]
@@ -290,7 +294,7 @@ Simple defaults for new players; designed to give you an easy start with better 
     [PET:1:BIRD_TURKEY:MALE:STANDARD]
 
 [PROFILE]
-    [TITLE:Nonfish 40.15+]
+    [TITLE:Nonfish]
     [SKILL:1:MINING:5]
     [SKILL:2:MINING:5]
     [SKILL:3:CARPENTRY:5]
@@ -537,74 +541,40 @@ Simple defaults for new players; designed to give you an easy start with better 
     [PET:1:BIRD_CHICKEN:MALE:STANDARD]
 
 [PROFILE]
-    [TITLE:Disciplined Craftlords (raw materials, advanced, 40.15+)]
-    [SKILL:1:DETAILSTONE:3]
-    [SKILL:1:MASONRY:3]
-    [SKILL:1:CROSSBOW:1]
-    [SKILL:1:DESIGNBUILDING:1]
-    [SKILL:1:DISCIPLINE:1]
-    [SKILL:2:FORGE_ARMOR:3]
-    [SKILL:2:METALCRAFT:3]
-    [SKILL:2:CROSSBOW:1]
-    [SKILL:2:DISCIPLINE:1]
-    [SKILL:3:FORGE_WEAPON:3]
-    [SKILL:3:FORGE_FURNITURE:3]
-    [SKILL:3:DISCIPLINE:1]
-    [SKILL:4:CUTGEM:3]
-    [SKILL:4:ENCRUSTGEM:3]
-    [SKILL:4:DISCIPLINE:1]
-    [SKILL:5:HERBALISM:2]
-    [SKILL:5:GLASSMAKER:3]
-    [SKILL:5:JUDGING_INTENT:1]
-    [SKILL:5:APPRAISAL:1]
-    [SKILL:5:DISCIPLINE:1]
-    [SKILL:6:SIEGECRAFT:1]
-    [SKILL:6:MECHANICS:3]
-    [SKILL:6:DESIGNBUILDING:1]
-    [SKILL:6:OPERATE_PUMP:1]
-    [SKILL:6:ORGANIZATION:1]
-    [SKILL:6:DISCIPLINE:1]
-    [SKILL:7:STONECRAFT:3]
-    [SKILL:7:DESIGNBUILDING:1]
-    [SKILL:7:CONSOLE:1]
-    [SKILL:7:PACIFY:1]
-    [SKILL:7:DISCIPLINE:1]
-    [SKILL:7:LEADERSHIP:1]
-    [ITEM:1:ANVIL:NONE:INORGANIC:IRON]
-    [ITEM:1:BAR:NONE:INORGANIC:COPPER]
-    [ITEM:1:BAR:NONE:COAL:COKE]
-    [ITEM:30:BOULDER:NONE:INORGANIC:COAL_BITUMINOUS]
-    [ITEM:10:BOULDER:NONE:INORGANIC:CASSITERITE]
-    [ITEM:10:BOULDER:NONE:INORGANIC:MALACHITE]
-    [ITEM:52:POWDER_MISC:NONE:INORGANIC:SAND_TAN]
-    [ITEM:10:WOOD:NONE:PLANT_MAT:TOWER_CAP:WOOD]
-    [ITEM:10:BOULDER:NONE:INORGANIC:BAUXITE]
-    [ITEM:5:MEAT:NONE:CREATURE_MAT:COW:MUSCLE]
-    [ITEM:5:MEAT:NONE:CREATURE_MAT:SHEEP:MUSCLE]
-    [ITEM:5:MEAT:NONE:CREATURE_MAT:RABBIT:MUSCLE]
-    [ITEM:5:MEAT:NONE:CREATURE_MAT:BIRD_CHICKEN:MUSCLE]
-    [ITEM:40:PLANT:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:STRUCTURAL]
-    [ITEM:28:DRINK:NONE:PLANT_MAT:GRASS_TAIL_PIG:DRINK]
-    [ITEM:28:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
-    [ITEM:28:DRINK:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:DRINK]
-    [ITEM:15:SEEDS:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:SEED]
-    [ITEM:14:SEEDS:NONE:PLANT_MAT:GRASS_TAIL_PIG:SEED]
-    [ITEM:7:SEEDS:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:SEED]
-    [ITEM:7:SEEDS:NONE:PLANT_MAT:POD_SWEET:SEED]
-    [ITEM:14:SEEDS:NONE:PLANT_MAT:BUSH_QUARRY:SEED]
-    [ITEM:7:SEEDS:NONE:PLANT_MAT:MUSHROOM_CUP_DIMPLE:SEED]
-    [ITEM:1:THREAD:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
-    [ITEM:1:CLOTH:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
-    [ITEM:1:CHAIN:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [TITLE:eniteris' LIBERAL ART MAJORS (Useless Scholars Challenge Embark)]
+    [SKILL:1:OPTICS_ENGINEER:5]
+    [SKILL:1:FLUID_ENGINEER:5]
+    [SKILL:2:WRITING:5]
+    [SKILL:2:GEOGRAPHY:5]
+    [SKILL:3:PROSE:5]
+    [SKILL:3:CHEMISTRY:5]
+    [SKILL:4:POETRY:5]
+    [SKILL:4:ASTRONOMY:5]
+    [SKILL:5:SPEAKING:5]
+    [SKILL:5:MATHEMATICS:5]
+    [SKILL:6:MAKE_MUSIC:5]
+    [SKILL:6:LOGIC:5]
+    [SKILL:7:DANCE:5]
+    [SKILL:7:CRITICAL_THINKING:5]
+    [ITEM:2:WEAPON:ITEM_WEAPON_PICK:INORGANIC:COPPER]
     [ITEM:1:WEAPON:ITEM_WEAPON_AXE_BATTLE:INORGANIC:COPPER]
-    [PET:2:BIRD_TURKEY:MALE:STANDARD]
-    [PET:4:BIRD_TURKEY:FEMALE:STANDARD]
-    [PET:4:DOG:FEMALE:STANDARD]
-    [PET:2:DOG:MALE:STANDARD]
-    [PET:2:CAT:FEMALE:STANDARD]
-    [PET:2:CAT:MALE:STANDARD]
-    [PET:7:BIRD_GUINEAFOWL:FEMALE:STANDARD]
-    [PET:2:BIRD_GUINEAFOWL:MALE:STANDARD]
+    [ITEM:1:ANVIL:NONE:INORGANIC:IRON]
+    [ITEM:70:DRINK:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:DRINK]
+    [ITEM:64:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
+    [ITEM:6:SEEDS:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:GRASS_TAIL_PIG:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:POD_SWEET:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:BUSH_QUARRY:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:MUSHROOM_CUP_DIMPLE:SEED]
+    [ITEM:15:MEAT:NONE:CREATURE_MAT:YAK:PANCREAS]
+    [ITEM:15:FISH:NONE:FISH_CAVE:MALE]
+    [ITEM:15:PLANT:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:STRUCTURAL]
+    [ITEM:70:DRINK:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:DRINK]
+    [ITEM:70:DRINK:NONE:PLANT_MAT:GRASS_TAIL_PIG:DRINK]
+    [PET:2:DOG:FEMALE:CHILD]
+    [PET:1:DOG:MALE:CHILD]
+    [PET:1:CAT:FEMALE:CHILD]
 
 [PROFILE]
     [TITLE:Disciplined Ruin Assault! (raw materials, advanced)]
@@ -684,3 +654,429 @@ Simple defaults for new players; designed to give you an easy start with better 
     [PET:1:CAT:MALE:STANDARD]
     [PET:1:PIG:FEMALE:STANDARD]
     [PET:1:PIG:MALE:STANDARD]
+
+[PROFILE]
+2020-02-11 by AlastrionaCatskill
+
+The intent of this embark profile is to provide a balance between micro and
+macromanagement on embark.  While the player is given the raw stones for coke
+and bronze (alloy of copper + tin), they are also provided with a surplus of
+food, tools, and leveled skills so that the dwarves can still easily get to
+safety (for example, reanimating evil biomes).  Dwarves have skills pre-set
+for having a manager, bookkeeper, broker, and chief medical dwarf.
+
+Because of the need for this embark to have reasonable levels of metal ores
+and bituminous coal, every wood object on a "Play Now!" embark has been
+sacrificed.  If you need buckets, crutches, splints, a wheelbarrow, or a
+stepladder, you will have to make those on your own.
+
+
+    [TITLE:AlastrionaCatskill - Metal Feast]
+    [SKILL:1:MINING:5]
+    [SKILL:1:MECHANICS:1]
+    [SKILL:2:MINING:5]
+    [SKILL:2:CUTGEM:1]
+    [SKILL:2:ENCRUSTGEM:1]
+    [SKILL:2:BONECARVE:1]
+    [SKILL:3:WOODCUTTING:1]
+    [SKILL:3:DRESS_WOUNDS:1]
+    [SKILL:3:DIAGNOSE:1]
+    [SKILL:3:SURGERY:1]
+    [SKILL:3:SET_BONE:1]
+    [SKILL:3:SUTURE:1]
+    [SKILL:3:RECORD_KEEPING:1]
+    [SKILL:4:CARPENTRY:5]
+    [SKILL:4:WOODCRAFT:1]
+    [SKILL:5:DETAILSTONE:1]
+    [SKILL:5:MASONRY:5]
+    [SKILL:5:STONECRAFT:1]
+    [SKILL:5:DESIGNBUILDING:1]
+    [SKILL:6:BUTCHER:1]
+    [SKILL:6:TANNER:1]
+    [SKILL:6:WEAVING:1]
+    [SKILL:6:BREWING:1]
+    [SKILL:6:CLOTHESMAKING:1]
+    [SKILL:6:COOK:1]
+    [SKILL:6:PLANT:1]
+    [SKILL:6:HERBALISM:1]
+    [SKILL:6:LEATHERWORK:1]
+    [SKILL:7:SMELT:1]
+    [SKILL:7:FORGE_WEAPON:1]
+    [SKILL:7:FORGE_ARMOR:1]
+    [SKILL:7:FORGE_FURNITURE:1]
+    [SKILL:7:METALCRAFT:1]
+    [SKILL:7:APPRAISAL:1]
+    [SKILL:7:ORGANIZATION:1]
+    [ITEM:2:WEAPON:ITEM_WEAPON_PICK:INORGANIC:COPPER]
+    [ITEM:1:WEAPON:ITEM_WEAPON_AXE_BATTLE:INORGANIC:COPPER]
+    [ITEM:1:ANVIL:NONE:INORGANIC:IRON]
+    [ITEM:6:SEEDS:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:GRASS_TAIL_PIG:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:POD_SWEET:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:BUSH_QUARRY:SEED]
+    [ITEM:5:SEEDS:NONE:PLANT_MAT:MUSHROOM_CUP_DIMPLE:SEED]
+    [ITEM:15:PLANT:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:STRUCTURAL]
+    [ITEM:5:THREAD:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [ITEM:5:CLOTH:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [ITEM:5:BOX:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [ITEM:3:CHAIN:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+    [ITEM:30:DRINK:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:DRINK]
+    [ITEM:30:DRINK:NONE:PLANT_MAT:GRASS_TAIL_PIG:DRINK]
+    [ITEM:30:DRINK:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:DRINK]
+    [ITEM:30:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
+    [ITEM:5:MEAT:NONE:CREATURE_MAT:HORSE:MUSCLE]
+    [ITEM:5:MEAT:NONE:CREATURE_MAT:PIG:GUT]
+    [ITEM:5:MEAT:NONE:CREATURE_MAT:COW:MUSCLE]
+    [ITEM:5:MEAT:NONE:CREATURE_MAT:BIRD_CHICKEN:MUSCLE]
+    [ITEM:5:FISH:NONE:FISH_CAVE:MALE]
+    [ITEM:5:FISH:NONE:LOBSTER_CAVE:MALE]
+    [ITEM:5:FISH:NONE:LOBSTER_CAVE:FEMALE]
+    [ITEM:5:FISH:NONE:FISH_CAVE:FEMALE]
+    [ITEM:1:BAR:NONE:COAL:COKE]
+    [ITEM:20:BOULDER:NONE:INORGANIC:COAL_BITUMINOUS]
+    [ITEM:20:BOULDER:NONE:INORGANIC:CASSITERITE]
+    [ITEM:20:BOULDER:NONE:INORGANIC:MALACHITE]
+    [ITEM:2:BOULDER:NONE:INORGANIC:MICROCLINE]
+    [PET:2:DOG:FEMALE:STANDARD]
+    [PET:1:DOG:MALE:STANDARD]
+    [PET:2:CAT:FEMALE:STANDARD]
+    [PET:1:CAT:MALE:STANDARD]
+
+
+[PROFILE]
+
+    [TITLE:clinodev's Annotated Craftlords (Open embark_profiles.txt or pastebin.com/2xNtgiqS for tutorial!)]
+
+Hello, folks!
+
+I thought it might be fun and educational to annotate my Craftlords embark
+profile with the logic behind, as a sort of combined tutorial on playing the
+profile, and on making your own profiles. Conveniently, the game ignores any
+text that isn't in square brackets! You can actually copy this entire post to
+the bottom of your current embark_profiles.txt! You might be reading this
+there right now if you're playing Dwarf Fortress v47 or later!
+
+Not every "best practice" in an embark profile can be used in a widely
+distributed pack, and I've pointed out a few things that can be improved
+situationally. I'm interested in your feedback!
+
+Craftlords are aspiring master smiths, craftsdwarves, and artists. They've
+set out searching for a home where they can focus on the art of transforming
+the raw stuff of the mountain into the finest examples of Craftdwarfsmanship
+to be found anywhere in the world, (and get what they deserve in trade!)
+They've also made sure they know the basics of defending themselves, and how
+to bind their wounds. They will quickly teach each other their skills if you
+put them in a military squad!
+
+As always, each has at least one good, dwarfy, moodable skill as its main,
+and they are as fully skilled as possible. I have avoided assigning skills
+that are easily trained (mining, woodcutting) produce "no quality" goods
+(wood burning, strand extracting, furnace operating) or ephemeral/peasant
+goods (brewing, cooking, cheesemaking, wood crafting.) Skills that I find
+"insufficiently dwarfy" are also excluded. My starting seven are meant to
+end up famous craftsmen in comfortable craft halls, and while they will
+perform some many tasks early on, once lesser dwarves have arrived, they'll
+be allowed to focus on their Arts. Migrants who arrive as Master Craftsdwarves
+(after a careful check for vampirism,) and the rare apprentice who shows rare
+talent (through a mood, usually,) are similarly honored.
+
+The Engraver
+
+This dwarf's dream is to carve the fortress into a palace of art and learning,
+engraved with the legends and histories of their people. In addition, they've
+learned to master their fears, and to teach a bit about the proper use of armor.
+
+    [SKILL:1:DETAILSTONE:5]
+    [SKILL:1:ARMOR:2]
+    [SKILL:1:DISCIPLINE:1]
+    [SKILL:1:TEACHING:1]
+    [SKILL:1:KNOWLEDGE_ACQUISITION:1]
+
+
+The Armorer
+
+Well on their way to becoming a master armorsmith, they've always been
+concerned about protecting their fellow dwarves. When they weren't
+learning at the forge, they were studying basic medicine.
+
+    [SKILL:2:FORGE_ARMOR:5]
+    [SKILL:2:DRESS_WOUNDS:1]
+    [SKILL:2:DIAGNOSE:2]
+    [SKILL:2:SET_BONE:1]
+    [SKILL:2:SUTURE:1]
+
+The Weaponsmith
+
+More skilled than most at forging arms, this dwarf has also taken lessons
+with spear and shield, and is prepared to teach others all they know.
+
+    [SKILL:3:FORGE_WEAPON:5]
+    [SKILL:3:SPEAR:2]
+    [SKILL:3:SHIELD:1]
+    [SKILL:3:TEACHING:2]
+
+The Jeweler
+
+Almost equally skilled at setting gems, making goblets, minting coins,
+and making wonderous metal toys and crafts, they can also build metal
+constructions, and even forge anvils! This dwarf will quickly fill the
+fortress and trade depot with fine goods!
+
+    [SKILL:4:ENCRUSTGEM:5]
+    [SKILL:4:METALCRAFT:4]
+    [SKILL:4:FORGE_FURNITURE:1]
+
+(Why no gem cutting? Cutting small gems is a "no quality" skill. Any no-skill
+peasant can cut them as well as a master, if not as quickly. The Jeweler will
+pick the skill up quickly enough if you enable it that the 5% of cutting jobs
+that are large gems or gem crafts will be masterwork soon enough! I often
+just enable it on large numbers of dwarves with no other moodable skills.)
+
+The Glassmaker
+
+Trained to transform the unlimited sand of the surface layers into virtually
+any good made by  other craftsdwarves, the Glassmaker often replaces them in
+mature fortresses. In the process of learning to make such a grand array of
+goods, our glassmaker has learned to judge the value of things, and the
+intentions of buyers and sellers, making them an excellent trade broker.
+They very often end up being the expedition leader as well.
+
+    [SKILL:5:GLASSMAKER:5]
+    [SKILL:5:JUDGING_INTENT:1]
+    [SKILL:5:APPRAISAL:1]
+    [SKILL:5:CONSOLE:3]
+
+
+
+The Engineer
+
+Meticulously trained in the engineering arts, this dwarf is in their element
+designing feindish traps from simple stonefalls to elaborate "reception rooms"
+that fill with pressurized magma at the pull of a lever. They can build the
+most meticulous mechanisms and machine components with their own hands. They
+understand the smelting of every metal and alloy known to dwarvenkind, and can
+even be found discussing the intricacies of fluid mechanics with visiting
+scholars.
+
+    [SKILL:6:MECHANICS:5]
+    [SKILL:6:SMELT:3]
+    [SKILL:6:FLUID_ENGINEER:1]
+    [SKILL:6:OPERATE_PUMP:1]
+
+
+The Mason
+
+In love with the very bones of the earth, this dwarf is experienced with
+making nearly any stone object, from granite puzzleboxes to marble bridges,
+basalt furnaces to obsidian short swords. Their experience with designing
+larger constructions has given them an installing them has given them an
+insight into architecture.
+
+    [SKILL:7:MASONRY:5]
+    [SKILL:7:STONECRAFT:4]
+    [SKILL:7:DESIGNBUILDING:1]
+
+Common concerns about the starting skills:
+
+"Wait, where are your miners?"
+
+Once upon a time, mining skill determined how many precious ore stones
+dropped from mining, but now there is a straight 25%/33%/100% chance for
+level stone, vein stone, and small cluster stone, respectively. Highly
+skilled miners are much faster, of course, but as you'll see below, my
+Starting Seven will quickly have six picks between them, which makes early
+mining go pretty darn fast! In practice, mining skill goes up so fast, the
+least busy starters on any given embark often end up training mining as
+their highest skill accidentally anyway before I can turn it off in favor
+of migrants. Dwarf Fortress streamers I've enticed to try this profile pack
+have often been surprised to discover they're a season or more ahead of
+their normal digging schedule the first year.
+
+"Wait, where is your woodcutter?"
+
+Admittedly, untrained woodcutters are sometimes a menace to themselves and
+others these days, but the embark profile starts with enough wood for a
+decent early dormitory. Most other wooden things are better done with stone,
+metal, or glass, and removing the small number of trees blocking early
+constructions is a reasonable risk. Woodcutting as a profession also implies
+that being outside is a good thing! It's best left to migrants, or practiced
+in the caverns. There is an axe included in case it's needed right away,
+and many more can be made if needed.
+
+"Wait, where are your cooks, growers, herbalists, and brewers?"
+
+Well, those are all fine things, of course, and can be assigned temporarily
+to the Starting Seven, and then permanently to early migrants, but high skill
+is hardly required in the early days of the fortress. The embark equipment
+below probably includes nearly enough food and drink to make it through to the
+first Dwarven caravan, even if you forget to grow crops or build nest boxes
+(assuming average migration waves.) Brewing up the plump helmets is a pretty
+important task, though, a great task for a first Summer migrant!
+
+"Wait, where are your cheesemakers and fisherdwarves?"
+
+Okay, you're just trolling now. On to starting equipment.
+
+Starting Equipment
+
+Tools and Crafting Materials
+
+[ITEM:1:ANVIL:NONE:INORGANIC:IRON]
+
+An anvil is absolutely critical to this build. Don't leave the Mountainhome without it!
+
+[ITEM:1:WEAPON:ITEM_WEAPON_AXE_BATTLE:INORGANIC:COPPER]
+
+A starting axe is a bit dubious for this build, to be honest. It was added
+some time back when wooden training axes stopped working for cutting down
+trees, and because I grew tired of explaining why there was no axe.
+I personally always delete it for the points.
+
+"Whoa, wait, you promised me 6 picks, I don't see them, and what do you mean,
+you delete the axe for the points? What about weapons and armor?
+There's nothing there!"
+
+Calm down, Urist, everything is going to be fine. See, we're Craftlords,
+and if we're going to devote our lives to turning the riches of the mountain
+into fine goods, what better time to start than right away? Unless we are in
+immediate danger upon embarking, the first thing we want to do is assign our
+mason to Furnace Operating and Architecture, and build a smelter, which we set
+to "Make coke from bituminous coal" three times, which will give us plenty of
+coke fuel for now. Then we "Make bronze bars (use ore)" three times, which will
+give us enough bronze for 24(!) axes, picks, etc., or a lesser number of other
+weapons and armor. The ore included will produce a total of 80 bronze bars,
+and 161 coke fuel, but it's easier to move the ores than bars, so three of
+each job is plenty.
+
+While this is going on, build a Metalsmith's Forge, and go ahead and start
+making picks, axes, and spears as required. I make six picks, one spear,
+and an axe to start.
+
+[ITEM:1:BAR:NONE:COAL:COKE]
+
+It takes fuel to make coke fuel! Without this starting bar, I'd need to build
+a Wood Furnace to make charcoal fuel before I could start producing coke fuel.
+Pure laziness, but it's much easier.
+
+[ITEM:1:BAR:NONE:INORGANIC:COPPER]
+
+This copper bar is an emergency backup, in case things are scarier on embark
+than planned. I can throw up a Metalsmith's Forge and make a quick pick to
+dig in the wagon (using the included coke fuel,) and worry about the other
+tools later.
+
+[ITEM:20:BOULDER:NONE:INORGANIC:COAL_BITUMINOUS]
+
+While 161 coke fuel seems like a lot, it goes pretty quick when you're using
+it for all your metal and glass needs. It's fairly cheap, and you can use it
+to build a quick wall in an emergency if needed. Occasionally, bituminous coal
+is not available to your civilization, and can be replaced by more expensive
+(per unit of fuel,) lignite or wood. Wood has to be burned at a wood furnace
+into charcoal to be used as fuel.
+
+[ITEM:10:BOULDER:NONE:INORGANIC:BAUXITE]
+
+The traditional fire/magma proof red stone, for those first few temporary
+workshops. It can be used (along with the wood and coal,) in a pinch for an
+emergency early surface bunker over the wagon. While bauxite is usually
+available, this is a common failure point like bituminous coal. It can be
+replaced with olivine, petrified wood, orthoclase, rutile, or other cheap
+magma-safe stone.
+
+[ITEM:10:BOULDER:NONE:INORGANIC:CASSITERITE]
+
+[ITEM:10:BOULDER:NONE:INORGANIC:MALACHITE]
+
+These are the cheapest ores commonly available for bronze. The malachite can be
+replaced with copper nuggets for the same price, or tetrahedrite for a little
+more. There's an argument for bismuth bronze, but in a distributed profile,
+it's just one more potential failure point
+(it's also not a great argument, to be honest.)
+
+[ITEM:50:POWDER_MISC:NONE:INORGANIC:SAND_TAN]
+
+Glass is love, glass is life! Cheap bags are handy! Seriously, though, glass
+is awesome. I never embark on any site with no sand now, and my main need for
+bags remains sand. If you need a handful of points to buy something else, this
+is a place to get them.
+
+[ITEM:10:WOOD:NONE:PLANT_MAT:TOWER_CAP:WOOD]
+
+Starting beds from properly dwarfy subterranean mushroom wood, such luxury!
+Mushroom woods are nearly always available, but if your civilization is missing
+Tower Cap, replace it with some other wood.
+
+
+Drink, Food, and Livestock
+
+[ITEM:40:PLANT:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:STRUCTURAL]
+[ITEM:28:DRINK:NONE:PLANT_MAT:GRASS_TAIL_PIG:DRINK]
+[ITEM:28:DRINK:NONE:PLANT_MAT:POD_SWEET:DRINK]
+[ITEM:28:DRINK:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:DRINK]
+[PET:8:BIRD_GUINEAFOWL:FEMALE:STANDARD]
+[PET:2:BIRD_GUINEAFOWL:MALE:STANDARD]
+
+"Wait, I was promised tons of food and drink, even if I forgot to build nest
+boxes or plant crops! That's not tons!"
+
+Well, do try to remember, and also make sure cooking is turned off for plump
+helmets. Once you've eaten or brewed all the plump helmets up, you'll probably
+be okay (with average first migration waves,) until the first caravan for
+booze (and much more secure if you plant something, or gather plants on the
+surface or in the caverns.) You could replace those with brewable garden
+vegetables for even more booze, but it's hard to predict which ones will be
+available for an embark, while plumpies are always there. Replace them if
+you prefer!
+
+Now, as for food, I prefer guineafowl for eggs because they have decent
+clutch size, mature quickly, and don't leave a lot of parts behind when they
+die. They are terrible for meat, though, so don't bother butchering them.
+
+"You said no nest boxes!"
+
+Alright, actually do build those nest boxes and plots, but butcher your draft
+animals (the ones you get free for drawing your wagon,) which will get you at
+least another 60 food, and sometimes double that. If you luck out with females,
+milk them first and make cheese!
+
+Seeds
+
+[ITEM:14:SEEDS:NONE:PLANT_MAT:MUSHROOM_HELMET_PLUMP:SEED]
+[ITEM:14:SEEDS:NONE:PLANT_MAT:GRASS_TAIL_PIG:SEED]
+[ITEM:7:SEEDS:NONE:PLANT_MAT:GRASS_WHEAT_CAVE:SEED]
+[ITEM:7:SEEDS:NONE:PLANT_MAT:POD_SWEET:SEED]
+[ITEM:14:SEEDS:NONE:PLANT_MAT:BUSH_QUARRY:SEED]
+[ITEM:7:SEEDS:NONE:PLANT_MAT:MUSHROOM_CUP_DIMPLE:SEED]
+
+Why multiples of seven seeds? I use 1x7 plots early on, because it's the
+smallest efficient plot to fertilize. If you're worried about plump helmet
+seeds, just hold off on the Spring crop until the plumpies have been brewed
+up. There's a common tendency to grow far more underground field crops than
+a fortress needs, by the way. It's much more efficient to under-grow and
+make it up with exotic caravan food than over-grow to the point where you're
+selling food just to keep it from rotting.
+
+Moodables
+
+[ITEM:1:THREAD:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+[ITEM:1:CLOTH:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+[ITEM:1:CHAIN:NONE:CREATURE_MAT:SPIDER_CAVE:SILK]
+
+They're not that expensive, and they've saved me on freak early moods before
+I have any textiles set up.
+
+Pets
+
+[PET:4:DOG:FEMALE:STANDARD]
+[PET:2:DOG:MALE:STANDARD]
+
+Dogs are useful for spotting sneakers and training up for war and hunting.
+
+[PET:1:CAT:MALE:STANDARD]
+
+As is tradition. Cats aren't actually all that useful, honestly, and they
+clutter the place with vermin corpses. But, tradition. I may or may not put
+the points into something else.
+
+Enjoy! --clinodev
