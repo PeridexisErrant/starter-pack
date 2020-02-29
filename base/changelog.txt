@@ -1,3 +1,15 @@
+0.47.03-r02
+    (preview/unstable; not yet recommended for new players)
+ - updated DFHack to 0.47.03-beta1
+ - updated TwbT to 0.47.03-beta1 (unofficial build by thurin)
+ - updated Dwarf Therapist to v41.1.4
+ - added new utility Soundsense-RS - does not require Java
+ - fixed icons configuration for Announcement Window
+ - disabled demo ("default") soundpack for Soundsense (overrides many 'real' sounds)
+   Thanks to Erendir for suggesting these config improvements
+ - added small base Soundsense pack by Jecowa
+   (still downloads music but many sounds 'just work')
+
 0.47.03-r01
     (preview/unstable; not yet recommended for new players)
  - updated Dwarf Fortress to v0.47.03

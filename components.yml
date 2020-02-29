@@ -16,16 +16,6 @@ files:
         ident: DFHack/dfhack
         extract_to: df
         install_after: Dwarf Fortress
-        ##  These lines can be un-commented and edited as appropriate to get a
-        ##  nightly build of DFHack from https://buildmaster.lubar.me/applications/3/overview
-        ##  You'll need to go to the latest build page, download the appropriate artifact
-        ##  (e.g. Windows64.zip), then *extract the zipfile inside that zip* to the
-        ##  components cache.  With the keys below also updated, it should then work...
-        ##  TODO: consider automating this process when passed --unstable
-        host: manual
-        dl_link: http://example.com/dfhack-0.47.03-alpha0-200219000-Windows-64.zip
-        version: "0.47.03-alpha0-200219000"
-        updated: "2020-02-21"
     PyLNP:
         bay12: 140808
         host: bitbucket
@@ -44,10 +34,10 @@ files:
         install_after: Dwarf Fortress
     TwbT:
         bay12: 138754
-        ident: mifki/df-twbt
+        ident: thurin/df-twbt  # mifki/df-twbt  ## using alternative for pre-release
         os-win:
-            extract_to: |
-                {DFHACK_VER}/twbt.plug.dll:plugins/
+            extract_to: plugins/
+              # | {DFHACK_VER}/twbt.plug.dll:plugins/ ## pre-release is only for current beta
         os-linux:
             extract_to: |
                 {DFHACK_VER}/twbt.plug.so:plugins/
@@ -63,6 +53,14 @@ files:
         updated: "2017-03-10"
         extract_to: lnp/utilities/Quickfort
         install_after: Quickfort
+    Basic sounds pack:
+        bay12: "126076.msg8095366#msg8095366"
+        host: manual
+        dl_link: https://download1639.mediafire.com/h6jcnmydx7bg/bumhy495a3spr0m/packs+mini+%282020-02-20%29.zip
+        version: "2020-02-20"
+        updated: "2020-02-20"
+        extract_to: "lnp/utilities/Soundsense"
+        install_after: "Soundsense"
     Ann. window icons:
         requires_os: win
         bay12: 153777
@@ -72,13 +70,6 @@ files:
         updated: "2019-04-23"
         extract_to: "lnp/utilities/Announcement Window"
         install_after: "Announcement Window"
-    Therapist mem layout:
-        bay12: "168411.msg8092372#msg8092372"
-        host: manual
-        dl_link: https://raw.githubusercontent.com/cvuchener/Dwarf-Therapist/memory-layouts-0.47.03/share/memory_layouts/windows/v0.47.03_graphics_win64.ini
-        version: "unstable"
-        updated: "2020-02-17"
-        extract_to: False  # handled in build stage
 utilities:
     Announcement Window:
         requires_os: win
@@ -167,9 +158,11 @@ utilities:
         manifest:
             tooltip: A Sound+Music engine for DF - it reads the gamelog, and plays appropriate sounds and seasonal music.
             linux_exe: soundSense.sh
-    # Soundsense RS:  # disabled while in prerelease mode and it has a mac-only prerelease
-    #     bay12: 174585
-    #     ident: prixt/soundsense-rs
+    Soundsense RS:
+        bay12: 174585
+        ident: prixt/soundsense-rs
+        manifest:
+            tooltip: Soundsense alternative; newer but doesn't need Java
     World Viewer:
         requires_os: win
         bay12: 128932

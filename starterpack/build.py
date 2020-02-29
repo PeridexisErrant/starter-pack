@@ -107,6 +107,12 @@ def _soundsense_xml():
         for line in config:
             if 'gamelog.txt' in line:
                 f.write(line.replace('..', relpath))
+            elif "<disabledSounds/>" in line:
+                f.write(
+                    '\t<disabledSounds>'
+                    '<item path="./packs/default/sample.xml"/>'
+                    '</disabledSounds>'
+                )
             else:
                 f.write(line)
 
@@ -220,6 +226,13 @@ def _exes_for(util):
     return {'win_exe': win_exe, 'osx_exe': osx_exe, 'linux_exe': linux_exe}
 
 
+def _announcement_window_config():
+    # Fixes icons configuration; upstream looks pretty dead :-/
+    cfg = paths.utilities("Announcement Window", "Settings.cfg")
+    assert not os.path.exists(cfg)
+    shutil.copyfile(paths.base("announcement-window-settings.cfg"), cfg)
+
+
 def create_utilities():
     """Confgure utilities metadata and check config files."""
     # Detailed checks for complicated config
@@ -227,6 +240,7 @@ def create_utilities():
     _soundCenSe_config()
     _therapist_ini()
     _armok_vision_plugin()
+    _announcement_window_config()
     # Need file extension for association for readme-opener
     for readme in glob.glob(paths.utilities('*', 'README')):
         os.rename(readme, readme + '.txt')
