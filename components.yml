@@ -18,7 +18,6 @@ files:
         install_after: Dwarf Fortress
     PyLNP:
         bay12: 140808
-        host: bitbucket
         ident: Pidgeot/python-lnp
         os-win:
             extract_to: |
