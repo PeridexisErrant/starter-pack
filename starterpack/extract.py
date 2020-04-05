@@ -66,8 +66,8 @@ def nonzip_extract(filename, target_dir=None, path_pairs=None):
     the .tar.bz2 archived DF releases (complicated header issue).
     OSX disk images (.dmg) are also unsupported by Python.
     """
-    if filename.endswith('.exe') and paths.HOST_OS == 'win' \
-            or filename.endswith('.jar'):
+    if (filename.endswith('.exe') and paths.HOST_OS == 'win') \
+            or filename.endswith('.jar') or filename.endswith('.lua'):
         _copyfile(filename,
                   os.path.join(target_dir, os.path.basename(filename)))
         return True
