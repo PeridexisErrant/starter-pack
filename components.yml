@@ -45,8 +45,8 @@ files:
         bay12: 138754
         ident: thurin/df-twbt  # mifki/df-twbt  ## using alternative for pre-release
         os-win:
-            extract_to: plugins/
-              # | {DFHACK_VER}/twbt.plug.dll:plugins/ ## pre-release is only for current beta
+            extract_to: |
+                {DFHACK_VER}/twbt.plug.dll:plugins/
         os-linux:
             extract_to: |
                 {DFHACK_VER}/twbt.plug.so:plugins/

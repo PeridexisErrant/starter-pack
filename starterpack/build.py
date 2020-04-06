@@ -260,6 +260,7 @@ def _twbt_settings(pack):
     """Set TwbT-specific options for a graphics pack."""
     leave_text_tiles = ('CLA', 'DungeonSet')
     if not os.path.isfile(paths.df('hack', 'plugins', 'twbt.plug.dll')):
+        assert "TwbT" not in component.ALL, "twbt plugin in wrong place?"
         return
     if component.ALL.get('TwbT').version >= 'v5.77' and paths.BITS != '64':
         raise RuntimeError('This version of TwbT does not support 32-bit.')
