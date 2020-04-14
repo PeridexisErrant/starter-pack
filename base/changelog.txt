@@ -1,3 +1,8 @@
+0.47.04-r03
+    (preview/unstable; not yet recommended for new players)
+ - updated Vettlingr graphics to v1.4 with *many* new sprites
+ - updated Phoebus and Obsidian graphics for DF 0.47.04
+
 0.47.04-r02
     (preview/unstable; not yet recommended for new players)
  - fixed TwbT installation problem, and added automatic check so it can't happen again
