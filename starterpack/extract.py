@@ -66,7 +66,7 @@ def unzip_to(filename, target_dir=None, path_pairs=None):
 
 
 def nonzip_extract(filename, target_dir=None, path_pairs=None):
-    """An alternative to `unzip_to`, for non-zip archives.
+    """Equivalent to `unzip_to`, for non-zip archives.
 
     Extract to tempdir, copy files to destination/path_pairs, remove tempdir.
 
@@ -190,7 +190,7 @@ def extract_everything():
     ]
     queue.sort(key=q_key, reverse=True)
     with concurrent.futures.ProcessPoolExecutor(8) as pool:
-        futures = dict()
+        futures = {}
         while queue:
             while sum(f.running() for f in futures.values()) < 8:
                 for idx, comp in enumerate(queue):

@@ -137,8 +137,7 @@ def _component(data):
 
 
 def get_globals():
-    """Returns the dict and lists for the module variables
-    ALL, FILES, GRAPHICS, and UTILITIES."""
+    """Return the dict and lists for globals ALL, FILES, GRAPHICS, and UTILITIES."""
     # get config objects for components
     with open("components.yml") as ymlf:
         config = yaml.safe_load(ymlf)

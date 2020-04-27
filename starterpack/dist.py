@@ -12,8 +12,11 @@ from . import component, paths
 
 
 def get_contents(kwargs):
-    """Read, edit, and format the contents template.  Removes lines for
-    missing components and warns if existing components are not listed."""
+    """Read, edit, and format the contents template.
+
+    Removes lines for missing components and
+    warns if existing components are not listed.
+    """
     with open(paths.base("contents.txt")) as f:
         template = "".join(
             l

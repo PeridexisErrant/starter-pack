@@ -21,7 +21,7 @@ from . import component, paths
 
 
 def overwrite_dir(src, dest):
-    """Copies a tree from src to dest, adding files."""
+    """Copy a tree from src to dest, adding files."""
     if os.path.isdir(src):
         if not os.path.isdir(dest):
             os.makedirs(dest)
@@ -32,7 +32,7 @@ def overwrite_dir(src, dest):
 
 
 def rough_simplify(df_dir):
-    """Remove all files except data, raw, and manifests.json"""
+    """Remove all files except data, raw, and manifests.json."""
     for fname in os.listdir(df_dir):
         path = os.path.join(df_dir, fname)
         if os.path.isfile(path):
@@ -46,7 +46,8 @@ def dodgy_json(filename):
     """Read json from a file, even if it's slightly invalid..."""
     with open(filename) as f:
         txt = f.read()
-        return json.loads(txt[txt.find("{") :])
+        first_brace = txt.find("{")
+        return json.loads(txt[first_brace:])
 
 
 def fixup_manifest(filename, comp, **kwargs):
@@ -105,7 +106,7 @@ def fixup_manifest(filename, comp, **kwargs):
 
 
 def _soundsense_xml():
-    """Check and update version strings in xml path config"""
+    """Check and update version strings in xml path config."""
     xmlfile = paths.utilities("Soundsense", "configuration.xml")
     if not os.path.isfile(xmlfile):
         return
@@ -139,8 +140,8 @@ def _soundsense_xml():
             f.write(text.replace("\r\n", "\n"))
 
 
-def _soundCenSe_config():
-    """Check and update version strings in xml path config"""
+def _soundcense_config():
+    """Check and update version strings in xml path config."""
     jsonpath = paths.utilities("SoundCenSe", "Configuration.json")
     if not os.path.isfile(jsonpath):
         return
@@ -253,7 +254,7 @@ def create_utilities():
     """Confgure utilities metadata and check config files."""
     # Detailed checks for complicated config
     _soundsense_xml()
-    _soundCenSe_config()
+    _soundcense_config()
     _therapist_ini()
     _armok_vision_plugin()
     _announcement_window_config()

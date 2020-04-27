@@ -12,7 +12,7 @@ from . import paths
 
 
 def get_ok(*args, **kwargs):
-    """requests.get plus raise_for_status"""
+    """Run `requests.get` plus `raise_for_status`."""
     r = requests.get(*args, **kwargs)
     r.raise_for_status()
     return r
@@ -26,23 +26,26 @@ def get_auth():
     return None
 
 
-def cache(method=lambda *_: None, *, saved={}, dump=False):
-    """A caching decorator.
+SAVED = {}
+
+
+def cache(method=lambda *_: None, *, dump=False):
+    """Use a persistent cache for the decorated function.
 
     Reads cache from local file if cache is empty.
     Keeps record of when items were last refreshed, and expires at interval.
     Supports conditional requests for GitHub.
     """
-    if not saved:
+    if not SAVED:
         try:
             with open("_cached.yml") as f:
-                saved.update(yaml.load(f, Loader=yaml.Loader))
+                SAVED.update(yaml.load(f, Loader=yaml.Loader))
         except OSError:
             print("Downloading metadata for components...\n")
-            saved.update({"metadata": {}, "timestamps": {}})
+            SAVED.update({"metadata": {}, "timestamps": {}})
     elif dump:
         with open("_cached.yml", "w") as f:
-            yaml.dump(saved, f, indent=4)
+            yaml.dump(SAVED, f, indent=4)
 
     def wrapper(self, ident):
         key, args = ident, (self, ident)
@@ -51,21 +54,21 @@ def cache(method=lambda *_: None, *, saved={}, dump=False):
             args = (
                 self,
                 ident,
-                saved["timestamps"].get(key, 0),
-                saved["metadata"].get(ident),
+                SAVED["timestamps"].get(key, 0),
+                SAVED["metadata"].get(ident),
             )
-        if (time.time() - saved["timestamps"].get(key, 0)) > 30 * 60:
+        if (time.time() - SAVED["timestamps"].get(key, 0)) > 30 * 60:
             new_json = method(*args)
             if new_json is not None:
-                saved["metadata"][key] = new_json
-                saved["timestamps"][key] = time.time()
-        return saved["metadata"].get(key)
+                SAVED["metadata"][key] = new_json
+                SAVED["timestamps"][key] = time.time()
+        return SAVED["metadata"].get(key)
 
     return wrapper
 
 
 def days_ago(func):
-    """Moves date-subtraction boilerplate to a decorator."""
+    """Implement date-subtraction boilerplate as a decorator."""
 
     def _inner(*args):
         return (datetime.datetime.today() - func(*args)).days
@@ -94,7 +97,7 @@ def best_asset(fname_list, break_ties_by_type=True):
                 for a in fname_list
                 if k in fname(a) or (k == "osx" and "mac" in fname(a))
             ]
-            un_bitted = [a for a in os_files if not wrong_bits in fname(a)]
+            un_bitted = [a for a in os_files if wrong_bits not in fname(a)]
             bitted = [a for a in os_files if bits in fname(a)]
             lst = bitted or un_bitted or os_files or typed or fname_list
             asst[(k, bits)] = lst[0] if lst else None
@@ -122,19 +125,19 @@ class AbstractMetadata:
 
 class DFFDMetadata(AbstractMetadata):
     @cache
-    def json(self, ID):
-        return get_ok("http://dffd.bay12games.com/file_data/{}.json".format(ID)).json()
+    def json(self, id_):
+        return get_ok(f"http://dffd.bay12games.com/file_data/{id_}.json").json()
 
-    def filename(self, ID):
-        return self.json(ID).get("filename", "dffd_{}_{}".format(ID, self.version(ID)))
+    def filename(self, id_):
+        return self.json(id_).get("filename", f"dffd_{id_}_{self.version(id_)}")
 
-    def dl_link(self, ID):
-        return "http://dffd.bay12games.com/download.php?id={}&f=b".format(ID)
+    def dl_link(self, id_):
+        return f"http://dffd.bay12games.com/download.php?id={id_}&f=b"
 
     @days_ago
-    def days_since_update(self, ID):
+    def days_since_update(self, id_):
         return datetime.datetime.fromtimestamp(
-            float(self.json(ID)["updated_timestamp"])
+            float(self.json(id_)["updated_timestamp"])
         )
 
 
@@ -230,8 +233,8 @@ class ManualMetadata(AbstractMetadata):
         raise ValueError(identifier)
 
     @days_ago
-    def days_since_update(self, ID):
-        return datetime.datetime.strptime(self.json(ID)["updated"], "%Y-%m-%d")
+    def days_since_update(self, id_):
+        return datetime.datetime.strptime(self.json(id_)["updated"], "%Y-%m-%d")
 
 
 def df_dl_from_ver(ver):
