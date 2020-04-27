@@ -1,3 +1,7 @@
+0.47.04-r04
+ - updated DFHack to 0.47.04-r1
+ - updated TwbT to 0.47.04-r1 (unofficial build by thurin)
+
 0.47.04-r03
     (preview/unstable; not yet recommended for new players)
  - updated Vettlingr graphics to v1.4 with *many* new sprites
