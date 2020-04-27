@@ -146,7 +146,8 @@ class GitHubAssetMetadata(AbstractMetadata):
     @cache
     def json(self, repo, last_timestamp=None, last_json=None):
         """Return JSON payload, or None if not modified since timestamp."""
-        url = "https://api.github.com/repos/{}/releases".format(repo)
+        url = f"https://api.github.com/repos/{repo}/releases"
+        use_list = not paths.ARGS.stable
         if paths.ARGS.stable:
             url += "/latest"
         header = {
@@ -154,11 +155,23 @@ class GitHubAssetMetadata(AbstractMetadata):
                 last_timestamp, datetime.timezone.utc
             ).strftime("%a, %d %b %Y %H:%M:%S GMT")
         }
-        req = get_ok(url, auth=get_auth(), headers=header)
+        try:
+            req = get_ok(url, auth=get_auth(), headers=header)
+        except requests.exceptions.HTTPError:
+            # Raises 404 on repos with no stable releases, e.g. Thurin's TwbT builds
+            if paths.ARGS.stable:
+                req = get_ok(
+                    f"https://api.github.com/repos/{repo}/releases",
+                    auth=get_auth(),
+                    headers=header,
+                )
+                use_list = True
+            else:
+                raise
         if req.status_code == 304:
             return last_json
         resp = req.json()
-        if not paths.ARGS.stable:
+        if use_list:
             resp = resp[0]
 
         assets = [r["browser_download_url"] for r in resp["assets"]]
