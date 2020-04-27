@@ -16,16 +16,6 @@ files:
         ident: DFHack/dfhack
         extract_to: df
         install_after: Dwarf Fortress
-    exportlegends patch:  # TODO: remove this after DFHack 0.47.04-beta1
-        bay12: 139553
-        ident: exportlegends
-        host: manual
-        dl_link: https://raw.githubusercontent.com/DFHack/scripts/8618cd0b0a17935fe07f329b249726cda61f5bdf/exportlegends.lua
-        version: "1"
-        updated: "2020-04-05"
-        extract_to: df/hack/scripts/
-        needs_dfhack: True
-        install_after: DFHack
     PyLNP:
         bay12: 140808
         ident: Pidgeot/python-lnp
