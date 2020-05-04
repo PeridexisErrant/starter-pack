@@ -247,7 +247,8 @@ def _announcement_window_config():
     # Fixes icons configuration; upstream looks pretty dead :-/
     cfg = paths.utilities("Announcement Window", "Settings.cfg")
     assert not os.path.exists(cfg)
-    shutil.copyfile(paths.base("announcement-window-settings.cfg"), cfg)
+    if os.path.isdir(paths.utilities("Announcement Window")):
+        shutil.copyfile(paths.base("announcement-window-settings.cfg"), cfg)
 
 
 def create_utilities():
@@ -267,9 +268,13 @@ def create_utilities():
             paths.utilities(util.name, "manifest.json"), util, **_exes_for(util)
         )
         if paths.HOST_OS != "win":
+            exe_name = paths.HOST_OS + "_exe"
             with open(paths.utilities(util.name, "manifest.json")) as f:
-                exe = json.load(f)[paths.HOST_OS + "_exe"]
-            os.chmod(exe, 0o110 | os.stat(exe).st_mode)
+                manifest = json.load(f)
+                if exe_name in manifest:
+                    exe = manifest[exe_name]
+                    if os.path.exists(exe):
+                        os.chmod(exe, 0o110 | os.stat(exe).st_mode)
 
 
 # Configure graphics packs
@@ -278,7 +283,8 @@ def create_utilities():
 def _twbt_settings(pack):
     """Set TwbT-specific options for a graphics pack."""
     leave_text_tiles = ("CLA", "DungeonSet")
-    if not os.path.isfile(paths.df("hack", "plugins", "twbt.plug.dll")):
+    twbt_plug = "twbt.plug." + ("dll" if paths.HOST_OS == "win" else "so")
+    if not os.path.isfile(paths.df("hack", "plugins", twbt_plug)):
         assert "TwbT" not in component.ALL, "twbt plugin in wrong place?"
         return
     if component.ALL.get("TwbT").version >= "v5.77" and paths.BITS != "64":
