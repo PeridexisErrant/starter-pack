@@ -1,3 +1,6 @@
+0.47.04-r05
+ - fixed pack-assembly error which broke DFHack's exportlegends command
+
 0.47.04-r04
  - updated DFHack to 0.47.04-r1
  - updated TwbT to 0.47.04-r1 (unofficial build by thurin)
