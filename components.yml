@@ -80,8 +80,6 @@ utilities:
         bay12: 146473
         ident: JapaMala/armok-vision
         needs_dfhack: True
-        manifest:
-            tooltip: Armok Vision visualises your fortress in real-time true 3D!
     DF Story Maker:
         requires_os: win
         bay12: 128570

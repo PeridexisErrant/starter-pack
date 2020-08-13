@@ -1,3 +1,10 @@
+0.47.04-r07
+ - updated PyLNP to 0.14a
+ - updated DFHack to 0.47.04-r02
+ - updated TwbT to 0.47.04-r2 (unofficial build by thurin)
+ - updated Legends Browser to 1.19.1
+ - updated Armok Vision to 0.21.0
+
 0.47.04-r06
  - updated Dwarf Therapist to v41.1.7
  - updated Legends Browser to 1.19
