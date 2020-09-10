@@ -1,3 +1,8 @@
+0.47.04-r08
+ - updated Legends Viewer to v1.20.05
+ - updated Legends Browser to v1.19.2
+ - now fetching DwarfMockup from DFFD due to bitbucket shutdown
+
 0.47.04-r07
  - updated PyLNP to 0.14a
  - updated DFHack to 0.47.04-r02

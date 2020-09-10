@@ -95,8 +95,7 @@ utilities:
     Dwarf Mockup:
         requires_os: win
         bay12: 143546
-        host: bitbucket
-        ident: fredsen/dwarfmockup
+        ident: 9654
         manifest:
             tooltip: DF-like interface for the creation of Quickfort blueprints, with some nice helper features
     Dwarf Portrait:
