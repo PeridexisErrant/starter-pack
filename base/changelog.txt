@@ -1,3 +1,8 @@
+0.47.04-r10
+ - updated Dwarf Therapist to v41.2.0
+ - updated Legends Viewer to 1.20.06c with many crash fixes
+ - removed Meph tileset due to many crash reports :-/
+
 0.47.04-r09
  - updated DFHack to 0.47.04-r03
  - updated TwbT to 0.47.04-r3 (unofficial build by thurin)
