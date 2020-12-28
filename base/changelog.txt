@@ -1,3 +1,6 @@
+0.47.04-r11
+ - updated DFHack to 0.47.04-r04
+
 0.47.04-r10
  - updated Dwarf Therapist to v41.2.0
  - updated Legends Viewer to 1.20.06c with many crash fixes

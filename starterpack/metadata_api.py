@@ -156,7 +156,9 @@ class GitHubAssetMetadata(AbstractMetadata):
             ).strftime("%a, %d %b %Y %H:%M:%S GMT")
         }
         try:
-            req = get_ok(url, auth=get_auth(), headers=header)
+            req = get_ok(
+                url, auth=get_auth(), headers={} if last_json is None else header
+            )
         except requests.exceptions.HTTPError:
             # Raises 404 on repos with no stable releases, e.g. Thurin's TwbT builds
             if paths.ARGS.stable:
