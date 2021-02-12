@@ -1,3 +1,9 @@
+0.47.05-r01
+ - updated Dwarf Fortress
+ - updated DFHack to 0.47.05-beta1
+ - updated TwbT to 0.47.05-beta1 (unofficial build by thurin)
+ - updated Dwarf Therapist to v41.2.1
+
 0.47.04-r12
  - updated DFHack to 0.47.04-r05
  - updated TwbT to 0.47.04-r5 (unofficial build by thurin)
