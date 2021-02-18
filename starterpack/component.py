@@ -194,5 +194,6 @@ if __name__ != "__main__":
 
     # I forgot to update this last time... upload a new file to get ID, edit
     # config and this assertion, and then rebuild pack for correct forum message.
+    # Note that this also sets the URL for PyLNP's update check!
     _dffd_id = paths.CONFIG["unstable_dffdID"]
-    assert (_dffd_id == "14793") == paths.df_ver().startswith("0.47")
+    assert (_dffd_id == "7622") == paths.df_ver().startswith("0.47.05")
