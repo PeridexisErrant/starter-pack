@@ -1,3 +1,9 @@
+0.47.05-r02
+ - updated DFHack to 0.47.05-r2
+ - updated TwbT to 0.47.05-r1 (unofficial build by thurin)
+ - updated Vettlingr graphics to 1.4a
+ - re-added Meph's graphics pack (TwbT bugfix should resolve crashes!)
+
 0.47.05-r01
  - updated Dwarf Fortress
  - updated DFHack to 0.47.05-beta1
