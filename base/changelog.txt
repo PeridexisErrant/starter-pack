@@ -1,3 +1,9 @@
+0.47.05-r03
+ - updated Legends Viewer to 1.20.07 with crash fixes and UI improvements
+ - updated Vettlingr graphics to 1.5 (transparent edition!)
+ - updated Meph graphics to v5.5.1-V
+ - updated Spacefox graphics to 47.05a
+
 0.47.05-r02
  - updated DFHack to 0.47.05-r2
  - updated TwbT to 0.47.05-r1 (unofficial build by thurin)
