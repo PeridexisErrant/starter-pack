@@ -1,3 +1,7 @@
+0.47.05-r04
+ - updated DFHack to 0.47.05-r2
+ - updated TwbT to 0.47.05-r2 (unofficial build by thurin)
+
 0.47.05-r03
  - updated Legends Viewer to 1.20.07 with crash fixes and UI improvements
  - updated Vettlingr graphics to 1.5 (transparent edition!)
@@ -5,7 +9,7 @@
  - updated Spacefox graphics to 47.05a
 
 0.47.05-r02
- - updated DFHack to 0.47.05-r2
+ - updated DFHack to 0.47.05-r1
  - updated TwbT to 0.47.05-r1 (unofficial build by thurin)
  - updated Vettlingr graphics to 1.4a
  - re-added Meph's graphics pack (TwbT bugfix should resolve crashes!)
