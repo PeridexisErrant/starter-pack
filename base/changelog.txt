@@ -1,3 +1,7 @@
+0.47.05-r05
+ - updated DFHack to 0.47.05-r3
+ - updated TwbT to 0.47.05-r3 (unofficial build by thurin)
+
 0.47.05-r04
  - updated DFHack to 0.47.05-r2
  - updated TwbT to 0.47.05-r2 (unofficial build by thurin)
