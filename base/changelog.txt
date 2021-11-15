@@ -1,3 +1,8 @@
+0.47.05-r06
+ - updated Vettlingr graphics to 1.6
+ - updated Legends Viewer to 1.20.08
+ - removed Meph graphics due to attribution/copyright concerns
+
 0.47.05-r05
  - updated DFHack to 0.47.05-r3
  - updated TwbT to 0.47.05-r3 (unofficial build by thurin)

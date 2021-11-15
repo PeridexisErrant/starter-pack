@@ -185,9 +185,6 @@ graphics:
     Mayday:
         bay12: 137370
         ident: DFgraphics/Mayday
-    Meph:
-        bay12: 161047
-        ident: jecowa/Meph
     Obsidian:
         bay12: 126934
         ident: DFgraphics/Obsidian
